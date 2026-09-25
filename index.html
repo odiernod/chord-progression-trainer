@@ -265,9 +265,14 @@
           <div class="pt-2 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
             <div class="flex flex-wrap items-center gap-2.5">
               <button id="btn-play-progression" class="flex-1 sm:flex-none px-6 py-3.5 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-400 hover:to-yellow-500 text-black font-display font-bold uppercase tracking-wider rounded-xl shadow-lg transition active:scale-95 flex items-center justify-center gap-2 text-base">
-                <i class="fa-solid fa-play"></i>
+                <i id="trainer-play-icon" class="fa-solid fa-play"></i>
                 <span id="btn-play-text">Play Progression</span>
               </button>
+
+              <label class="flex items-center gap-2 text-xs font-mono text-gray-300 bg-amp-950 px-3.5 py-3 rounded-xl border border-amp-800 hover:border-amber-500/50 cursor-pointer shadow-inset-panel select-none transition">
+                <input id="toggle-trainer-loop" type="checkbox" class="accent-amber-500 cursor-pointer w-4 h-4">
+                <span>Loop Riff</span>
+              </label>
 
               <button id="btn-play-tonic" class="px-4 py-3.5 bg-amp-800 hover:bg-amp-700 text-vintage-gold border border-amp-700 rounded-xl font-display font-medium uppercase tracking-wider text-xs md:text-sm transition active:scale-95 flex items-center gap-2 shadow-inset-panel">
                 <i class="fa-solid fa-music text-amber-400"></i>
@@ -730,7 +735,8 @@
         drumGroove: 'standard',
         drivePreset: 'plexi',
         inversionMode: 'random',
-        strictBlindMode: true
+        strictBlindMode: true,
+        trainerLoop: false
       }
     };
 
@@ -1419,6 +1425,9 @@
       drumGroove: appStore.settings.drumGroove || 'standard',
       revealed: false,
       strictBlindMode: appStore.settings.strictBlindMode !== undefined ? appStore.settings.strictBlindMode : true,
+      trainerLoop: appStore.settings.trainerLoop !== undefined ? appStore.settings.trainerLoop : false,
+      trainerTimeouts: [],
+      trainerIntervals: [],
       sandboxKey: 'A',
       sandboxCustomProg: [],
       sandboxInversionSelect: 0,
@@ -1433,6 +1442,8 @@
       labelBpm: document.getElementById('label-bpm'),
       btnPlayProgression: document.getElementById('btn-play-progression'),
       btnPlayText: document.getElementById('btn-play-text'),
+      trainerPlayIcon: document.getElementById('trainer-play-icon'),
+      toggleTrainerLoop: document.getElementById('toggle-trainer-loop'),
       btnPlayTonic: document.getElementById('btn-play-tonic'),
       btnNewProgression: document.getElementById('btn-new-progression'),
       btnCheckAnswer: document.getElementById('btn-check-answer'),
@@ -1489,7 +1500,32 @@
       return 2;
     }
 
+    function stopProgressionPlayback() {
+      STATE.trainerTimeouts.forEach(t => clearTimeout(t));
+      STATE.trainerTimeouts = [];
+      STATE.trainerIntervals.forEach(i => clearInterval(i));
+      STATE.trainerIntervals = [];
+      STATE.isPlaying = false;
+
+      const isLooping = elements.toggleTrainerLoop?.checked || STATE.trainerLoop;
+      if (elements.btnPlayProgression) {
+        elements.btnPlayProgression.className = 'flex-1 sm:flex-none px-6 py-3.5 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-400 hover:to-yellow-500 text-black font-display font-bold uppercase tracking-wider rounded-xl shadow-lg transition active:scale-95 flex items-center justify-center gap-2 text-base';
+      }
+      if (elements.btnPlayText) {
+        elements.btnPlayText.textContent = isLooping ? 'Play Loop' : 'Play Progression';
+      }
+      if (elements.trainerPlayIcon) {
+        elements.trainerPlayIcon.className = 'fa-solid fa-play';
+      }
+      if (elements.playbackStatusText) elements.playbackStatusText.textContent = 'STANDBY';
+      if (elements.pulseMeter) elements.pulseMeter.classList.add('hidden');
+      elements.beatDots.forEach(d => {
+        d.className = 'w-2.5 h-2.5 rounded-full bg-amp-800 transition-colors';
+      });
+    }
+
     function generateNewProgression() {
+      stopProgressionPlayback();
       const keys = ['A', 'E', 'D', 'G', 'C'];
       STATE.currentKey = keys[Math.floor(Math.random() * keys.length)];
       STATE.currentProgression = ROCK_PROGRESSIONS[Math.floor(Math.random() * ROCK_PROGRESSIONS.length)];
@@ -1701,17 +1737,36 @@
       guitarPitches.forEach(f => playGuitarNote(f, chordStartTime + beatDuration * 3.0, barDuration * 0.4, 0.6));
     }
 
-    let progressionTimeout = null;
+    async function toggleProgressionPlayback() {
+      if (STATE.isPlaying) {
+        stopProgressionPlayback();
+        return;
+      }
 
-    async function playProgression() {
+      if (!STATE.currentProgression) return;
+
       const ready = await ensureAudioContext();
-      if (!ready || STATE.isPlaying) return;
+      if (!ready) return;
 
       STATE.isPlaying = true;
-      elements.btnPlayProgression.classList.add('bg-rose-600', 'text-white');
-      elements.btnPlayProgression.classList.remove('bg-gradient-to-r', 'from-amber-500', 'to-yellow-600');
-      elements.btnPlayText.textContent = 'Playing...';
-      elements.pulseMeter.classList.remove('hidden');
+      const isLooping = elements.toggleTrainerLoop?.checked || STATE.trainerLoop;
+
+      if (elements.btnPlayProgression) {
+        elements.btnPlayProgression.className = 'flex-1 sm:flex-none px-6 py-3.5 bg-rose-600 hover:bg-rose-500 text-white font-display font-bold uppercase tracking-wider rounded-xl shadow-lg transition active:scale-95 flex items-center justify-center gap-2 text-base';
+      }
+      if (elements.btnPlayText) {
+        elements.btnPlayText.textContent = isLooping ? 'Stop Loop' : 'Stop Playing';
+      }
+      if (elements.trainerPlayIcon) {
+        elements.trainerPlayIcon.className = 'fa-solid fa-stop';
+      }
+      if (elements.pulseMeter) elements.pulseMeter.classList.remove('hidden');
+
+      scheduleTrainerLoopIteration();
+    }
+
+    function scheduleTrainerLoopIteration() {
+      if (!STATE.isPlaying || !STATE.currentProgression) return;
 
       const bpm = STATE.bpm;
       const beatDuration = 60 / bpm;
@@ -1734,7 +1789,7 @@
         playBassNote(bassPitch, chordStartTime, barDuration * 0.95);
 
         const delayMs = Math.max(0, (chordStartTime - audioCtx.currentTime) * 1000);
-        setTimeout(() => {
+        const tVisual = setTimeout(() => {
           if (!STATE.isPlaying) return;
 
           if (!STATE.strictBlindMode || STATE.revealed) {
@@ -1755,22 +1810,31 @@
             currentBeat = (currentBeat + 1) % 4;
           }, beatDuration * 1000);
 
-          setTimeout(() => clearInterval(beatInterval), barDuration * 1000);
+          STATE.trainerIntervals.push(beatInterval);
+          const tClear = setTimeout(() => {
+            clearInterval(beatInterval);
+            const idx = STATE.trainerIntervals.indexOf(beatInterval);
+            if (idx !== -1) STATE.trainerIntervals.splice(idx, 1);
+          }, barDuration * 1000);
+          STATE.trainerTimeouts.push(tClear);
         }, delayMs);
+
+        STATE.trainerTimeouts.push(tVisual);
       });
 
       const totalDuration = totalChords * barDuration;
-      progressionTimeout = setTimeout(() => {
-        STATE.isPlaying = false;
-        elements.btnPlayProgression.classList.remove('bg-rose-600', 'text-white');
-        elements.btnPlayProgression.classList.add('bg-gradient-to-r', 'from-amber-500', 'to-yellow-600');
-        elements.btnPlayText.textContent = 'Play Progression';
-        elements.playbackStatusText.textContent = 'STANDBY';
-        elements.pulseMeter.classList.add('hidden');
-        elements.beatDots.forEach(d => {
-          d.className = 'w-2.5 h-2.5 rounded-full bg-amp-800 transition-colors';
-        });
-      }, totalDuration * 1000 + 200);
+      const tEnd = setTimeout(() => {
+        if (!STATE.isPlaying) return;
+
+        const isLooping = elements.toggleTrainerLoop?.checked || STATE.trainerLoop;
+        if (isLooping) {
+          scheduleTrainerLoopIteration();
+        } else {
+          stopProgressionPlayback();
+        }
+      }, totalDuration * 1000);
+
+      STATE.trainerTimeouts.push(tEnd);
     }
 
     /* =========================================================================
@@ -2186,6 +2250,7 @@
       const viewSandbox = document.getElementById('view-sandbox');
 
       tabTrainer.addEventListener('click', () => {
+        stopSandboxChainPlayback();
         tabTrainer.className = 'px-3 py-1 rounded font-medium text-xs sm:text-sm transition-colors bg-vintage-gold text-black shadow font-display uppercase tracking-wider';
         tabSandbox.className = 'px-3 py-1 rounded font-medium text-xs sm:text-sm text-gray-400 hover:text-gray-200 transition-colors font-display uppercase tracking-wider';
         viewTrainer.classList.remove('hidden');
@@ -2193,6 +2258,7 @@
       });
 
       tabSandbox.addEventListener('click', () => {
+        stopProgressionPlayback();
         tabSandbox.className = 'px-3 py-1 rounded font-medium text-xs sm:text-sm transition-colors bg-vintage-gold text-black shadow font-display uppercase tracking-wider';
         tabTrainer.className = 'px-3 py-1 rounded font-medium text-xs sm:text-sm text-gray-400 hover:text-gray-200 transition-colors font-display uppercase tracking-wider';
         viewSandbox.classList.remove('hidden');
@@ -2200,13 +2266,34 @@
       });
 
       // Trainer Deck Controls
-      elements.btnPlayProgression.addEventListener('click', playProgression);
+      elements.btnPlayProgression.addEventListener('click', toggleProgressionPlayback);
+      if (elements.toggleTrainerLoop) {
+        elements.toggleTrainerLoop.checked = STATE.trainerLoop;
+        elements.toggleTrainerLoop.addEventListener('change', (e) => {
+          STATE.trainerLoop = e.target.checked;
+          appStore.settings.trainerLoop = STATE.trainerLoop;
+          saveStore(appStore);
+          if (!STATE.isPlaying && elements.btnPlayText) {
+            elements.btnPlayText.textContent = STATE.trainerLoop ? 'Play Loop' : 'Play Progression';
+          }
+        });
+        if (!STATE.isPlaying && elements.btnPlayText) {
+          elements.btnPlayText.textContent = STATE.trainerLoop ? 'Play Loop' : 'Play Progression';
+        }
+      }
       elements.btnPlayTonic.addEventListener('click', () => {
+        stopProgressionPlayback();
         playSingleChord(STATE.currentKey, 'I', 1.0);
       });
       elements.btnNewProgression.addEventListener('click', generateNewProgression);
-      elements.btnCheckAnswer.addEventListener('click', checkAnswer);
-      elements.btnRevealSolution.addEventListener('click', revealTheoryCard);
+      elements.btnCheckAnswer.addEventListener('click', () => {
+        stopProgressionPlayback();
+        checkAnswer();
+      });
+      elements.btnRevealSolution.addEventListener('click', () => {
+        stopProgressionPlayback();
+        revealTheoryCard();
+      });
 
       elements.btnClearGuess.addEventListener('click', () => {
         STATE.userSlots = new Array(STATE.currentProgression.numerals.length).fill(null);
