@@ -1,0 +1,2391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RiffMaster - Rock Chord Ear Trainer</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,500;0,700;1,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Chakra Petch', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            amp: {
+              950: '#090a0d',
+              900: '#111318',
+              850: '#181b22',
+              800: '#212530',
+              700: '#2f3545',
+              600: '#434c63',
+            },
+            vintage: {
+              gold: '#e5a73b',
+              amber: '#f59e0b',
+              tweed: '#cbb189',
+              red: '#ef4444',
+            }
+          },
+          boxShadow: {
+            'tube': '0 0 25px rgba(245, 158, 11, 0.5)',
+            'led': '0 0 10px rgba(245, 158, 11, 0.85)',
+            'led-green': '0 0 12px rgba(34, 197, 94, 0.9)',
+            'led-red': '0 0 12px rgba(239, 68, 68, 0.9)',
+            'inset-panel': 'inset 0 2px 8px rgba(0, 0, 0, 0.8)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    .grill-cloth {
+      background-color: #0d0e12;
+      background-image: 
+        radial-gradient(rgba(203, 177, 137, 0.15) 15%, transparent 16%),
+        radial-gradient(rgba(0, 0, 0, 0.85) 15%, transparent 16%);
+      background-size: 8px 8px;
+      background-position: 0 0, 4px 4px;
+    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #111318; }
+    ::-webkit-scrollbar-thumb { background: #2f3545; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #f59e0b; }
+  </style>
+</head>
+
+<body class="bg-amp-950 text-gray-200 min-h-screen font-sans antialiased selection:bg-amber-500 selection:text-black flex flex-col justify-between relative overflow-x-hidden">
+
+  <!-- FULLSCREEN / COMPONENT OVERLAY FOR HARDWARE AUDIO UNLOCK -->
+  <div id="audio-unlock-overlay" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="max-w-md w-full bg-amp-900 border-2 border-amber-500/80 rounded-2xl p-6 sm:p-8 shadow-2xl text-center relative overflow-hidden">
+      <div class="absolute -top-12 -right-12 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl pointer-events-none"></div>
+      
+      <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-amber-500/10 border-2 border-amber-500/40 flex items-center justify-center text-amber-400 text-2xl shadow-tube animate-pulse">
+        <i class="fa-solid fa-bolt"></i>
+      </div>
+      
+      <h2 class="text-2xl font-bold font-display uppercase tracking-wider text-amber-400">Power Up Amp Head</h2>
+      <p class="text-sm text-gray-300 mt-2 font-sans">
+        Web browsers require a direct tap before starting the Web Audio synthesizer. Tap below to unlock the sound card &amp; tube simulator.
+      </p>
+
+      <button id="btn-modal-unlock" class="w-full mt-6 py-3.5 px-6 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-400 hover:to-yellow-500 text-black font-display font-bold uppercase tracking-wider text-base rounded-xl shadow-lg transition transform active:scale-95 flex items-center justify-center gap-2">
+        <i class="fa-solid fa-volume-high"></i>
+        <span>Activate Audio Engine</span>
+      </button>
+
+      <div class="mt-4 text-[11px] font-mono text-gray-400 flex items-center justify-center gap-2">
+        <i class="fa-solid fa-shield-halved text-amber-500/70"></i>
+        <span>Safe Zero-Latency WebAudio DSP</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="border-b border-amp-800 bg-amp-900/95 sticky top-0 z-40 backdrop-blur-md">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-3">
+        <div id="power-jewel" class="w-4 h-4 rounded-full bg-red-600 shadow-led-red border border-red-400/50 transition-all duration-300"></div>
+        <div>
+          <h1 class="text-xl md:text-2xl font-bold font-display tracking-wider text-amber-400 uppercase flex items-center gap-2">
+            RiffMaster
+            <span class="text-xs px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/20 font-mono tracking-normal lowercase">v3.1 live</span>
+          </h1>
+          <p class="text-xs text-gray-400 hidden sm:block">Rock Chord Ear Trainer • Zero Latency WebAudio Synthesis</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2.5 flex-wrap">
+        <!-- Analytics Modal Toggle Button -->
+        <button id="btn-open-analytics" class="px-3 py-1.5 rounded-lg bg-amp-950 hover:bg-amp-800 border border-amber-500/40 text-amber-300 hover:text-amber-200 transition text-xs font-mono font-bold flex items-center gap-2 shadow-inset-panel">
+          <i class="fa-solid fa-chart-pie text-amber-400"></i>
+          <span>Analytics</span>
+          <span id="badge-accuracy" class="px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 text-[10px]">--%</span>
+        </button>
+
+        <div class="flex items-center gap-2 bg-amp-950 px-2.5 py-1 rounded-lg border border-amp-800 text-xs font-mono">
+          <span class="text-gray-400">DSP:</span>
+          <span id="audio-engine-state" class="text-red-400 font-bold uppercase">OFFLINE</span>
+          <button id="btn-quick-sound-test" class="ml-1 px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 rounded transition text-[11px] font-bold flex items-center gap-1.5">
+            <i class="fa-solid fa-play text-[10px]"></i> Test Audio
+          </button>
+        </div>
+
+        <div class="flex bg-amp-950 p-1 rounded-lg border border-amp-800 text-sm">
+          <button id="tab-trainer" class="px-3 py-1 rounded font-medium text-xs sm:text-sm transition-colors bg-vintage-gold text-black shadow font-display uppercase tracking-wider">
+            Trainer
+          </button>
+          <button id="tab-sandbox" class="px-3 py-1 rounded font-medium text-xs sm:text-sm text-gray-400 hover:text-gray-200 transition-colors font-display uppercase tracking-wider">
+            Chord Lab
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 py-5 w-full flex-1">
+    
+    <!-- AUDIO HARDWARE DIAGNOSTIC BAR -->
+    <div id="audio-diagnostic-bar" class="mb-5 p-3 rounded-xl bg-amp-900 border border-amp-800 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+      <div class="flex items-center gap-2 flex-wrap">
+        <span class="text-gray-400"><i class="fa-solid fa-microchip text-amber-400 mr-1"></i>Hardware State:</span>
+        <span id="diag-state" class="px-2 py-0.5 rounded bg-amp-950 border border-amp-800 text-rose-400 font-bold">UNINITIALIZED</span>
+        <span class="text-gray-400 hidden sm:inline">•</span>
+        <span class="text-gray-400 hidden sm:inline">Rate: <span id="diag-samplerate" class="text-gray-200">--</span></span>
+        <span class="text-gray-400 hidden sm:inline">•</span>
+        <span id="diag-msg" class="text-amber-300/80">Awaiting user activation</span>
+      </div>
+      <button id="btn-reinit-audio" class="px-3 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 rounded transition text-xs font-bold flex items-center gap-1.5">
+        <i class="fa-solid fa-rotate text-[10px]"></i> Force Reset DSP
+      </button>
+    </div>
+
+    <!-- VIEW 1: EAR TRAINER MODE -->
+    <div id="view-trainer" class="space-y-6">
+
+      <!-- AMP HEAD / CONTROLS PANEL -->
+      <div class="bg-amp-900 rounded-2xl border-2 border-amp-700 shadow-2xl overflow-hidden relative">
+        <div class="h-3 bg-gradient-to-r from-amp-950 via-amp-800 to-amp-950 border-b border-amp-700"></div>
+
+        <div class="p-4 md:p-6 bg-gradient-to-b from-amp-900 to-amp-850 space-y-4">
+          
+          <!-- TOP ROW: Key, Chord Count, Score, BPM -->
+          <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-amp-800">
+            <div class="flex items-center gap-3 flex-wrap">
+              <div class="bg-amp-950 px-4 py-2 rounded-lg border border-amp-800 shadow-inset-panel flex items-center gap-3">
+                <span class="text-xs text-gray-400 font-mono">KEY:</span>
+                <span id="label-key-center" class="text-lg font-bold font-mono text-amber-400">???</span>
+                <button id="btn-toggle-key-reveal" title="Peek at key center" class="text-xs text-gray-500 hover:text-amber-400 transition ml-1">
+                  <i class="fa-regular fa-eye"></i>
+                </button>
+              </div>
+
+              <div class="bg-amp-950 px-3 py-2 rounded-lg border border-amp-800 shadow-inset-panel flex items-center gap-2 text-xs font-mono">
+                <span class="text-gray-400">CHORDS:</span>
+                <span id="label-chord-count" class="text-white font-bold">4</span>
+              </div>
+
+              <div class="bg-amp-950 px-3 py-2 rounded-lg border border-amp-800 shadow-inset-panel flex items-center gap-3 text-xs font-mono">
+                <div><span class="text-gray-400">Score:</span> <span id="stat-score" class="text-amber-400 font-bold">0/0</span></div>
+                <div><span class="text-gray-400">Streak:</span> <span id="stat-streak" class="text-emerald-400 font-bold">0</span> 🔥</div>
+                <div class="hidden sm:block"><span class="text-gray-400">Best:</span> <span id="stat-best-streak" class="text-amber-300 font-bold">0</span></div>
+              </div>
+            </div>
+
+            <!-- Tempo Slider -->
+            <div class="flex items-center gap-2 bg-amp-950 px-3 py-1.5 rounded-lg border border-amp-800 shadow-inset-panel">
+              <span class="text-xs font-mono text-gray-400">TEMPO</span>
+              <input id="slider-bpm" type="range" min="70" max="145" value="105" class="w-20 sm:w-28 accent-amber-500 cursor-pointer">
+              <span id="label-bpm" class="text-xs font-mono font-bold text-amber-400 w-12 text-right">105 BPM</span>
+            </div>
+          </div>
+
+          <!-- MIDDLE ROW: AMP TONE & RHYTHM CONTROLS -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-1 text-xs font-mono">
+            
+            <!-- 1. Distortion / Drive Level -->
+            <div class="bg-amp-950 p-2.5 rounded-xl border border-amp-800 flex flex-col justify-between">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-gray-400 uppercase text-[10px]"><i class="fa-solid fa-fire text-amber-500 mr-1"></i>Amp Drive</span>
+                <span id="label-drive-preset" class="text-amber-300 font-bold text-[11px]">Plexi Crunch</span>
+              </div>
+              <div class="grid grid-cols-4 gap-1">
+                <button class="btn-drive-preset px-1.5 py-1 rounded bg-amp-850 hover:bg-amp-800 text-gray-300 border border-amp-700 text-[10px]" data-drive="clean" title="Clean Warm Tweed">Clean</button>
+                <button class="btn-drive-preset px-1.5 py-1 rounded bg-amp-850 hover:bg-amp-800 text-gray-300 border border-amp-700 text-[10px]" data-drive="breakup" title="Vintage Breakup">Crunch</button>
+                <button class="btn-drive-preset px-1.5 py-1 rounded bg-amber-500 text-black font-bold border border-amber-400 text-[10px]" data-drive="plexi" title="Classic Marshall Plexi">Plexi</button>
+                <button class="btn-drive-preset px-1.5 py-1 rounded bg-amp-850 hover:bg-amp-800 text-gray-300 border border-amp-700 text-[10px]" data-drive="metal" title="High Gain Lead">Lead</button>
+              </div>
+            </div>
+
+            <!-- 2. Guitar Strum Style -->
+            <div class="bg-amp-950 p-2.5 rounded-xl border border-amp-800 flex flex-col justify-between">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-gray-400 uppercase text-[10px]"><i class="fa-solid fa-hand text-amber-500 mr-1"></i>Guitar Rhythm</span>
+                <span class="text-amber-300 font-bold text-[10px]" id="label-active-strum">Rock Strum</span>
+              </div>
+              <select id="select-strum-style" class="bg-amp-900 text-amber-300 font-mono text-xs rounded border border-amp-700 px-2 py-1 focus:outline-none focus:border-amber-400 cursor-pointer w-full">
+                <option value="standard" selected>Rock Strum (Syncopated)</option>
+                <option value="chug">Palm-Muted Chug (8ths)</option>
+                <option value="halftime">Half-Time Stomp (Sustained)</option>
+                <option value="shuffle">Blues-Rock Swing Shuffle</option>
+                <option value="arpeggio">Arpeggio Swept Riff</option>
+              </select>
+            </div>
+
+            <!-- 3. Drum Groove Pattern -->
+            <div class="bg-amp-950 p-2.5 rounded-xl border border-amp-800 flex flex-col justify-between">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-gray-400 uppercase text-[10px]"><i class="fa-solid fa-drum text-amber-500 mr-1"></i>Drum Groove</span>
+                <span class="text-emerald-400 font-bold text-[10px]" id="label-active-drum">Standard 4/4</span>
+              </div>
+              <select id="select-drum-groove" class="bg-amp-900 text-amber-300 font-mono text-xs rounded border border-amp-700 px-2 py-1 focus:outline-none focus:border-amber-400 cursor-pointer w-full">
+                <option value="standard" selected>Standard Rock Beat</option>
+                <option value="halftime">Arena Half-Time Beat</option>
+                <option value="punk">Driving Punk Double-Time</option>
+                <option value="shuffle">Blues-Rock Swing Shuffle</option>
+                <option value="minimal">Minimal Kick Pulse (Ear Focus)</option>
+                <option value="off">Drums Muted (Silent)</option>
+              </select>
+            </div>
+
+            <!-- 4. Voicing & Inversion Mode -->
+            <div class="bg-amp-950 p-2.5 rounded-xl border border-amp-800 flex flex-col justify-between">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-gray-400 uppercase text-[10px]"><i class="fa-solid fa-sliders text-amber-500 mr-1"></i>Inversions</span>
+                <span class="text-amber-300 text-[10px] font-bold">Bass Engine</span>
+              </div>
+              <div class="flex items-center gap-1">
+                <select id="select-inversion-mode" class="bg-amp-900 text-amber-300 font-mono text-xs rounded border border-amp-700 px-2 py-1 focus:outline-none focus:border-amber-400 cursor-pointer w-full">
+                  <option value="none">Root Position Only</option>
+                  <option value="random" selected>Random Inversions</option>
+                  <option value="always">Always Invert</option>
+                </select>
+                <button id="btn-voicing-toggle" class="px-2 py-1 bg-amp-850 hover:bg-amp-800 border border-amp-700 text-amber-400 rounded font-bold text-[11px] shrink-0" title="Toggle Power vs Triad Voicing">
+                  5th
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Transport Deck -->
+          <div class="pt-2 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+            <div class="flex flex-wrap items-center gap-2.5">
+              <button id="btn-play-progression" class="flex-1 sm:flex-none px-6 py-3.5 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-400 hover:to-yellow-500 text-black font-display font-bold uppercase tracking-wider rounded-xl shadow-lg transition active:scale-95 flex items-center justify-center gap-2 text-base">
+                <i class="fa-solid fa-play"></i>
+                <span id="btn-play-text">Play Progression</span>
+              </button>
+
+              <button id="btn-play-tonic" class="px-4 py-3.5 bg-amp-800 hover:bg-amp-700 text-vintage-gold border border-amp-700 rounded-xl font-display font-medium uppercase tracking-wider text-xs md:text-sm transition active:scale-95 flex items-center gap-2 shadow-inset-panel">
+                <i class="fa-solid fa-music text-amber-400"></i>
+                Hear Tonic (I Root)
+              </button>
+
+              <button id="btn-new-progression" class="px-4 py-3.5 bg-amp-800 hover:bg-amp-700 text-gray-200 border border-amp-700 rounded-xl font-display font-medium uppercase tracking-wider text-xs md:text-sm transition active:scale-95 flex items-center gap-1.5">
+                <i class="fa-solid fa-forward-step"></i>
+                Next Riff
+              </button>
+            </div>
+
+            <!-- Rhythm Status Display -->
+            <div class="flex items-center gap-3 bg-amp-950 px-4 py-2 rounded-xl border border-amp-800">
+              <div class="flex flex-col">
+                <span class="text-[10px] uppercase font-mono text-gray-400">Rhythm Status</span>
+                <span class="font-mono font-bold text-amber-400 text-lg tracking-wide flex items-center gap-2">
+                  <span id="playback-status-text">STANDBY</span>
+                  <span id="pulse-meter" class="hidden w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+                </span>
+              </div>
+              <div class="flex items-center gap-1.5 pl-3 border-l border-amp-800">
+                <div id="beat-dot-1" class="w-2.5 h-2.5 rounded-full bg-amp-800 transition-colors"></div>
+                <div id="beat-dot-2" class="w-2.5 h-2.5 rounded-full bg-amp-800 transition-colors"></div>
+                <div id="beat-dot-3" class="w-2.5 h-2.5 rounded-full bg-amp-800 transition-colors"></div>
+                <div id="beat-dot-4" class="w-2.5 h-2.5 rounded-full bg-amp-800 transition-colors"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mode Badge & Rules Strip -->
+        <div class="bg-amp-950/90 px-6 py-2.5 border-t border-amp-800/80 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 font-bold uppercase tracking-wider text-[11px]">
+              ⚡ Inversion Neutral
+            </span>
+            <span class="text-gray-400 text-[11px]">
+              Hear inverted bass notes (slash chords like <span class="text-amber-300">V/3, I/5, or inverted 4ths</span>)? Just identify the Roman numeral harmonic degree—inversion type does not penalize your score!
+            </span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <label for="toggle-blind-mode" class="text-gray-400 cursor-pointer select-none">Blind Ear Mode:</label>
+            <input id="toggle-blind-mode" type="checkbox" checked class="accent-amber-500 h-4 w-4 cursor-pointer">
+            <span id="blind-mode-status" class="text-emerald-400 font-bold">STRICT (Hidden)</span>
+          </div>
+        </div>
+
+        <!-- Progression Slots Container -->
+        <div class="grill-cloth p-6 border-t-2 border-amp-800">
+          <div class="max-w-3xl mx-auto">
+            <div class="flex items-center justify-between mb-2">
+              <label class="text-xs font-mono text-vintage-tweed tracking-wider uppercase">Your Roman Numeral Guess Sequence:</label>
+              <button id="btn-clear-guess" class="text-xs font-mono text-gray-400 hover:text-rose-400 underline">Clear Slots</button>
+            </div>
+
+            <div id="slots-container" class="grid grid-cols-4 gap-3 md:gap-4 my-3">
+              <!-- Dynamically populated chord slots -->
+            </div>
+
+            <p class="text-xs text-gray-400 text-center mt-2">
+              Tap a slot to select it, then tap a chord button below to fill it.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHORD PALETTE: Roman Numeral Selector Buttons -->
+      <div class="bg-amp-900/90 rounded-2xl border border-amp-800 p-5 shadow-xl">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-vintage-gold shadow-led"></span>
+            <h2 class="text-base font-display font-bold uppercase tracking-wider text-gray-200">
+              Chord Palette
+            </h2>
+          </div>
+          <span class="text-xs text-gray-400 font-mono">Tap chord to assign slot &amp; audition</span>
+        </div>
+
+        <!-- Primary Rock Chords -->
+        <div class="space-y-3">
+          <div>
+            <span class="text-[11px] font-mono text-amber-400/80 uppercase tracking-wider">Primary Rock Degrees:</span>
+            <div class="grid grid-cols-3 sm:grid-cols-6 gap-2.5 mt-1.5">
+              <button class="chord-btn group relative p-3 rounded-xl bg-amp-850 hover:bg-amp-800 border-2 border-amp-700 hover:border-amber-500/80 active:scale-95 transition-all text-center" data-rn="I">
+                <span class="text-lg font-bold font-mono text-vintage-gold group-hover:text-amber-400">I</span>
+                <span class="block text-[10px] text-gray-400 font-mono">Tonic Root</span>
+              </button>
+              <button class="chord-btn group relative p-3 rounded-xl bg-amp-850 hover:bg-amp-800 border-2 border-amp-700 hover:border-amber-500/80 active:scale-95 transition-all text-center" data-rn="♭VII">
+                <span class="text-lg font-bold font-mono text-vintage-gold group-hover:text-amber-400">♭VII</span>
+                <span class="block text-[10px] text-gray-400 font-mono">Subtonic</span>
+              </button>
+              <button class="chord-btn group relative p-3 rounded-xl bg-amp-850 hover:bg-amp-800 border-2 border-amp-700 hover:border-amber-500/80 active:scale-95 transition-all text-center" data-rn="IV">
+                <span class="text-lg font-bold font-mono text-vintage-gold group-hover:text-amber-400">IV</span>
+                <span class="block text-[10px] text-gray-400 font-mono">Subdominant</span>
+              </button>
+              <button class="chord-btn group relative p-3 rounded-xl bg-amp-850 hover:bg-amp-800 border-2 border-amp-700 hover:border-amber-500/80 active:scale-95 transition-all text-center" data-rn="V">
+                <span class="text-lg font-bold font-mono text-vintage-gold group-hover:text-amber-400">V</span>
+                <span class="block text-[10px] text-gray-400 font-mono">Dominant</span>
+              </button>
+              <button class="chord-btn group relative p-3 rounded-xl bg-amp-850 hover:bg-amp-800 border-2 border-amp-700 hover:border-amber-500/80 active:scale-95 transition-all text-center" data-rn="♭VI">
+                <span class="text-lg font-bold font-mono text-vintage-gold group-hover:text-amber-400">♭VI</span>
+                <span class="block text-[10px] text-gray-400 font-mono">Minor 6th</span>
+              </button>
+              <button class="chord-btn group relative p-3 rounded-xl bg-amp-850 hover:bg-amp-800 border-2 border-amp-700 hover:border-amber-500/80 active:scale-95 transition-all text-center" data-rn="♭III">
+                <span class="text-lg font-bold font-mono text-vintage-gold group-hover:text-amber-400">♭III</span>
+                <span class="block text-[10px] text-gray-400 font-mono">Minor 3rd</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Secondary / Minor Degrees -->
+          <div>
+            <span class="text-[11px] font-mono text-gray-400 uppercase tracking-wider">Secondary &amp; Minor Degrees:</span>
+            <div class="grid grid-cols-3 sm:grid-cols-6 gap-2.5 mt-1.5">
+              <button class="chord-btn group relative p-2.5 rounded-xl bg-amp-950/80 hover:bg-amp-800 border border-amp-700 hover:border-amber-500/60 active:scale-95 transition-all text-center" data-rn="i">
+                <span class="text-base font-bold font-mono text-gray-200 group-hover:text-amber-400">i</span>
+                <span class="block text-[9px] text-gray-500 font-mono">Minor Root</span>
+              </button>
+              <button class="chord-btn group relative p-2.5 rounded-xl bg-amp-950/80 hover:bg-amp-800 border border-amp-700 hover:border-amber-500/60 active:scale-95 transition-all text-center" data-rn="vi">
+                <span class="text-base font-bold font-mono text-gray-200 group-hover:text-amber-400">vi</span>
+                <span class="block text-[9px] text-gray-500 font-mono">Rel Minor</span>
+              </button>
+              <button class="chord-btn group relative p-2.5 rounded-xl bg-amp-950/80 hover:bg-amp-800 border border-amp-700 hover:border-amber-500/60 active:scale-95 transition-all text-center" data-rn="ii">
+                <span class="text-base font-bold font-mono text-gray-200 group-hover:text-amber-400">ii</span>
+                <span class="block text-[9px] text-gray-500 font-mono">Supertonic</span>
+              </button>
+              <button class="chord-btn group relative p-2.5 rounded-xl bg-amp-950/80 hover:bg-amp-800 border border-amp-700 hover:border-amber-500/60 active:scale-95 transition-all text-center" data-rn="v">
+                <span class="text-base font-bold font-mono text-gray-200 group-hover:text-amber-400">v</span>
+                <span class="block text-[9px] text-gray-500 font-mono">Minor 5th</span>
+              </button>
+              <button class="chord-btn group relative p-2.5 rounded-xl bg-amp-950/80 hover:bg-amp-800 border border-amp-700 hover:border-amber-500/60 active:scale-95 transition-all text-center" data-rn="♭II">
+                <span class="text-base font-bold font-mono text-gray-200 group-hover:text-amber-400">♭II</span>
+                <span class="block text-[9px] text-gray-500 font-mono">Phrygian</span>
+              </button>
+              <button class="chord-btn group relative p-2.5 rounded-xl bg-amp-950/80 hover:bg-amp-800 border border-amp-700 hover:border-amber-500/60 active:scale-95 transition-all text-center" data-rn="♭V">
+                <span class="text-base font-bold font-mono text-gray-200 group-hover:text-amber-400">♭V</span>
+                <span class="block text-[9px] text-gray-500 font-mono">Tritone</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submission Buttons -->
+        <div class="mt-6 flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-amp-800">
+          <div class="flex items-center gap-2">
+            <button id="btn-check-answer" class="px-6 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-black font-display font-bold uppercase tracking-wider rounded-xl transition shadow active:scale-95 flex items-center gap-2">
+              <i class="fa-solid fa-check"></i>
+              Check Answer
+            </button>
+            <button id="btn-reveal-solution" class="px-4 py-2.5 bg-amp-800 hover:bg-amp-700 text-amber-300 font-display font-medium uppercase tracking-wider rounded-xl border border-amp-700 transition active:scale-95 flex items-center gap-1.5">
+              <i class="fa-solid fa-lightbulb"></i>
+              Give Up / Reveal
+            </button>
+          </div>
+
+          <div id="validation-message" class="text-sm font-medium font-mono hidden"></div>
+        </div>
+      </div>
+
+      <!-- Theory Card -->
+      <div id="theory-card" class="hidden bg-amp-900 rounded-2xl border border-vintage-gold/40 p-6 shadow-2xl relative overflow-hidden transition-all duration-300">
+        <div class="flex items-start gap-4">
+          <div class="p-3 bg-amber-500/10 rounded-xl border border-amber-500/30 text-amber-400">
+            <i class="fa-solid fa-guitar text-xl"></i>
+          </div>
+          <div class="flex-1 space-y-2">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <h3 id="theory-title" class="text-lg font-bold font-display uppercase tracking-wider text-amber-300">
+                Mixolydian Rock Anthem
+              </h3>
+              <span id="theory-actual-chords" class="text-xs font-mono px-2.5 py-1 rounded bg-amp-950 border border-amp-800 text-vintage-gold font-bold">
+                A - G - D - A
+              </span>
+            </div>
+            <p id="theory-explanation" class="text-sm text-gray-300 leading-relaxed">
+              The ♭VII chord is the defining sonic fingerprint of rock. Borrowed from the Mixolydian mode, it bypasses classical V-I tension for raw momentum.
+            </p>
+            <div class="pt-2 flex flex-wrap items-center gap-2">
+              <span class="text-xs font-mono text-gray-400">Famous Tracks:</span>
+              <span id="theory-examples" class="text-xs font-mono text-amber-200/90 bg-amp-950 px-2 py-0.5 rounded border border-amp-800">
+                "Sweet Home Alabama", "You Shook Me All Night Long"
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 2: CHORD LAB & SANDBOX MODE -->
+    <div id="view-sandbox" class="hidden space-y-6">
+      <div class="bg-amp-900 rounded-2xl border border-amp-800 p-6 shadow-xl">
+        <div class="flex flex-wrap items-center justify-between gap-4 border-b border-amp-800 pb-4">
+          <div>
+            <h2 class="text-xl font-bold font-display uppercase tracking-wider text-amber-400">Rock Chord Laboratory</h2>
+            <p class="text-xs text-gray-400">Audition chords &amp; inversions against a tonal center and build your own custom chord chains to hear how degrees connect.</p>
+          </div>
+
+          <div class="flex items-center gap-3 flex-wrap">
+            <div class="flex items-center gap-2 bg-amp-950 p-1.5 rounded-xl border border-amp-800">
+              <span class="text-xs font-mono text-gray-400 px-2">Key:</span>
+              <div id="sandbox-key-selector" class="flex gap-1">
+                <button class="sb-key-btn px-2.5 py-1 rounded text-xs font-mono font-bold bg-amber-500 text-black" data-key="A">A</button>
+                <button class="sb-key-btn px-2.5 py-1 rounded text-xs font-mono font-bold bg-amp-800 text-gray-300 hover:text-white" data-key="E">E</button>
+                <button class="sb-key-btn px-2.5 py-1 rounded text-xs font-mono font-bold bg-amp-800 text-gray-300 hover:text-white" data-key="D">D</button>
+                <button class="sb-key-btn px-2.5 py-1 rounded text-xs font-mono font-bold bg-amp-800 text-gray-300 hover:text-white" data-key="G">G</button>
+                <button class="sb-key-btn px-2.5 py-1 rounded text-xs font-mono font-bold bg-amp-800 text-gray-300 hover:text-white" data-key="C">C</button>
+              </div>
+            </div>
+
+            <!-- Inversion selector for Chord Lab additions -->
+            <div class="flex items-center gap-1.5 bg-amp-950 px-3 py-1.5 rounded-xl border border-amp-800 text-xs font-mono">
+              <span class="text-gray-400">Audition Inversion:</span>
+              <select id="sb-inversion-select" class="bg-amp-900 text-amber-300 font-mono text-xs rounded border border-amp-700 px-2 py-1 focus:outline-none focus:border-amber-400 cursor-pointer">
+                <option value="0">Root Position (1)</option>
+                <option value="1">1st Inversion (3rd / Inverted 4th)</option>
+                <option value="2">2nd Inversion (5th in Bass)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chord Pad Grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
+          <div class="sb-pad group cursor-pointer p-4 bg-amp-850 hover:bg-amp-800 rounded-xl border-2 border-amp-700 hover:border-amber-500 transition active:scale-95" data-rn="I">
+            <div class="flex justify-between items-center">
+              <span class="text-2xl font-mono font-bold text-vintage-gold">I</span>
+              <span class="sb-chord-name text-xs font-mono font-bold text-gray-400 bg-amp-950 px-2 py-0.5 rounded">A5</span>
+            </div>
+            <p class="text-xs text-gray-400 mt-2">The home base. Full resolution and grounded power.</p>
+          </div>
+
+          <div class="sb-pad group cursor-pointer p-4 bg-amp-850 hover:bg-amp-800 rounded-xl border-2 border-amp-700 hover:border-amber-500 transition active:scale-95" data-rn="♭VII">
+            <div class="flex justify-between items-center">
+              <span class="text-2xl font-mono font-bold text-vintage-gold">♭VII</span>
+              <span class="sb-chord-name text-xs font-mono font-bold text-gray-400 bg-amp-950 px-2 py-0.5 rounded">G5</span>
+            </div>
+            <p class="text-xs text-gray-400 mt-2">Mixolydian step-down. Heavy, swaggering rock cadence.</p>
+          </div>
+
+          <div class="sb-pad group cursor-pointer p-4 bg-amp-850 hover:bg-amp-800 rounded-xl border-2 border-amp-700 hover:border-amber-500 transition active:scale-95" data-rn="IV">
+            <div class="flex justify-between items-center">
+              <span class="text-2xl font-mono font-bold text-vintage-gold">IV</span>
+              <span class="sb-chord-name text-xs font-mono font-bold text-gray-400 bg-amp-950 px-2 py-0.5 rounded">D5</span>
+            </div>
+            <p class="text-xs text-gray-400 mt-2">Subdominant lift. Bright, expansive, resolving cleanly to the I.</p>
+          </div>
+
+          <div class="sb-pad group cursor-pointer p-4 bg-amp-850 hover:bg-amp-800 rounded-xl border-2 border-amp-700 hover:border-amber-500 transition active:scale-95" data-rn="V">
+            <div class="flex justify-between items-center">
+              <span class="text-2xl font-mono font-bold text-vintage-gold">V</span>
+              <span class="sb-chord-name text-xs font-mono font-bold text-gray-400 bg-amp-950 px-2 py-0.5 rounded">E5</span>
+            </div>
+            <p class="text-xs text-gray-400 mt-2">Dominant anchor. Strongest pull back toward tonic.</p>
+          </div>
+
+          <div class="sb-pad group cursor-pointer p-4 bg-amp-850 hover:bg-amp-800 rounded-xl border-2 border-amp-700 hover:border-amber-500 transition active:scale-95" data-rn="♭VI">
+            <div class="flex justify-between items-center">
+              <span class="text-2xl font-mono font-bold text-vintage-gold">♭VI</span>
+              <span class="sb-chord-name text-xs font-mono font-bold text-gray-400 bg-amp-950 px-2 py-0.5 rounded">F5</span>
+            </div>
+            <p class="text-xs text-gray-400 mt-2">Aeolian punch. Dark, heroic, cinematic tension.</p>
+          </div>
+
+          <div class="sb-pad group cursor-pointer p-4 bg-amp-850 hover:bg-amp-800 rounded-xl border-2 border-amp-700 hover:border-amber-500 transition active:scale-95" data-rn="♭III">
+            <div class="flex justify-between items-center">
+              <span class="text-2xl font-mono font-bold text-vintage-gold">♭III</span>
+              <span class="sb-chord-name text-xs font-mono font-bold text-gray-400 bg-amp-950 px-2 py-0.5 rounded">C5</span>
+            </div>
+            <p class="text-xs text-gray-400 mt-2">Pentatonic blues stab. Sudden gritty lift.</p>
+          </div>
+
+          <div class="sb-pad group cursor-pointer p-4 bg-amp-850 hover:bg-amp-800 rounded-xl border-2 border-amp-700 hover:border-amber-500 transition active:scale-95" data-rn="vi">
+            <div class="flex justify-between items-center">
+              <span class="text-2xl font-mono font-bold text-gray-200">vi</span>
+              <span class="sb-chord-name text-xs font-mono font-bold text-gray-400 bg-amp-950 px-2 py-0.5 rounded">F#m</span>
+            </div>
+            <p class="text-xs text-gray-400 mt-2">Relative minor sadness. Melodic rock &amp; ballad turn.</p>
+          </div>
+
+          <div class="sb-pad group cursor-pointer p-4 bg-amp-850 hover:bg-amp-800 rounded-xl border-2 border-amp-700 hover:border-amber-500 transition active:scale-95" data-rn="♭II">
+            <div class="flex justify-between items-center">
+              <span class="text-2xl font-mono font-bold text-gray-200">♭II</span>
+              <span class="sb-chord-name text-xs font-mono font-bold text-gray-400 bg-amp-950 px-2 py-0.5 rounded">Bb5</span>
+            </div>
+            <p class="text-xs text-gray-400 mt-2">Phrygian slam. Extreme heavy tension.</p>
+          </div>
+        </div>
+
+        <!-- Custom Chord Chain Builder Deck with Dedicated Playback -->
+        <div class="mt-8 pt-6 border-t border-amp-800">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+            <div>
+              <span class="text-xs font-mono uppercase text-amber-400 font-bold tracking-wider">Custom Progression Chain:</span>
+              <p class="text-[11px] text-gray-400">Click any chord card above to append it. Tap Play Chain to hear your sequence.</p>
+            </div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <label class="flex items-center gap-1.5 text-xs font-mono text-gray-400 bg-amp-950 px-3 py-1.5 rounded-lg border border-amp-800 cursor-pointer">
+                <input id="sb-toggle-loop" type="checkbox" checked class="accent-amber-500 cursor-pointer">
+                <span>Continuous Loop</span>
+              </label>
+
+              <!-- Prominent Play / Stop Chain Button -->
+              <button id="btn-sb-play" class="px-5 py-2 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-400 hover:to-yellow-500 text-black font-display font-bold uppercase rounded-xl text-xs flex items-center gap-2 shadow-lg transition active:scale-95">
+                <i id="sb-play-icon" class="fa-solid fa-play"></i>
+                <span id="sb-play-text">Play Chain</span>
+              </button>
+
+              <button id="btn-sb-clear" class="px-3.5 py-2 bg-amp-950 hover:bg-amp-800 border border-amp-800 text-gray-400 hover:text-rose-400 text-xs font-mono rounded-xl transition">
+                Clear
+              </button>
+            </div>
+          </div>
+
+          <!-- Chain Chips Container with Active Highlighting -->
+          <div id="sb-sequence-display" class="min-h-[64px] p-3 rounded-xl bg-amp-950 border border-amp-800 flex items-center gap-2.5 overflow-x-auto text-sm font-mono shadow-inset-panel">
+            <span class="text-gray-500 text-xs">No chords added yet. Tap any chord card above to begin building your sequence!</span>
+          </div>
+
+          <div id="sb-chain-feedback" class="mt-2 text-xs font-mono hidden"></div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ANALYTICS & EAR PROGRESS MODAL DIALOG (100% Offline & Backward Compatible) -->
+  <div id="modal-analytics" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
+    <div class="max-w-3xl w-full bg-amp-900 border-2 border-amp-700 rounded-2xl p-5 sm:p-7 shadow-2xl space-y-5 my-auto max-h-[90vh] overflow-y-auto">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between pb-3 border-b border-amp-800">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
+            <i class="fa-solid fa-chart-simple"></i>
+          </div>
+          <div>
+            <h2 class="text-lg sm:text-xl font-bold font-display uppercase tracking-wider text-amber-400">Ear Training Analytics</h2>
+            <p class="text-xs text-gray-400 font-mono">100% Client-Side • Local &amp; Mobile Persistent</p>
+          </div>
+        </div>
+        <button id="btn-close-analytics" class="w-8 h-8 rounded-lg bg-amp-800 hover:bg-amp-700 text-gray-300 hover:text-white flex items-center justify-center text-sm transition">
+          ✕
+        </button>
+      </div>
+
+      <!-- Key Stats Overview Cards -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div class="bg-amp-950 p-3 rounded-xl border border-amp-800 text-center">
+          <span class="text-[10px] uppercase font-mono text-gray-400">Accuracy Rate</span>
+          <div id="analytics-stat-accuracy" class="text-xl sm:text-2xl font-bold font-mono text-amber-400 mt-0.5">0%</div>
+          <span id="analytics-stat-ratio" class="text-[10px] font-mono text-gray-500">0/0 Correct</span>
+        </div>
+        <div class="bg-amp-950 p-3 rounded-xl border border-amp-800 text-center">
+          <span class="text-[10px] uppercase font-mono text-gray-400">Total Exercises</span>
+          <div id="analytics-stat-total" class="text-xl sm:text-2xl font-bold font-mono text-gray-200 mt-0.5">0</div>
+          <span class="text-[10px] font-mono text-gray-500">Completed</span>
+        </div>
+        <div class="bg-amp-950 p-3 rounded-xl border border-amp-800 text-center">
+          <span class="text-[10px] uppercase font-mono text-gray-400">Current Streak</span>
+          <div id="analytics-stat-streak" class="text-xl sm:text-2xl font-bold font-mono text-emerald-400 mt-0.5">0</div>
+          <span class="text-[10px] font-mono text-emerald-500/80">Active Run 🔥</span>
+        </div>
+        <div class="bg-amp-950 p-3 rounded-xl border border-amp-800 text-center">
+          <span class="text-[10px] uppercase font-mono text-gray-400">All-Time High</span>
+          <div id="analytics-stat-best-streak" class="text-xl sm:text-2xl font-bold font-mono text-vintage-gold mt-0.5">0</div>
+          <span class="text-[10px] font-mono text-vintage-gold/80">Record Streak 🏆</span>
+        </div>
+      </div>
+
+      <!-- Degree Mastery Breakdown -->
+      <div class="bg-amp-950 p-4 rounded-xl border border-amp-800 space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-mono uppercase text-amber-400 font-bold tracking-wider">
+            <i class="fa-solid fa-signal text-amber-400 mr-1.5"></i>Accuracy by Roman Numeral Degree:
+          </span>
+          <span class="text-[10px] font-mono text-gray-400">Target $\ge 80\%$ mastery</span>
+        </div>
+        <div id="analytics-degrees-container" class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2.5 text-xs font-mono pt-1">
+          <!-- Populated dynamically with progress bars -->
+        </div>
+      </div>
+
+      <!-- Ear Blindspots & Top Confusions -->
+      <div class="bg-amp-950 p-4 rounded-xl border border-amp-800 space-y-2">
+        <span class="text-xs font-mono uppercase text-amber-400 font-bold tracking-wider">
+          <i class="fa-solid fa-triangle-exclamation text-amber-500 mr-1.5"></i>Ear Blindspots &amp; Common Confusions:
+        </span>
+        <div id="analytics-confusion-container" class="text-xs font-mono text-gray-300">
+          <span class="text-gray-500 italic">No recurring error patterns recorded yet. Complete more exercises to map your ear blindspots!</span>
+        </div>
+      </div>
+
+      <!-- Data Management: Export / Import / Reset -->
+      <div class="pt-2 border-t border-amp-800 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+        <div class="flex items-center gap-2 flex-wrap">
+          <button id="btn-export-stats" class="px-3 py-1.5 bg-amp-850 hover:bg-amp-800 border border-amp-700 text-gray-200 rounded-lg transition flex items-center gap-1.5">
+            <i class="fa-solid fa-download text-amber-400"></i> Export JSON
+          </button>
+          <label class="px-3 py-1.5 bg-amp-850 hover:bg-amp-800 border border-amp-700 text-gray-200 rounded-lg transition cursor-pointer flex items-center gap-1.5">
+            <i class="fa-solid fa-upload text-amber-400"></i> Import JSON
+            <input type="file" id="input-import-stats" accept=".json" class="hidden">
+          </label>
+        </div>
+
+        <button id="btn-reset-stats" class="px-3 py-1.5 bg-rose-950/60 hover:bg-rose-900 border border-rose-800 text-rose-300 rounded-lg transition flex items-center gap-1.5">
+          <i class="fa-solid fa-trash-can"></i> Reset All Stats
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="border-t border-amp-800/80 bg-amp-950 py-4 text-center text-xs text-gray-500 font-mono">
+    RiffMaster Audio Engine • Zero-Dependency Web Audio DSP with Dual-Tier Auto-Resume
+  </footer>
+
+  <script>
+    /* =========================================================================
+       1. BACKWARD-COMPATIBLE LOCAL STORAGE PERSISTENCE & ANALYTICS ENGINE
+       ========================================================================= */
+
+    const STORE_KEY = 'riffmaster_store_v1';
+    const CURRENT_SCHEMA_VERSION = 1;
+
+    const ALL_DEGREES = ['I', '♭VII', 'IV', 'V', '♭VI', '♭III', 'vi', 'ii', 'i', 'v', '♭II', '♭V'];
+
+    const DEFAULT_STORE = {
+      version: CURRENT_SCHEMA_VERSION,
+      createdAt: Date.now(),
+      lastUpdated: Date.now(),
+      stats: {
+        totalAttempts: 0,
+        correctAttempts: 0,
+        currentStreak: 0,
+        bestStreak: 0,
+        byDegree: {
+          'I': { seen: 0, correct: 0 },
+          '♭VII': { seen: 0, correct: 0 },
+          'IV': { seen: 0, correct: 0 },
+          'V': { seen: 0, correct: 0 },
+          '♭VI': { seen: 0, correct: 0 },
+          '♭III': { seen: 0, correct: 0 },
+          'vi': { seen: 0, correct: 0 },
+          'ii': { seen: 0, correct: 0 },
+          'i': { seen: 0, correct: 0 },
+          'v': { seen: 0, correct: 0 },
+          '♭II': { seen: 0, correct: 0 },
+          '♭V': { seen: 0, correct: 0 }
+        },
+        confusionMatrix: {}, // { targetDegree: { guessedDegree: count } }
+        history: []
+      },
+      settings: {
+        bpm: 105,
+        voicing: 'power',
+        strumStyle: 'standard',
+        drumGroove: 'standard',
+        drivePreset: 'plexi',
+        inversionMode: 'random',
+        strictBlindMode: true
+      }
+    };
+
+    function migrateStore(oldData) {
+      // Non-destructive schema migration pipeline for future updates
+      const updated = JSON.parse(JSON.stringify(DEFAULT_STORE));
+      if (!oldData || typeof oldData !== 'object') return updated;
+
+      if (oldData.stats) {
+        updated.stats.totalAttempts = oldData.stats.totalAttempts || 0;
+        updated.stats.correctAttempts = oldData.stats.correctAttempts || 0;
+        updated.stats.currentStreak = oldData.stats.currentStreak || 0;
+        updated.stats.bestStreak = oldData.stats.bestStreak || 0;
+        if (oldData.stats.byDegree) {
+          ALL_DEGREES.forEach(deg => {
+            if (oldData.stats.byDegree[deg]) {
+              updated.stats.byDegree[deg] = {
+                seen: oldData.stats.byDegree[deg].seen || 0,
+                correct: oldData.stats.byDegree[deg].correct || 0
+              };
+            }
+          });
+        }
+        if (oldData.stats.confusionMatrix) {
+          updated.stats.confusionMatrix = oldData.stats.confusionMatrix;
+        }
+        if (Array.isArray(oldData.stats.history)) {
+          updated.stats.history = oldData.stats.history.slice(-50);
+        }
+      }
+
+      if (oldData.settings) {
+        updated.settings = Object.assign({}, updated.settings, oldData.settings);
+      }
+
+      updated.version = CURRENT_SCHEMA_VERSION;
+      return updated;
+    }
+
+    function loadStore() {
+      try {
+        const raw = localStorage.getItem(STORE_KEY);
+        if (!raw) return JSON.parse(JSON.stringify(DEFAULT_STORE));
+        let parsed = JSON.parse(raw);
+        if (!parsed.version || parsed.version !== CURRENT_SCHEMA_VERSION) {
+          parsed = migrateStore(parsed);
+          saveStore(parsed);
+        }
+        // Safety: Fill any newly added degree fields
+        parsed.stats = parsed.stats || {};
+        parsed.stats.byDegree = parsed.stats.byDegree || {};
+        ALL_DEGREES.forEach(d => {
+          if (!parsed.stats.byDegree[d]) parsed.stats.byDegree[d] = { seen: 0, correct: 0 };
+        });
+        parsed.stats.confusionMatrix = parsed.stats.confusionMatrix || {};
+        parsed.settings = Object.assign({}, DEFAULT_STORE.settings, parsed.settings || {});
+        return parsed;
+      } catch (e) {
+        console.warn('[LocalStorage] Parse error, initializing defaults:', e);
+        return JSON.parse(JSON.stringify(DEFAULT_STORE));
+      }
+    }
+
+    function saveStore(store) {
+      try {
+        store.lastUpdated = Date.now();
+        localStorage.setItem(STORE_KEY, JSON.stringify(store));
+      } catch (e) {
+        console.error('[LocalStorage] Save failed:', e);
+      }
+    }
+
+    let appStore = loadStore();
+
+    /* =========================================================================
+       2. ROBUST WEB AUDIO ENGINE WITH DYNAMIC DISTORTION & REAL-TIME DSP
+       ========================================================================= */
+
+    let audioCtx = null;
+    let masterGain = null;
+    let guitarBus = null;
+    let guitarDistortionNode = null;
+    let guitarCabFilter = null;
+    let bassBus = null;
+    let drumBus = null;
+    let audioUnlockAttempted = false;
+
+    // Drive curve presets
+    const DRIVE_PROFILES = {
+      clean: { k: 3, preGain: 0.95, cabCutoff: 4800, name: 'Warm Tweed' },
+      breakup: { k: 12, preGain: 0.8, cabCutoff: 4500, name: 'Edge of Breakup' },
+      plexi: { k: 26, preGain: 0.65, cabCutoff: 4200, name: 'Plexi Crunch' },
+      metal: { k: 58, preGain: 0.52, cabCutoff: 3800, name: 'High-Gain Lead' }
+    };
+
+    function logAudioStatus(msg, isError = false) {
+      const diagMsg = document.getElementById('diag-msg');
+      if (diagMsg) {
+        diagMsg.textContent = msg;
+        diagMsg.className = isError ? 'text-rose-400 font-bold' : 'text-amber-300';
+      }
+      if (isError) {
+        console.error('[AudioEngine Error]:', msg);
+      } else {
+        console.log('[AudioEngine]:', msg);
+      }
+    }
+
+    function updateEngineStatusUI() {
+      const stateEl = document.getElementById('audio-engine-state');
+      const jewel = document.getElementById('power-jewel');
+      const overlay = document.getElementById('audio-unlock-overlay');
+      const diagState = document.getElementById('diag-state');
+      const diagRate = document.getElementById('diag-samplerate');
+
+      if (!audioCtx) {
+        if (stateEl) {
+          stateEl.textContent = 'OFFLINE';
+          stateEl.className = 'text-red-400 font-bold uppercase';
+        }
+        if (jewel) jewel.className = 'w-4 h-4 rounded-full bg-red-600 shadow-led-red border border-red-400';
+        if (diagState) {
+          diagState.textContent = 'UNINITIALIZED';
+          diagState.className = 'px-2 py-0.5 rounded bg-amp-950 border border-amp-800 text-rose-400 font-bold';
+        }
+        return;
+      }
+
+      const state = audioCtx.state;
+      if (diagState) {
+        diagState.textContent = state.toUpperCase();
+        diagState.className = state === 'running' 
+          ? 'px-2 py-0.5 rounded bg-amp-950 border border-amp-800 text-emerald-400 font-bold' 
+          : 'px-2 py-0.5 rounded bg-amp-950 border border-amp-800 text-amber-400 font-bold';
+      }
+      if (diagRate) {
+        diagRate.textContent = `${audioCtx.sampleRate || 44100} Hz`;
+      }
+
+      if (state === 'running') {
+        if (stateEl) {
+          stateEl.textContent = 'ONLINE';
+          stateEl.className = 'text-emerald-400 font-bold uppercase';
+        }
+        if (jewel) jewel.className = 'w-4 h-4 rounded-full bg-emerald-500 shadow-led-green border border-emerald-300';
+        if (overlay) overlay.classList.add('hidden');
+        logAudioStatus('DSP Online & ready for playback');
+      } else {
+        if (stateEl) {
+          stateEl.textContent = 'SUSPENDED';
+          stateEl.className = 'text-amber-400 font-bold uppercase';
+        }
+        if (jewel) jewel.className = 'w-4 h-4 rounded-full bg-amber-500 shadow-led border border-amber-300';
+        logAudioStatus('AudioContext suspended: tap any button to resume');
+      }
+    }
+
+    // Generate soft-clipping asymmetric analog overdrive curve
+    function generateDistortionCurve(amount = 26) {
+      const n_samples = 4096;
+      const curve = new Float32Array(n_samples);
+      const k = Math.max(1, amount);
+      for (let i = 0; i < n_samples; ++i) {
+        const x = (i * 2) / n_samples - 1;
+        curve[i] = ((1 + k) * x) / (1 + k * Math.abs(x));
+      }
+      return curve;
+    }
+
+    function applyDrivePreset(presetKey) {
+      const profile = DRIVE_PROFILES[presetKey] || DRIVE_PROFILES.plexi;
+      appStore.settings.drivePreset = presetKey;
+      saveStore(appStore);
+
+      const label = document.getElementById('label-drive-preset');
+      if (label) label.textContent = profile.name;
+
+      document.querySelectorAll('.btn-drive-preset').forEach(btn => {
+        if (btn.getAttribute('data-drive') === presetKey) {
+          btn.className = 'btn-drive-preset px-1.5 py-1 rounded bg-amber-500 text-black font-bold border border-amber-400 text-[10px]';
+        } else {
+          btn.className = 'btn-drive-preset px-1.5 py-1 rounded bg-amp-850 hover:bg-amp-800 text-gray-300 border border-amp-700 text-[10px]';
+        }
+      });
+
+      if (guitarDistortionNode && audioCtx) {
+        try {
+          guitarDistortionNode.curve = generateDistortionCurve(profile.k);
+          if (guitarBus) {
+            guitarBus.gain.setValueAtTime(profile.preGain, audioCtx.currentTime);
+          }
+          if (guitarCabFilter) {
+            guitarCabFilter.frequency.setValueAtTime(profile.cabCutoff, audioCtx.currentTime);
+          }
+        } catch (e) {
+          console.warn('Could not update drive DSP node in real time:', e);
+        }
+      }
+    }
+
+    function setupAudioBuses() {
+      if (!audioCtx) return;
+
+      try {
+        // Master Bus & Dynamic Limiter
+        masterGain = audioCtx.createGain();
+        masterGain.gain.setValueAtTime(0.7, audioCtx.currentTime);
+
+        const limiter = audioCtx.createDynamicsCompressor();
+        limiter.threshold.setValueAtTime(-1.5, audioCtx.currentTime);
+        limiter.knee.setValueAtTime(3.0, audioCtx.currentTime);
+        limiter.ratio.setValueAtTime(14.0, audioCtx.currentTime);
+        limiter.attack.setValueAtTime(0.003, audioCtx.currentTime);
+        limiter.release.setValueAtTime(0.12, audioCtx.currentTime);
+
+        masterGain.connect(limiter);
+        limiter.connect(audioCtx.destination);
+
+        // Guitar Bus: Waveshaper Saturation & Cabinet Speaker Filter
+        const profile = DRIVE_PROFILES[appStore.settings.drivePreset] || DRIVE_PROFILES.plexi;
+        guitarBus = audioCtx.createGain();
+        guitarBus.gain.setValueAtTime(profile.preGain, audioCtx.currentTime);
+
+        guitarDistortionNode = audioCtx.createWaveShaper();
+        guitarDistortionNode.curve = generateDistortionCurve(profile.k);
+        try {
+          guitarDistortionNode.oversample = '2x';
+        } catch (e) {
+          guitarDistortionNode.oversample = 'none';
+        }
+
+        guitarCabFilter = audioCtx.createBiquadFilter();
+        guitarCabFilter.type = 'lowpass';
+        guitarCabFilter.frequency.setValueAtTime(profile.cabCutoff, audioCtx.currentTime);
+        guitarCabFilter.Q.setValueAtTime(1.1, audioCtx.currentTime);
+
+        guitarBus.connect(guitarDistortionNode);
+        guitarDistortionNode.connect(guitarCabFilter);
+        guitarCabFilter.connect(masterGain);
+
+        // Bass Bus: Lowpass sub-frequency
+        bassBus = audioCtx.createGain();
+        bassBus.gain.setValueAtTime(0.75, audioCtx.currentTime);
+        const bassLowpass = audioCtx.createBiquadFilter();
+        bassLowpass.type = 'lowpass';
+        bassLowpass.frequency.setValueAtTime(380, audioCtx.currentTime);
+        bassBus.connect(bassLowpass);
+        bassLowpass.connect(masterGain);
+
+        // Drum Bus
+        drumBus = audioCtx.createGain();
+        drumBus.gain.setValueAtTime(0.7, audioCtx.currentTime);
+        drumBus.connect(masterGain);
+      } catch (err) {
+        logAudioStatus(`Bus graph routing error: ${err.message}`, true);
+      }
+    }
+
+    function playHardwareUnlockChirp() {
+      if (!audioCtx) return;
+      try {
+        const buffer = audioCtx.createBuffer(1, 1, 22050);
+        const source = audioCtx.createBufferSource();
+        source.buffer = buffer;
+        source.connect(audioCtx.destination);
+        source.start(0);
+      } catch (e) {
+        // Ignored
+      }
+    }
+
+    async function ensureAudioContext(forceNew = false) {
+      audioUnlockAttempted = true;
+      try {
+        if (!audioCtx || forceNew) {
+          if (audioCtx && typeof audioCtx.close === 'function') {
+            try { await audioCtx.close(); } catch(e){}
+          }
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (!AudioContextClass) {
+            logAudioStatus("Web Audio API not supported in this browser.", true);
+            return false;
+          }
+          audioCtx = new AudioContextClass();
+          setupAudioBuses();
+        }
+
+        if (audioCtx.state === 'suspended') {
+          await audioCtx.resume();
+        }
+
+        playHardwareUnlockChirp();
+        updateEngineStatusUI();
+        return audioCtx.state === 'running';
+      } catch (err) {
+        logAudioStatus(`Failed to start audio context: ${err.message}`, true);
+        updateEngineStatusUI();
+        return false;
+      }
+    }
+
+    const NOTE_SEMITONES = {
+      'C': 0, 'C#': 1, 'Db': 1, 'D': 2, 'D#': 3, 'Eb': 3,
+      'E': 4, 'F': 5, 'F#': 6, 'Gb': 6, 'G': 7, 'G#': 8,
+      'Ab': 8, 'A': 9, 'A#': 10, 'Bb': 10, 'B': 11
+    };
+
+    function noteToFreq(note, octave = 3) {
+      const semitone = NOTE_SEMITONES[note] !== undefined ? NOTE_SEMITONES[note] : 9;
+      const midi = (octave + 1) * 12 + semitone;
+      return 440 * Math.pow(2, (midi - 69) / 12);
+    }
+
+    function playGuitarNote(freq, startTime, duration = 0.8, velocity = 0.7, isMuted = false) {
+      if (!audioCtx || !guitarBus || audioCtx.state !== 'running') return;
+
+      const voiceGain = audioCtx.createGain();
+      const detunes = isMuted ? [0] : [-6, 0, 6.5];
+
+      detunes.forEach((cents) => {
+        const osc = audioCtx.createOscillator();
+        osc.type = isMuted ? 'triangle' : 'sawtooth';
+        osc.frequency.setValueAtTime(freq, startTime);
+        osc.detune.setValueAtTime(cents, startTime);
+
+        if (isMuted) {
+          voiceGain.gain.setValueAtTime(0.0001, startTime);
+          voiceGain.gain.linearRampToValueAtTime(velocity * 0.25, startTime + 0.01);
+          voiceGain.gain.exponentialRampToValueAtTime(0.0001, startTime + Math.min(duration, 0.12));
+        } else {
+          voiceGain.gain.setValueAtTime(0.0001, startTime);
+          voiceGain.gain.linearRampToValueAtTime(Math.max(0.001, velocity * 0.3), startTime + 0.02);
+          voiceGain.gain.exponentialRampToValueAtTime(Math.max(0.0001, velocity * 0.12), startTime + 0.35);
+          voiceGain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+        }
+
+        osc.connect(voiceGain);
+        osc.start(startTime);
+        osc.stop(startTime + (isMuted ? 0.15 : duration + 0.05));
+      });
+
+      voiceGain.connect(guitarBus);
+    }
+
+    function playBassNote(freq, startTime, duration = 0.8) {
+      if (!audioCtx || !bassBus || audioCtx.state !== 'running') return;
+      const osc = audioCtx.createOscillator();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq * 0.5, startTime);
+
+      const gain = audioCtx.createGain();
+      gain.gain.setValueAtTime(0.0001, startTime);
+      gain.gain.linearRampToValueAtTime(0.4, startTime + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+
+      osc.connect(gain);
+      gain.connect(bassBus);
+      osc.start(startTime);
+      osc.stop(startTime + duration + 0.05);
+    }
+
+    function playDrumKick(time, velocity = 0.7) {
+      if (!audioCtx || !drumBus || audioCtx.state !== 'running') return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.frequency.setValueAtTime(130, time);
+      osc.frequency.exponentialRampToValueAtTime(45, time + 0.11);
+
+      gain.gain.setValueAtTime(velocity, time);
+      gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.22);
+
+      osc.connect(gain);
+      gain.connect(drumBus);
+      osc.start(time);
+      osc.stop(time + 0.25);
+    }
+
+    function playDrumSnare(time, velocity = 0.35) {
+      if (!audioCtx || !drumBus || audioCtx.state !== 'running') return;
+      const osc = audioCtx.createOscillator();
+      osc.frequency.setValueAtTime(170, time);
+      osc.frequency.exponentialRampToValueAtTime(75, time + 0.09);
+
+      const gain = audioCtx.createGain();
+      gain.gain.setValueAtTime(velocity, time);
+      gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.12);
+
+      osc.connect(gain);
+      gain.connect(drumBus);
+      osc.start(time);
+      osc.stop(time + 0.14);
+
+      // Noise burst
+      const buffer = audioCtx.createBuffer(1, Math.floor(audioCtx.sampleRate * 0.14), audioCtx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < buffer.length; i++) data[i] = Math.random() * 2 - 1;
+
+      const noise = audioCtx.createBufferSource();
+      noise.buffer = buffer;
+      const noiseFilter = audioCtx.createBiquadFilter();
+      noiseFilter.type = 'highpass';
+      noiseFilter.frequency.setValueAtTime(1000, time);
+
+      const noiseGain = audioCtx.createGain();
+      noiseGain.gain.setValueAtTime(velocity * 0.85, time);
+      noiseGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.13);
+
+      noise.connect(noiseFilter);
+      noiseFilter.connect(noiseGain);
+      noiseGain.connect(drumBus);
+      noise.start(time);
+    }
+
+    function playDrumHiHat(time, open = false, velocity = 0.2) {
+      if (!audioCtx || !drumBus || audioCtx.state !== 'running') return;
+      const duration = open ? 0.28 : 0.045;
+      const buffer = audioCtx.createBuffer(1, Math.floor(audioCtx.sampleRate * duration), audioCtx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < buffer.length; i++) data[i] = Math.random() * 2 - 1;
+
+      const noise = audioCtx.createBufferSource();
+      noise.buffer = buffer;
+
+      const bandpass = audioCtx.createBiquadFilter();
+      bandpass.type = 'bandpass';
+      bandpass.frequency.setValueAtTime(8500, time);
+      bandpass.Q.setValueAtTime(2.0, time);
+
+      const highpass = audioCtx.createBiquadFilter();
+      highpass.type = 'highpass';
+      highpass.frequency.setValueAtTime(7000, time);
+
+      const gain = audioCtx.createGain();
+      gain.gain.setValueAtTime(velocity, time);
+      gain.gain.exponentialRampToValueAtTime(0.0001, time + duration);
+
+      noise.connect(bandpass);
+      bandpass.connect(highpass);
+      highpass.connect(gain);
+      gain.connect(drumBus);
+
+      noise.start(time);
+      noise.stop(time + duration + 0.02);
+    }
+
+    async function triggerSoundTest() {
+      const ready = await ensureAudioContext();
+      if (!ready) {
+        logAudioStatus("Could not activate audio hardware. Click anywhere on page.", true);
+        return;
+      }
+      const now = audioCtx.currentTime;
+      playDrumKick(now);
+      playDrumHiHat(now, false, 0.3);
+      playGuitarNote(110, now, 0.6, 0.85); // A2
+      playGuitarNote(164.81, now, 0.6, 0.85); // E3
+      playGuitarNote(220, now, 0.6, 0.85); // A3
+      playBassNote(110, now, 0.6);
+      logAudioStatus("Audio test triggered successfully!");
+    }
+
+    /* =========================================================================
+       3. HARMONY & PROGRESSION DATA MODEL
+       ========================================================================= */
+
+    const CHROMATIC_SCALE = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'Bb', 'B'];
+
+    const DEGREE_SEMITONES = {
+      'I': 0, 'i': 0,
+      '♭II': 1,
+      'ii': 2, 'II': 2,
+      '♭III': 3,
+      'iii': 4, 'III': 4,
+      'IV': 5, 'iv': 5,
+      '♭V': 6,
+      'V': 7, 'v': 7,
+      '♭VI': 8,
+      'vi': 9, 'VI': 9,
+      '♭VII': 10, '♭vii': 10, 'bVII': 10, 'bvii': 10,
+      'VII': 11
+    };
+
+    const ROCK_PROGRESSIONS = [
+      {
+        name: "Classic Mixolydian Anthem (Double Plagal)",
+        numerals: ["I", "♭VII", "IV", "I"],
+        theory: "The quintessential rock loop. Borrowing ♭VII from Mixolydian forms a 'double plagal' cadence (♭VII ➜ IV ➜ I) that bypasses classical V-I tension for raw swagger and continuous groove.",
+        examples: "Lynyrd Skynyrd - 'Sweet Home Alabama' • AC/DC - 'You Shook Me All Night Long' • Steppenwolf - 'Born to Be Wild' • Guns N' Roses - 'Paradise City'"
+      },
+      {
+        name: "Hard Rock Stomp / Arena Vamp",
+        numerals: ["I", "♭VII", "IV", "♭VII"],
+        theory: "Keeps the harmonic energy suspended on the subtonic degree without fully resolving back home, keeping the rhythm driving relentlessly forward.",
+        examples: "Led Zeppelin - 'Rock and Roll' • Tom Petty - 'Free Fallin'' • The Rolling Stones - 'Sympathy for the Devil'"
+      },
+      {
+        name: "The 4-Chord Pop-Rock & Punk Axis",
+        numerals: ["I", "V", "vi", "IV"],
+        theory: "The most commercially triumphant progression in music history. Moves from bright major tonic clarity into dominant tension, dropping into emotional relative minor before the IV lifts it home.",
+        examples: "Journey - 'Don't Stop Believin'' • Green Day - 'When I Come Around' • Blink-182 - 'Dammit' • U2 - 'With or Without You'"
+      },
+      {
+        name: "Emotional Minor Turnaround",
+        numerals: ["vi", "IV", "I", "V"],
+        theory: "The minor-started variation of the 4-chord axis. Instantly creates a darker, more dramatic vocal hook while retaining an energetic drive through the V turnaround.",
+        examples: "The Offspring - 'The Kids Aren't Alright' • Evanescence - 'Bring Me to Life' • The Cranberries - 'Zombie' • Joan Osborne - 'One of Us'"
+      },
+      {
+        name: "Aeolian Step-Down Walk",
+        numerals: ["i", "♭VII", "♭VI", "♭VII"],
+        theory: "Natural minor cadence built entirely on power chords descending stepwise. Delivers a defiant, mythical, and heroic atmosphere common in hard rock solos.",
+        examples: "Bob Dylan / Jimi Hendrix - 'All Along the Watchtower' • Led Zeppelin - 'Stairway to Heaven' (guitar solo section) • Iron Maiden - 'The Trooper'"
+      },
+      {
+        name: "Epic Aeolian Ascending Climb",
+        numerals: ["i", "♭VI", "♭VII", "i"],
+        theory: "The modern hard rock and melodic metal standard. Climbing up from the dark ♭VI through the ♭VII into the tonic gives an unstoppable feeling of triumph and release.",
+        examples: "Judas Priest - 'Breaking the Law' • Iron Maiden - 'Fear of the Dark' • Dio - 'Rainbow in the Dark' • Gary Moore - 'Over the Hills and Far Away'"
+      },
+      {
+        name: "Blues-Rock Pentatonic Punch",
+        numerals: ["I", "♭III", "IV", "I"],
+        theory: "Borrows ♭III directly from the minor pentatonic/blues scale while pumping over a major tonic. Creates gritty attitude and sudden harmonic punch.",
+        examples: "Black Sabbath - 'Iron Man' • Ted Nugent - 'Cat Scratch Fever' • 38 Special - 'Hold On Loosely' • The Jimi Hendrix Experience - 'Fire'"
+      },
+      {
+        name: "Arena Rock Turnaround / Garage Loop",
+        numerals: ["I", "IV", "V", "IV"],
+        theory: "Pure three-chord rock-and-roll simplicity. Cycling around the subdominant prevents the dominant V from feeling too classical or final.",
+        examples: "The Troggs - 'Wild Thing' • The Kingsmen - 'Louie Louie' • Ramones - 'Blitzkrieg Bop' • Boston - 'Smokin''"
+      },
+      {
+        name: "Andalusian Heavy Metal Descent",
+        numerals: ["i", "♭VII", "♭VI", "V"],
+        theory: "Stepwise descending minor bassline concluding on an aggressive major Dominant V. Inherited from flamenco and baroque music, popularized in rock for gothic suspense.",
+        examples: "Dire Straits - 'Sultans of Swing' • Del Shannon / Bon Jovi - 'Runaway' • Deep Purple - 'Child in Time' • Muse - 'Knights of Cydonia'"
+      },
+      {
+        name: "Grunge Dual Chromatic Borrow",
+        numerals: ["I", "♭III", "♭VII", "IV"],
+        theory: "Combines two non-diatonic borrowed chords (♭III and ♭VII). The voice leading defies classical functional harmony, creating the defining gritty crunch of early 90s alt-rock.",
+        examples: "Nirvana - 'In Bloom' • Soundgarden - 'Spoonman' • Bush - 'Machinehead' • Alice in Chains - 'The Them Bones' riff rhythm"
+      },
+      {
+        name: "Nirvana Chromatic Shift",
+        numerals: ["I", "♭VI", "IV", "V"],
+        theory: "Kurt Cobain's favorite harmonic move: juxtaposing the bright major I with a surprise flat-six (♭VI) chromatic mediant before driving through IV into V.",
+        examples: "Nirvana - 'Lithium' • Foo Fighters - 'Monkey Wrench' • Silverchair - 'Tomorrow'"
+      },
+      {
+        name: "Alternative Chromatic Stomp",
+        numerals: ["I", "IV", "♭VI", "V"],
+        theory: "Begins as a wholesome I-IV before slamming the brakes with the chromatic ♭VI power chord, dramatically resolving through V back home.",
+        examples: "Weezer - 'My Name Is Jonas' • Alice in Chains - 'Man in the Box' (bridge) • The Smashing Pumpkins - 'Today' (chorus turn)"
+      },
+      {
+        name: "Classic 50s & Doo-Wop Rock Ballad",
+        numerals: ["I", "vi", "IV", "V"],
+        theory: "The foundational progression of early rock & roll. Smooth diatonic stepwise fall from I to vi, subdominant lift to IV, and dominant turnaround on V.",
+        examples: "The Police - 'Every Breath You Take' • Ben E. King / John Lennon - 'Stand by Me' • Green Day - 'Jesus of Suburbia' (City of the Damned)"
+      },
+      {
+        name: "Power Mixolydian Chug",
+        numerals: ["I", "IV", "♭VII", "I"],
+        theory: "Swaps the positions of the IV and ♭VII chords from the classic double plagal loop. Landing on the flat-seven immediately prior to resolving adds a crisp slap back to tonic.",
+        examples: "The Who - 'Baba O'Riley' • Guns N' Roses - 'Sweet Child O' Mine' • Def Leppard - 'Photograph'"
+      },
+      {
+        name: "Southern Rock Cadence",
+        numerals: ["I", "♭VII", "I", "IV"],
+        theory: "Bounces directly between the root tonic and the subtonic ♭VII before opening up into the bright subdominant IV chord. Very common in Southern rock and blues vamps.",
+        examples: "The Allman Brothers Band - 'Ramblin' Man' • Creedence Clearwater Revival - 'Born on the Bayou' • Free - 'All Right Now'"
+      },
+      {
+        name: "Minor Heavy Rock Crunch",
+        numerals: ["i", "♭VI", "III", "♭VII"],
+        theory: "Ascending from minor tonic to flat-six, then leaping to the relative major III before completing the circle with the ♭VII. Imparts an atmospheric, melancholic power.",
+        examples: "The Cranberries - 'Zombie' • The White Stripes - 'Seven Nation Army' • System of a Down - 'Toxicity' (chorus)"
+      },
+      {
+        name: "Phrygian Heavy Slam",
+        numerals: ["i", "♭II", "i", "V"],
+        theory: "Utilizes the half-step ♭II Neapolitan/Phrygian relation. Instantly injects menacing darkness, high drama, and aggressive heavy metal weight.",
+        examples: "Metallica - 'Wherever I May Roam' • Megadeth - 'Symphony of Destruction' • Slayer - 'Raining Blood' • Tool - 'Forty Six & 2'"
+      },
+      {
+        name: "Classic Rock Plagal Bounce",
+        numerals: ["I", "IV", "I", "V"],
+        theory: "Direct rock and roll alternating between the tonic and IV before tagging the dominant V to restart the verse.",
+        examples: "Creedence Clearwater Revival - 'Bad Moon Rising' • The Beatles - 'Twist and Shout' • Bob Seger - 'Old Time Rock and Roll'"
+      },
+      {
+        name: "Classic Minor Blues Progression",
+        numerals: ["i", "iv", "v", "i"],
+        theory: "The standard minor blues skeleton using minor iv and v chords. Melancholy, moody, and deeply rooted in Delta blues and British blues-rock traditions.",
+        examples: "B.B. King - 'The Thrill Is Gone' • Gary Moore - 'Still Got the Blues' • Fleetwood Mac - 'Black Magic Woman'"
+      },
+      {
+        name: "Dorian Rock Groove",
+        numerals: ["i", "IV", "i", "IV"],
+        theory: "The definitive Dorian modal vamp. Mixing a minor tonic with a major IV chord (incorporating the natural 6th degree) generates a soulful, bluesy, uplifting rock swing.",
+        examples: "Pink Floyd - 'Breathe' • Carlos Santana - 'Oye Como Va' • The Doors - 'Light My Fire' (solo vamp) • Steely Dan - 'Josie'"
+      },
+      {
+        name: "Subtonic Dominant Launchpad",
+        numerals: ["I", "♭VII", "V", "I"],
+        theory: "Steps down from I to ♭VII for swagger, then ramps immediately into the dominant V chord to catapult hard into the tonic chord resolution.",
+        examples: "Kiss - 'Rock and Roll All Nite' • Queen - 'Tie Your Mother Down' • Mott the Hoople - 'All the Young Dudes'"
+      }
+    ];
+
+    function getChordRoot(key, roman) {
+      const keyIndex = CHROMATIC_SCALE.indexOf(key);
+      const interval = DEGREE_SEMITONES[roman] !== undefined ? DEGREE_SEMITONES[roman] : 0;
+      const targetIndex = (keyIndex + interval) % 12;
+      return CHROMATIC_SCALE[targetIndex];
+    }
+
+    function getVoicingFrequencies(rootNote, roman, style = 'power', inversion = 0) {
+      const rootIndex = CHROMATIC_SCALE.indexOf(rootNote);
+      const isMinor = roman === 'i' || roman === 'ii' || roman === 'iii' || roman === 'iv' || roman === 'v' || roman === 'vi';
+      const thirdInterval = isMinor ? 3 : 4;
+      const thirdNote = CHROMATIC_SCALE[(rootIndex + thirdInterval) % 12];
+      const fifthNote = CHROMATIC_SCALE[(rootIndex + 7) % 12];
+
+      let guitarPitches = [];
+      let bassPitch = 0;
+      let inversionLabel = 'Root Position';
+
+      if (style === 'triad') {
+        const rootOct3 = noteToFreq(rootNote, 3);
+        const thirdOct3 = noteToFreq(thirdNote, 3);
+        const fifthOct3 = noteToFreq(fifthNote, 3);
+        const rootOct4 = noteToFreq(rootNote, 4);
+        const thirdOct4 = noteToFreq(thirdNote, 4);
+
+        if (inversion === 1) {
+          guitarPitches = [thirdOct3, fifthOct3, rootOct4];
+          bassPitch = noteToFreq(thirdNote, 2);
+          inversionLabel = `1st Inv (3rd in bass: /${thirdNote})`;
+        } else if (inversion === 2) {
+          guitarPitches = [fifthOct3, rootOct4, thirdOct4];
+          bassPitch = noteToFreq(fifthNote, 2);
+          inversionLabel = `2nd Inv (5th in bass: /${fifthNote})`;
+        } else {
+          guitarPitches = [rootOct3, thirdOct3, fifthOct3];
+          bassPitch = noteToFreq(rootNote, 2);
+          inversionLabel = 'Root Position';
+        }
+      } else {
+        // Power Chords (Root + 5th)
+        const rootOct3 = noteToFreq(rootNote, 3);
+        const fifthOct3 = noteToFreq(fifthNote, 3);
+        const octPitch = noteToFreq(rootNote, 4);
+
+        if (inversion === 1 || inversion === 2) {
+          const fifthOct2 = noteToFreq(fifthNote, 2);
+          guitarPitches = [fifthOct3, octPitch];
+          bassPitch = fifthOct2;
+          inversionLabel = `Inverted 5th in bass (/${fifthNote})`;
+        } else {
+          guitarPitches = [rootOct3, fifthOct3, octPitch];
+          bassPitch = noteToFreq(rootNote, 2);
+          inversionLabel = 'Root Position';
+        }
+      }
+
+      return { guitarPitches, bassPitch, inversionLabel };
+    }
+
+    /* =========================================================================
+       4. APPLICATION STATE & ELEMENTS
+       ========================================================================= */
+
+    const STATE = {
+      currentKey: 'A',
+      currentProgression: null,
+      currentInversions: [],
+      inversionMode: appStore.settings.inversionMode || 'random',
+      userSlots: [],
+      selectedSlotIndex: 0,
+      isPlaying: false,
+      bpm: appStore.settings.bpm || 105,
+      voicing: appStore.settings.voicing || 'power',
+      strumStyle: appStore.settings.strumStyle || 'standard',
+      drumGroove: appStore.settings.drumGroove || 'standard',
+      revealed: false,
+      strictBlindMode: appStore.settings.strictBlindMode !== undefined ? appStore.settings.strictBlindMode : true,
+      sandboxKey: 'A',
+      sandboxCustomProg: [],
+      sandboxInversionSelect: 0,
+      sbIsPlaying: false,
+      sbLoopTimeouts: []
+    };
+
+    const elements = {
+      labelKeyCenter: document.getElementById('label-key-center'),
+      labelChordCount: document.getElementById('label-chord-count'),
+      sliderBpm: document.getElementById('slider-bpm'),
+      labelBpm: document.getElementById('label-bpm'),
+      btnPlayProgression: document.getElementById('btn-play-progression'),
+      btnPlayText: document.getElementById('btn-play-text'),
+      btnPlayTonic: document.getElementById('btn-play-tonic'),
+      btnNewProgression: document.getElementById('btn-new-progression'),
+      btnCheckAnswer: document.getElementById('btn-check-answer'),
+      btnRevealSolution: document.getElementById('btn-reveal-solution'),
+      btnClearGuess: document.getElementById('btn-clear-guess'),
+      btnToggleKeyReveal: document.getElementById('btn-toggle-key-reveal'),
+      slotsContainer: document.getElementById('slots-container'),
+      playbackStatusText: document.getElementById('playback-status-text'),
+      pulseMeter: document.getElementById('pulse-meter'),
+      toggleBlindMode: document.getElementById('toggle-blind-mode'),
+      blindModeStatus: document.getElementById('blind-mode-status'),
+      theoryCard: document.getElementById('theory-card'),
+      theoryTitle: document.getElementById('theory-title'),
+      theoryActualChords: document.getElementById('theory-actual-chords'),
+      theoryExplanation: document.getElementById('theory-explanation'),
+      theoryExamples: document.getElementById('theory-examples'),
+      validationMessage: document.getElementById('validation-message'),
+      statScore: document.getElementById('stat-score'),
+      statStreak: document.getElementById('stat-streak'),
+      statBestStreak: document.getElementById('stat-best-streak'),
+      badgeAccuracy: document.getElementById('badge-accuracy'),
+      labelActiveStrum: document.getElementById('label-active-strum'),
+      labelActiveDrum: document.getElementById('label-active-drum'),
+      selectStrumStyle: document.getElementById('select-strum-style'),
+      selectDrumGroove: document.getElementById('select-drum-groove'),
+      selectInversionMode: document.getElementById('select-inversion-mode'),
+      btnVoicingToggle: document.getElementById('btn-voicing-toggle'),
+      beatDots: [
+        document.getElementById('beat-dot-1'),
+        document.getElementById('beat-dot-2'),
+        document.getElementById('beat-dot-3'),
+        document.getElementById('beat-dot-4')
+      ]
+    };
+
+    function updateScoreboardUI() {
+      const stats = appStore.stats;
+      const total = stats.totalAttempts;
+      const correct = stats.correctAttempts;
+      const pct = total > 0 ? Math.round((correct / total) * 100) : 0;
+
+      elements.statScore.textContent = `${correct}/${total}`;
+      elements.statStreak.textContent = stats.currentStreak;
+      if (elements.statBestStreak) elements.statBestStreak.textContent = stats.bestStreak;
+      if (elements.badgeAccuracy) elements.badgeAccuracy.textContent = `${pct}%`;
+    }
+
+    function pickInversionForBar() {
+      if (STATE.inversionMode === 'none') return 0;
+      if (STATE.inversionMode === 'always') return Math.random() < 0.5 ? 1 : 2;
+      const r = Math.random();
+      if (r < 0.55) return 0;
+      if (r < 0.8) return 1;
+      return 2;
+    }
+
+    function generateNewProgression() {
+      const keys = ['A', 'E', 'D', 'G', 'C'];
+      STATE.currentKey = keys[Math.floor(Math.random() * keys.length)];
+      STATE.currentProgression = ROCK_PROGRESSIONS[Math.floor(Math.random() * ROCK_PROGRESSIONS.length)];
+      const chordCount = STATE.currentProgression.numerals.length;
+
+      STATE.currentInversions = Array.from({ length: chordCount }, () => pickInversionForBar());
+      STATE.userSlots = new Array(chordCount).fill(null);
+      STATE.selectedSlotIndex = 0;
+      STATE.revealed = false;
+
+      elements.labelKeyCenter.textContent = '???';
+      elements.labelKeyCenter.className = 'text-lg font-bold font-mono text-amber-400';
+      elements.labelChordCount.textContent = chordCount;
+      elements.theoryCard.classList.add('hidden');
+      elements.validationMessage.classList.add('hidden');
+
+      renderSlots();
+    }
+
+    function renderSlots() {
+      elements.slotsContainer.innerHTML = '';
+      const count = STATE.currentProgression.numerals.length;
+      elements.slotsContainer.className = `grid grid-cols-${count} gap-2 sm:gap-4 my-3`;
+
+      for (let i = 0; i < count; i++) {
+        const slotValue = STATE.userSlots[i];
+        const isSelected = STATE.selectedSlotIndex === i;
+
+        const slot = document.createElement('button');
+        slot.className = `h-24 sm:h-28 rounded-xl border-2 flex flex-col items-center justify-center p-2 transition-all relative ${
+          isSelected 
+            ? 'border-amber-400 bg-amp-850 shadow-tube ring-2 ring-amber-500/40' 
+            : 'border-amp-700 bg-amp-950/70 hover:border-amp-600'
+        }`;
+
+        slot.innerHTML = `
+          <span class="text-[10px] font-mono uppercase text-gray-500 mb-1">Bar ${i + 1}</span>
+          <span class="text-xl sm:text-2xl font-mono font-bold ${slotValue ? 'text-amber-300' : 'text-gray-600'}">
+            ${slotValue || '—'}
+          </span>
+          <span class="text-[9px] font-mono text-gray-400 mt-1">
+            ${slotValue ? (STATE.revealed ? getChordRoot(STATE.currentKey, slotValue) + '5' : 'Set') : 'Tap'}
+          </span>
+        `;
+
+        slot.addEventListener('click', () => {
+          STATE.selectedSlotIndex = i;
+          renderSlots();
+        });
+
+        elements.slotsContainer.appendChild(slot);
+      }
+    }
+
+    async function playSingleChord(root, roman, duration = 0.8, inversion = 0) {
+      const ready = await ensureAudioContext();
+      if (!ready || !audioCtx) return;
+
+      const now = audioCtx.currentTime;
+      const { guitarPitches, bassPitch, inversionLabel } = getVoicingFrequencies(root, roman, STATE.voicing, inversion);
+
+      guitarPitches.forEach(f => playGuitarNote(f, now, duration, 0.75));
+      playBassNote(bassPitch, now, duration);
+
+      if (!STATE.strictBlindMode || STATE.revealed) {
+        elements.playbackStatusText.textContent = `${root} (${roman}) [${inversionLabel}]`;
+      } else {
+        elements.playbackStatusText.textContent = 'AUDITIONING';
+      }
+
+      elements.pulseMeter.classList.remove('hidden');
+      setTimeout(() => {
+        if (!STATE.isPlaying) {
+          elements.playbackStatusText.textContent = 'STANDBY';
+          elements.pulseMeter.classList.add('hidden');
+        }
+      }, duration * 1000);
+    }
+
+    async function handleNumeralSelection(rn) {
+      await ensureAudioContext();
+      STATE.userSlots[STATE.selectedSlotIndex] = rn;
+      const root = getChordRoot(STATE.currentKey, rn);
+      const slotInversion = STATE.currentInversions[STATE.selectedSlotIndex] || 0;
+      playSingleChord(root, rn, 0.7, slotInversion);
+
+      if (STATE.selectedSlotIndex < STATE.userSlots.length - 1) {
+        STATE.selectedSlotIndex++;
+      }
+      renderSlots();
+    }
+
+    /* =========================================================================
+       5. RHYTHM PLAYBACK ENGINE (STRUMS & DRUM GROOVES)
+       ========================================================================= */
+
+    function scheduleBarDrums(chordStartTime, beatDuration, groove) {
+      if (groove === 'off') return;
+
+      if (groove === 'minimal') {
+        for (let b = 0; b < 4; b++) {
+          playDrumKick(chordStartTime + (b * beatDuration), 0.45);
+        }
+        return;
+      }
+
+      if (groove === 'halftime') {
+        // Heavy Arena Beat: Kick on 1, Huge Snare on 3
+        playDrumKick(chordStartTime, 0.8);
+        playDrumHiHat(chordStartTime, true, 0.25);
+        playDrumHiHat(chordStartTime + beatDuration, false, 0.18);
+        playDrumSnare(chordStartTime + (2 * beatDuration), 0.5);
+        playDrumHiHat(chordStartTime + (2 * beatDuration), false, 0.2);
+        playDrumKick(chordStartTime + (3 * beatDuration), 0.65);
+        playDrumHiHat(chordStartTime + (3 * beatDuration), false, 0.18);
+        return;
+      }
+
+      if (groove === 'punk') {
+        // Double-time Punk Drive
+        for (let b = 0; b < 4; b++) {
+          const t = chordStartTime + (b * beatDuration);
+          playDrumKick(t, 0.75);
+          playDrumHiHat(t, false, 0.22);
+          playDrumSnare(t + (beatDuration * 0.5), 0.4);
+          playDrumHiHat(t + (beatDuration * 0.5), false, 0.2);
+        }
+        return;
+      }
+
+      if (groove === 'shuffle') {
+        // Blues Triplet Shuffle
+        for (let b = 0; b < 4; b++) {
+          const t = chordStartTime + (b * beatDuration);
+          const tTrip = t + (beatDuration * 0.66);
+          if (b === 0 || b === 2) playDrumKick(t, 0.7);
+          else playDrumSnare(t, 0.4);
+          playDrumHiHat(t, false, 0.2);
+          playDrumHiHat(tTrip, false, 0.14);
+        }
+        return;
+      }
+
+      // Default: Standard Rock Groove with 8th-note Hi-Hats
+      for (let b = 0; b < 4; b++) {
+        const t = chordStartTime + (b * beatDuration);
+        const t8th = t + (beatDuration * 0.5);
+        if (b === 0 || b === 2) {
+          playDrumKick(t, 0.75);
+          if (b === 2) playDrumKick(t8th, 0.55); // Syncopated kick on 2.5
+        } else {
+          playDrumSnare(t, 0.4);
+        }
+        playDrumHiHat(t, false, 0.22);
+        playDrumHiHat(t8th, b === 3, 0.16); // Slightly open on 3.5
+      }
+    }
+
+    function scheduleBarGuitar(chordStartTime, beatDuration, barDuration, guitarPitches, strumStyle) {
+      if (strumStyle === 'arpeggio') {
+        const eighth = beatDuration / 2;
+        for (let step = 0; step < 8; step++) {
+          const arpTime = chordStartTime + (step * eighth);
+          const freq = guitarPitches[step % guitarPitches.length];
+          playGuitarNote(freq, arpTime, eighth * 1.5, 0.75);
+        }
+        return;
+      }
+
+      if (strumStyle === 'chug') {
+        // Palm-Muted 8th note Chug with open accents on 1 & 3
+        const eighth = beatDuration / 2;
+        for (let step = 0; step < 8; step++) {
+          const chugTime = chordStartTime + (step * eighth);
+          const isOpenAccent = (step === 0 || step === 4);
+          guitarPitches.forEach(f => {
+            playGuitarNote(f, chugTime, isOpenAccent ? barDuration * 0.4 : 0.1, isOpenAccent ? 0.85 : 0.65, !isOpenAccent);
+          });
+        }
+        return;
+      }
+
+      if (strumStyle === 'halftime') {
+        // Heavy Stomp: 2 huge sustained power rings
+        guitarPitches.forEach(f => {
+          playGuitarNote(f, chordStartTime, barDuration * 0.55, 0.85);
+          playGuitarNote(f, chordStartTime + (2 * beatDuration), barDuration * 0.45, 0.75);
+        });
+        return;
+      }
+
+      if (strumStyle === 'shuffle') {
+        // Blues Swing Strum
+        for (let b = 0; b < 4; b++) {
+          const t = chordStartTime + (b * beatDuration);
+          const tTrip = t + (beatDuration * 0.66);
+          guitarPitches.forEach(f => {
+            playGuitarNote(f, t, beatDuration * 0.6, 0.8);
+            playGuitarNote(f, tTrip, beatDuration * 0.35, 0.55);
+          });
+        }
+        return;
+      }
+
+      // Default: Syncopated Rock Strum
+      guitarPitches.forEach(f => playGuitarNote(f, chordStartTime, barDuration * 0.9, 0.8));
+      guitarPitches.forEach(f => playGuitarNote(f, chordStartTime + beatDuration * 1.5, barDuration * 0.45, 0.65));
+      guitarPitches.forEach(f => playGuitarNote(f, chordStartTime + beatDuration * 2.0, barDuration * 0.55, 0.75));
+      guitarPitches.forEach(f => playGuitarNote(f, chordStartTime + beatDuration * 3.0, barDuration * 0.4, 0.6));
+    }
+
+    let progressionTimeout = null;
+
+    async function playProgression() {
+      const ready = await ensureAudioContext();
+      if (!ready || STATE.isPlaying) return;
+
+      STATE.isPlaying = true;
+      elements.btnPlayProgression.classList.add('bg-rose-600', 'text-white');
+      elements.btnPlayProgression.classList.remove('bg-gradient-to-r', 'from-amber-500', 'to-yellow-600');
+      elements.btnPlayText.textContent = 'Playing...';
+      elements.pulseMeter.classList.remove('hidden');
+
+      const bpm = STATE.bpm;
+      const beatDuration = 60 / bpm;
+      const barDuration = beatDuration * 4;
+      const totalChords = STATE.currentProgression.numerals.length;
+
+      const startTime = audioCtx.currentTime + 0.05;
+
+      STATE.currentProgression.numerals.forEach((roman, index) => {
+        const chordStartTime = startTime + (index * barDuration);
+        const root = getChordRoot(STATE.currentKey, roman);
+        const inversion = STATE.currentInversions[index] || 0;
+        const { guitarPitches, bassPitch, inversionLabel } = getVoicingFrequencies(root, roman, STATE.voicing, inversion);
+
+        // Drums & Guitar
+        scheduleBarDrums(chordStartTime, beatDuration, STATE.drumGroove);
+        scheduleBarGuitar(chordStartTime, beatDuration, barDuration, guitarPitches, STATE.strumStyle);
+
+        // Bass synthesizes root or inverted slash note
+        playBassNote(bassPitch, chordStartTime, barDuration * 0.95);
+
+        const delayMs = Math.max(0, (chordStartTime - audioCtx.currentTime) * 1000);
+        setTimeout(() => {
+          if (!STATE.isPlaying) return;
+
+          if (!STATE.strictBlindMode || STATE.revealed) {
+            elements.playbackStatusText.textContent = `${root} (${roman}) [${inversionLabel}]`;
+          } else {
+            elements.playbackStatusText.textContent = `BAR ${index + 1} OF ${totalChords}`;
+          }
+
+          let currentBeat = 0;
+          const beatInterval = setInterval(() => {
+            elements.beatDots.forEach((dot, idx) => {
+              if (idx === currentBeat) {
+                dot.className = 'w-2.5 h-2.5 rounded-full bg-amber-400 shadow-led transition-colors';
+              } else {
+                dot.className = 'w-2.5 h-2.5 rounded-full bg-amp-800 transition-colors';
+              }
+            });
+            currentBeat = (currentBeat + 1) % 4;
+          }, beatDuration * 1000);
+
+          setTimeout(() => clearInterval(beatInterval), barDuration * 1000);
+        }, delayMs);
+      });
+
+      const totalDuration = totalChords * barDuration;
+      progressionTimeout = setTimeout(() => {
+        STATE.isPlaying = false;
+        elements.btnPlayProgression.classList.remove('bg-rose-600', 'text-white');
+        elements.btnPlayProgression.classList.add('bg-gradient-to-r', 'from-amber-500', 'to-yellow-600');
+        elements.btnPlayText.textContent = 'Play Progression';
+        elements.playbackStatusText.textContent = 'STANDBY';
+        elements.pulseMeter.classList.add('hidden');
+        elements.beatDots.forEach(d => {
+          d.className = 'w-2.5 h-2.5 rounded-full bg-amp-800 transition-colors';
+        });
+      }, totalDuration * 1000 + 200);
+    }
+
+    /* =========================================================================
+       6. GRADING & ANALYTICS RECORDING
+       ========================================================================= */
+
+    function chordsMatch(userGuess, targetChord) {
+      if (!userGuess || !targetChord) return false;
+      if (userGuess === targetChord) return true;
+
+      const userDegree = DEGREE_SEMITONES[userGuess];
+      const targetDegree = DEGREE_SEMITONES[targetChord];
+      return userDegree !== undefined && userDegree === targetDegree;
+    }
+
+    function recordAnalytics(isCorrect, targetNumerals, userGuesses) {
+      const stats = appStore.stats;
+      stats.totalAttempts++;
+
+      if (isCorrect) {
+        stats.correctAttempts++;
+        stats.currentStreak++;
+        if (stats.currentStreak > stats.bestStreak) {
+          stats.bestStreak = stats.currentStreak;
+        }
+      } else {
+        stats.currentStreak = 0;
+      }
+
+      // Record per-degree accuracy and confusion matrix
+      for (let i = 0; i < targetNumerals.length; i++) {
+        const target = targetNumerals[i];
+        const guess = userGuesses[i];
+
+        if (!stats.byDegree[target]) stats.byDegree[target] = { seen: 0, correct: 0 };
+        stats.byDegree[target].seen++;
+
+        if (chordsMatch(guess, target)) {
+          stats.byDegree[target].correct++;
+        } else if (guess) {
+          // Record confusion
+          stats.confusionMatrix[target] = stats.confusionMatrix[target] || {};
+          stats.confusionMatrix[target][guess] = (stats.confusionMatrix[target][guess] || 0) + 1;
+        }
+      }
+
+      // Keep recent 30 history records
+      stats.history.unshift({
+        date: new Date().toISOString(),
+        key: STATE.currentKey,
+        prog: STATE.currentProgression.name,
+        target: targetNumerals,
+        guess: userGuesses,
+        correct: isCorrect
+      });
+      if (stats.history.length > 30) stats.history.pop();
+
+      saveStore(appStore);
+      updateScoreboardUI();
+    }
+
+    function checkAnswer() {
+      if (!STATE.currentProgression) return;
+      const target = STATE.currentProgression.numerals;
+      const user = STATE.userSlots;
+
+      if (user.includes(null)) {
+        showValidation("Fill all chord slots before checking!", "text-amber-400");
+        return;
+      }
+
+      let isCorrect = true;
+      let powerNeutralAccepted = false;
+
+      for (let i = 0; i < target.length; i++) {
+        if (!chordsMatch(user[i], target[i])) {
+          isCorrect = false;
+          break;
+        } else if (user[i] !== target[i]) {
+          powerNeutralAccepted = true;
+        }
+      }
+
+      recordAnalytics(isCorrect, target, user);
+
+      if (isCorrect) {
+        const note = powerNeutralAccepted ? " (Power-chord Major/Minor neutrality accepted!)" : "";
+        showValidation(`⚡ Correct! Rock-solid ear.${note}`, "text-emerald-400");
+        revealTheoryCard();
+      } else {
+        showValidation("Not quite. Listen closely to the root movements!", "text-rose-400");
+      }
+    }
+
+    function revealTheoryCard() {
+      STATE.revealed = true;
+      const prog = STATE.currentProgression;
+      elements.theoryTitle.textContent = prog.name;
+      elements.theoryExplanation.textContent = prog.theory;
+      elements.theoryExamples.textContent = prog.examples;
+
+      const chordBreakdowns = prog.numerals.map((rn, idx) => {
+        const root = getChordRoot(STATE.currentKey, rn);
+        const inv = STATE.currentInversions[idx] || 0;
+        const { inversionLabel } = getVoicingFrequencies(root, rn, STATE.voicing, inv);
+        return `${root}5 (${rn}) [${inversionLabel}]`;
+      }).join('  ➜  ');
+
+      elements.theoryActualChords.innerHTML = `<span class="text-gray-400">Key of ${STATE.currentKey}:</span> ${chordBreakdowns}`;
+
+      elements.labelKeyCenter.textContent = STATE.currentKey;
+      elements.labelKeyCenter.className = 'text-lg font-bold font-mono text-emerald-400';
+      elements.theoryCard.classList.remove('hidden');
+      renderSlots();
+    }
+
+    function showValidation(msg, colorClass) {
+      elements.validationMessage.textContent = msg;
+      elements.validationMessage.className = `text-sm font-semibold font-mono ${colorClass}`;
+      elements.validationMessage.classList.remove('hidden');
+    }
+
+    /* =========================================================================
+       7. ANALYTICS MODAL RENDERING & DATA MANAGEMENT
+       ========================================================================= */
+
+    function renderAnalyticsModal() {
+      const stats = appStore.stats;
+      const total = stats.totalAttempts;
+      const correct = stats.correctAttempts;
+      const pct = total > 0 ? Math.round((correct / total) * 100) : 0;
+
+      document.getElementById('analytics-stat-accuracy').textContent = `${pct}%`;
+      document.getElementById('analytics-stat-ratio').textContent = `${correct}/${total} Correct`;
+      document.getElementById('analytics-stat-total').textContent = total;
+      document.getElementById('analytics-stat-streak').textContent = stats.currentStreak;
+      document.getElementById('analytics-stat-best-streak').textContent = stats.bestStreak;
+
+      // Render Degree Accuracy Progress Bars
+      const degreesContainer = document.getElementById('analytics-degrees-container');
+      degreesContainer.innerHTML = '';
+
+      ALL_DEGREES.forEach(deg => {
+        const degData = stats.byDegree[deg] || { seen: 0, correct: 0 };
+        const degPct = degData.seen > 0 ? Math.round((degData.correct / degData.seen) * 100) : null;
+
+        let barColor = 'bg-gray-700';
+        let textColor = 'text-gray-400';
+        if (degPct !== null) {
+          if (degPct >= 80) { barColor = 'bg-emerald-500'; textColor = 'text-emerald-400 font-bold'; }
+          else if (degPct >= 50) { barColor = 'bg-amber-500'; textColor = 'text-amber-400 font-bold'; }
+          else { barColor = 'bg-rose-500'; textColor = 'text-rose-400 font-bold'; }
+        }
+
+        const item = document.createElement('div');
+        item.className = 'bg-amp-900 p-2.5 rounded-lg border border-amp-800/80 flex flex-col gap-1';
+        item.innerHTML = `
+          <div class="flex justify-between items-center text-xs">
+            <span class="font-bold text-amber-300">${deg}</span>
+            <span class="${textColor}">${degPct !== null ? `${degPct}% (${degData.correct}/${degData.seen})` : 'No data'}</span>
+          </div>
+          <div class="w-full h-1.5 rounded-full bg-amp-950 overflow-hidden">
+            <div class="h-full ${barColor} rounded-full transition-all duration-300" style="width: ${degPct !== null ? degPct : 0}%"></div>
+          </div>
+        `;
+        degreesContainer.appendChild(item);
+      });
+
+      // Render Top Confusions / Blindspots
+      const confContainer = document.getElementById('analytics-confusion-container');
+      const confList = [];
+
+      Object.entries(stats.confusionMatrix || {}).forEach(([target, guesses]) => {
+        Object.entries(guesses).forEach(([guess, count]) => {
+          if (count > 0) {
+            confList.push({ target, guess, count });
+          }
+        });
+      });
+
+      confList.sort((a, b) => b.count - a.count);
+
+      if (confList.length === 0) {
+        confContainer.innerHTML = '<span class="text-gray-500 italic">No recurring error patterns recorded yet. Complete more exercises to map your ear blindspots!</span>';
+      } else {
+        const top3 = confList.slice(0, 4);
+        confContainer.innerHTML = `
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+            ${top3.map(c => `
+              <div class="p-2 rounded bg-amp-900 border border-amp-800 flex items-center justify-between text-xs">
+                <div>
+                  <span class="text-rose-400 font-bold">${c.guess}</span>
+                  <span class="text-gray-400">mistaken for target</span>
+                  <span class="text-emerald-400 font-bold">${c.target}</span>
+                </div>
+                <span class="px-2 py-0.5 rounded bg-amp-950 text-amber-300 font-mono text-[10px] font-bold">${c.count}x</span>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+    }
+
+    function exportStatsJSON() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appStore, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `riffmaster_stats_backup_${new Date().toISOString().slice(0,10)}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    }
+
+    function importStatsJSON(file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const imported = JSON.parse(e.target.result);
+          appStore = migrateStore(imported);
+          saveStore(appStore);
+          updateScoreboardUI();
+          renderAnalyticsModal();
+          alert('Analytics data imported successfully!');
+        } catch (err) {
+          alert('Failed to parse JSON backup file: ' + err.message);
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function resetAllStats() {
+      if (confirm('Are you sure you want to reset all ear training statistics and streaks? This cannot be undone.')) {
+        appStore.stats = JSON.parse(JSON.stringify(DEFAULT_STORE.stats));
+        saveStore(appStore);
+        updateScoreboardUI();
+        renderAnalyticsModal();
+      }
+    }
+
+    /* =========================================================================
+       8. CHORD LAB & SANDBOX DECK
+       ========================================================================= */
+
+    function stopSandboxChainPlayback() {
+      STATE.sbLoopTimeouts.forEach(t => clearTimeout(t));
+      STATE.sbLoopTimeouts = [];
+      STATE.sbIsPlaying = false;
+
+      const btn = document.getElementById('btn-sb-play');
+      const text = document.getElementById('sb-play-text');
+      const icon = document.getElementById('sb-play-icon');
+
+      if (btn) btn.className = 'px-5 py-2 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-400 hover:to-yellow-500 text-black font-display font-bold uppercase rounded-xl text-xs flex items-center gap-2 shadow-lg transition active:scale-95';
+      if (text) text.textContent = 'Play Chain';
+      if (icon) icon.className = 'fa-solid fa-play';
+
+      clearSandboxVisualHighlight();
+    }
+
+    function clearSandboxVisualHighlight() {
+      document.querySelectorAll('.sb-chain-chip').forEach(chip => {
+        chip.classList.remove('ring-2', 'ring-amber-400', 'bg-amber-500/30', 'scale-105');
+        chip.classList.add('bg-amp-850');
+      });
+    }
+
+    function highlightSandboxChip(index) {
+      clearSandboxVisualHighlight();
+      const chips = document.querySelectorAll('.sb-chain-chip');
+      if (chips[index]) {
+        chips[index].classList.remove('bg-amp-850');
+        chips[index].classList.add('ring-2', 'ring-amber-400', 'bg-amber-500/30', 'scale-105');
+        chips[index].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    }
+
+    async function playSandboxChain() {
+      if (STATE.sbIsPlaying) {
+        stopSandboxChainPlayback();
+        return;
+      }
+
+      if (STATE.sandboxCustomProg.length === 0) {
+        const feedback = document.getElementById('sb-chain-feedback');
+        feedback.textContent = '⚠️ Add some chords to your chain first by tapping the chord cards above!';
+        feedback.className = 'mt-2 text-xs font-mono text-amber-400';
+        feedback.classList.remove('hidden');
+        setTimeout(() => feedback.classList.add('hidden'), 3500);
+        return;
+      }
+
+      const ready = await ensureAudioContext();
+      if (!ready) return;
+
+      STATE.sbIsPlaying = true;
+      const btn = document.getElementById('btn-sb-play');
+      const text = document.getElementById('sb-play-text');
+      const icon = document.getElementById('sb-play-icon');
+
+      btn.className = 'px-5 py-2 bg-rose-600 hover:bg-rose-500 text-white font-display font-bold uppercase rounded-xl text-xs flex items-center gap-2 shadow-lg transition active:scale-95';
+      text.textContent = 'Stop Chain';
+      icon.className = 'fa-solid fa-stop';
+
+      scheduleSandboxLoopIteration();
+    }
+
+    function scheduleSandboxLoopIteration() {
+      if (!STATE.sbIsPlaying) return;
+
+      const bpm = STATE.bpm;
+      const beatDuration = 60 / bpm;
+      const barDuration = beatDuration * 4;
+      const chain = STATE.sandboxCustomProg;
+      const key = STATE.sandboxKey;
+
+      const startTime = audioCtx.currentTime + 0.05;
+
+      chain.forEach((item, index) => {
+        const chordStartTime = startTime + (index * barDuration);
+        const roman = typeof item === 'string' ? item : item.rn;
+        const inv = typeof item === 'object' && item.inversion !== undefined ? item.inversion : 0;
+        const root = getChordRoot(key, roman);
+        const { guitarPitches, bassPitch } = getVoicingFrequencies(root, roman, STATE.voicing, inv);
+
+        scheduleBarDrums(chordStartTime, beatDuration, STATE.drumGroove);
+        scheduleBarGuitar(chordStartTime, beatDuration, barDuration, guitarPitches, STATE.strumStyle);
+        playBassNote(bassPitch, chordStartTime, barDuration * 0.95);
+
+        const delayMs = Math.max(0, (chordStartTime - audioCtx.currentTime) * 1000);
+        const tVisual = setTimeout(() => {
+          if (!STATE.sbIsPlaying) return;
+          highlightSandboxChip(index);
+        }, delayMs);
+        STATE.sbLoopTimeouts.push(tVisual);
+      });
+
+      const totalChainDuration = chain.length * barDuration;
+      const tEnd = setTimeout(() => {
+        if (!STATE.sbIsPlaying) return;
+
+        const isLooping = document.getElementById('sb-toggle-loop').checked;
+        if (isLooping) {
+          scheduleSandboxLoopIteration();
+        } else {
+          stopSandboxChainPlayback();
+        }
+      }, totalChainDuration * 1000);
+
+      STATE.sbLoopTimeouts.push(tEnd);
+    }
+
+    function renderSandboxSequence() {
+      const display = document.getElementById('sb-sequence-display');
+      if (STATE.sandboxCustomProg.length === 0) {
+        display.innerHTML = '<span class="text-gray-500 text-xs">No chords added yet. Tap any chord card above to begin building your sequence!</span>';
+        return;
+      }
+      display.innerHTML = '';
+      STATE.sandboxCustomProg.forEach((item, index) => {
+        const rn = typeof item === 'string' ? item : item.rn;
+        const inv = typeof item === 'object' && item.inversion !== undefined ? item.inversion : 0;
+        const root = getChordRoot(STATE.sandboxKey, rn);
+
+        const chip = document.createElement('div');
+        chip.className = 'sb-chain-chip px-3 py-1.5 rounded-lg bg-amp-850 border border-amber-500/40 text-amber-300 font-mono font-bold text-xs flex items-center gap-1.5 shrink-0 transition-all duration-150';
+        chip.innerHTML = `
+          <span class="text-[10px] text-gray-500 font-normal">#${index + 1}</span>
+          <span>${root}5 (${rn})</span>
+          <span class="text-[10px] px-1 py-0.5 rounded bg-amp-950 text-gray-400 font-normal">${inv === 0 ? 'Root' : (inv === 1 ? '1st Inv' : '2nd Inv')}</span>
+          <button title="Remove chord" class="text-gray-400 hover:text-rose-400 ml-1 text-xs">✕</button>
+        `;
+        chip.querySelector('button').addEventListener('click', (e) => {
+          e.stopPropagation();
+          stopSandboxChainPlayback();
+          STATE.sandboxCustomProg.splice(index, 1);
+          renderSandboxSequence();
+        });
+        display.appendChild(chip);
+      });
+    }
+
+    /* =========================================================================
+       9. DOM INITIALIZATION & EVENT LISTENERS
+       ========================================================================= */
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Audio Activation Buttons
+      const btnModalUnlock = document.getElementById('btn-modal-unlock');
+      if (btnModalUnlock) {
+        btnModalUnlock.addEventListener('click', async () => {
+          const ok = await ensureAudioContext(true);
+          if (ok) triggerSoundTest();
+        });
+      }
+
+      document.getElementById('btn-quick-sound-test').addEventListener('click', triggerSoundTest);
+      document.getElementById('btn-reinit-audio').addEventListener('click', () => ensureAudioContext(true));
+
+      // Global capture for mobile/desktop taps to keep AudioContext active
+      const unlockTriggers = ['click', 'pointerdown', 'touchstart'];
+      unlockTriggers.forEach(evtName => {
+        document.body.addEventListener(evtName, () => {
+          if (!audioCtx || audioCtx.state === 'suspended') {
+            ensureAudioContext();
+          }
+        }, { once: false, passive: true });
+      });
+
+      // View switching
+      const tabTrainer = document.getElementById('tab-trainer');
+      const tabSandbox = document.getElementById('tab-sandbox');
+      const viewTrainer = document.getElementById('view-trainer');
+      const viewSandbox = document.getElementById('view-sandbox');
+
+      tabTrainer.addEventListener('click', () => {
+        tabTrainer.className = 'px-3 py-1 rounded font-medium text-xs sm:text-sm transition-colors bg-vintage-gold text-black shadow font-display uppercase tracking-wider';
+        tabSandbox.className = 'px-3 py-1 rounded font-medium text-xs sm:text-sm text-gray-400 hover:text-gray-200 transition-colors font-display uppercase tracking-wider';
+        viewTrainer.classList.remove('hidden');
+        viewSandbox.classList.add('hidden');
+      });
+
+      tabSandbox.addEventListener('click', () => {
+        tabSandbox.className = 'px-3 py-1 rounded font-medium text-xs sm:text-sm transition-colors bg-vintage-gold text-black shadow font-display uppercase tracking-wider';
+        tabTrainer.className = 'px-3 py-1 rounded font-medium text-xs sm:text-sm text-gray-400 hover:text-gray-200 transition-colors font-display uppercase tracking-wider';
+        viewSandbox.classList.remove('hidden');
+        viewTrainer.classList.add('hidden');
+      });
+
+      // Trainer Deck Controls
+      elements.btnPlayProgression.addEventListener('click', playProgression);
+      elements.btnPlayTonic.addEventListener('click', () => {
+        playSingleChord(STATE.currentKey, 'I', 1.0);
+      });
+      elements.btnNewProgression.addEventListener('click', generateNewProgression);
+      elements.btnCheckAnswer.addEventListener('click', checkAnswer);
+      elements.btnRevealSolution.addEventListener('click', revealTheoryCard);
+
+      elements.btnClearGuess.addEventListener('click', () => {
+        STATE.userSlots = new Array(STATE.currentProgression.numerals.length).fill(null);
+        STATE.selectedSlotIndex = 0;
+        renderSlots();
+      });
+
+      elements.btnToggleKeyReveal.addEventListener('click', () => {
+        elements.labelKeyCenter.textContent = STATE.currentKey;
+        elements.labelKeyCenter.className = 'text-lg font-bold font-mono text-emerald-400';
+      });
+
+      // BPM slider
+      elements.sliderBpm.value = STATE.bpm;
+      elements.labelBpm.textContent = `${STATE.bpm} BPM`;
+      elements.sliderBpm.addEventListener('input', (e) => {
+        STATE.bpm = parseInt(e.target.value, 10);
+        elements.labelBpm.textContent = `${STATE.bpm} BPM`;
+        appStore.settings.bpm = STATE.bpm;
+        saveStore(appStore);
+      });
+
+      // Blind mode toggle
+      elements.toggleBlindMode.checked = STATE.strictBlindMode;
+      elements.toggleBlindMode.addEventListener('change', (e) => {
+        STATE.strictBlindMode = e.target.checked;
+        appStore.settings.strictBlindMode = STATE.strictBlindMode;
+        saveStore(appStore);
+        if (STATE.strictBlindMode) {
+          elements.blindModeStatus.textContent = 'STRICT (Hidden)';
+          elements.blindModeStatus.className = 'text-emerald-400 font-bold';
+        } else {
+          elements.blindModeStatus.textContent = 'RELAXED (Shown)';
+          elements.blindModeStatus.className = 'text-amber-400 font-bold';
+        }
+      });
+
+      // Drive Preset Selector Buttons
+      document.querySelectorAll('.btn-drive-preset').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const driveKey = btn.getAttribute('data-drive');
+          applyDrivePreset(driveKey);
+        });
+      });
+      applyDrivePreset(appStore.settings.drivePreset || 'plexi');
+
+      // Strum Style Selector
+      elements.selectStrumStyle.value = STATE.strumStyle;
+      elements.selectStrumStyle.addEventListener('change', (e) => {
+        STATE.strumStyle = e.target.value;
+        appStore.settings.strumStyle = STATE.strumStyle;
+        saveStore(appStore);
+        const opt = e.target.options[e.target.selectedIndex];
+        elements.labelActiveStrum.textContent = opt.textContent.split(' ')[0] + ' ' + (opt.textContent.split(' ')[1] || '');
+      });
+
+      // Drum Groove Selector
+      elements.selectDrumGroove.value = STATE.drumGroove;
+      elements.selectDrumGroove.addEventListener('change', (e) => {
+        STATE.drumGroove = e.target.value;
+        appStore.settings.drumGroove = STATE.drumGroove;
+        saveStore(appStore);
+        const opt = e.target.options[e.target.selectedIndex];
+        elements.labelActiveDrum.textContent = opt.textContent.split(' ')[0] + ' ' + (opt.textContent.split(' ')[1] || '');
+      });
+
+      // Voicing Toggle (Power 5th vs Full Triad)
+      elements.btnVoicingToggle.addEventListener('click', () => {
+        if (STATE.voicing === 'power') {
+          STATE.voicing = 'triad';
+          elements.btnVoicingToggle.textContent = 'Triad';
+          elements.btnVoicingToggle.className = 'px-2 py-1 bg-amber-500 text-black rounded font-bold text-[11px] shrink-0';
+        } else {
+          STATE.voicing = 'power';
+          elements.btnVoicingToggle.textContent = '5th';
+          elements.btnVoicingToggle.className = 'px-2 py-1 bg-amp-850 hover:bg-amp-800 border border-amp-700 text-amber-400 rounded font-bold text-[11px] shrink-0';
+        }
+        appStore.settings.voicing = STATE.voicing;
+        saveStore(appStore);
+      });
+
+      // Inversion Mode dropdown listener
+      elements.selectInversionMode.value = STATE.inversionMode;
+      elements.selectInversionMode.addEventListener('change', (e) => {
+        STATE.inversionMode = e.target.value;
+        appStore.settings.inversionMode = STATE.inversionMode;
+        saveStore(appStore);
+        if (STATE.currentProgression) {
+          STATE.currentInversions = Array.from(
+            { length: STATE.currentProgression.numerals.length }, 
+            () => pickInversionForBar()
+          );
+        }
+      });
+
+      // Chord Palette Buttons
+      document.querySelectorAll('.chord-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const rn = btn.getAttribute('data-rn');
+          handleNumeralSelection(rn);
+        });
+      });
+
+      // Sandbox Inversion Selector
+      const sbInversionSelect = document.getElementById('sb-inversion-select');
+      if (sbInversionSelect) {
+        sbInversionSelect.addEventListener('change', (e) => {
+          STATE.sandboxInversionSelect = parseInt(e.target.value, 10);
+        });
+      }
+
+      // Chord Lab Pad Buttons: Audition and append with chosen inversion
+      document.querySelectorAll('.sb-pad').forEach(pad => {
+        pad.addEventListener('click', () => {
+          const rn = pad.getAttribute('data-rn');
+          const root = getChordRoot(STATE.sandboxKey, rn);
+          const currentInv = STATE.sandboxInversionSelect || 0;
+          playSingleChord(root, rn, 0.9, currentInv);
+          STATE.sandboxCustomProg.push({ rn, inversion: currentInv });
+          renderSandboxSequence();
+        });
+      });
+
+      // Chord Lab Key Selector
+      document.querySelectorAll('.sb-key-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          stopSandboxChainPlayback();
+          document.querySelectorAll('.sb-key-btn').forEach(b => {
+            b.className = 'sb-key-btn px-2.5 py-1 rounded text-xs font-mono font-bold bg-amp-800 text-gray-300 hover:text-white';
+          });
+          btn.className = 'sb-key-btn px-2.5 py-1 rounded text-xs font-mono font-bold bg-amber-500 text-black';
+          STATE.sandboxKey = btn.getAttribute('data-key');
+          document.querySelectorAll('.sb-pad').forEach(pad => {
+            const rn = pad.getAttribute('data-rn');
+            const root = getChordRoot(STATE.sandboxKey, rn);
+            pad.querySelector('.sb-chord-name').textContent = `${root}5`;
+          });
+          renderSandboxSequence();
+        });
+      });
+
+      document.getElementById('btn-sb-play').addEventListener('click', playSandboxChain);
+
+      document.getElementById('btn-sb-clear').addEventListener('click', () => {
+        stopSandboxChainPlayback();
+        STATE.sandboxCustomProg = [];
+        renderSandboxSequence();
+      });
+
+      // Analytics Modal Listeners
+      const modalAnalytics = document.getElementById('modal-analytics');
+      document.getElementById('btn-open-analytics').addEventListener('click', () => {
+        renderAnalyticsModal();
+        modalAnalytics.classList.remove('hidden');
+      });
+
+      document.getElementById('btn-close-analytics').addEventListener('click', () => {
+        modalAnalytics.classList.add('hidden');
+      });
+
+      modalAnalytics.addEventListener('click', (e) => {
+        if (e.target === modalAnalytics) modalAnalytics.classList.add('hidden');
+      });
+
+      document.getElementById('btn-export-stats').addEventListener('click', exportStatsJSON);
+
+      document.getElementById('input-import-stats').addEventListener('change', (e) => {
+        if (e.target.files && e.target.files[0]) {
+          importStatsJSON(e.target.files[0]);
+        }
+      });
+
+      document.getElementById('btn-reset-stats').addEventListener('click', resetAllStats);
+
+      // Initialize scoreboard, first progression, and audio UI
+      updateScoreboardUI();
+      generateNewProgression();
+      updateEngineStatusUI();
+    });
+  </script>
+</body>
+</html>
