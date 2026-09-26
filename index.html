@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RiffMaster - Rock Chord Ear Trainer</title>
+  <title>Chord Progression Trainer - Rock Ear Trainer</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- FontAwesome Icons -->
@@ -101,10 +101,10 @@
         <div id="power-jewel" class="w-4 h-4 rounded-full bg-red-600 shadow-led-red border border-red-400/50 transition-all duration-300"></div>
         <div>
           <h1 class="text-xl md:text-2xl font-bold font-display tracking-wider text-amber-400 uppercase flex items-center gap-2">
-            RiffMaster
-            <span class="text-xs px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/20 font-mono tracking-normal lowercase">v3.1 live</span>
+            Chord Progression Trainer
+            <span class="text-xs px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/20 font-mono tracking-normal lowercase">v3.2 live</span>
           </h1>
-          <p class="text-xs text-gray-400 hidden sm:block">Rock Chord Ear Trainer • Zero Latency WebAudio Synthesis</p>
+          <p class="text-xs text-gray-400 hidden sm:block">Rock &amp; Blues-Rock Ear Trainer • Zero Latency WebAudio Synthesis</p>
         </div>
       </div>
 
@@ -221,7 +221,7 @@
                 <option value="chug">Palm-Muted Chug (8ths)</option>
                 <option value="halftime">Half-Time Stomp (Sustained)</option>
                 <option value="shuffle">Blues-Rock Swing Shuffle</option>
-                <option value="arpeggio">Arpeggio Swept Riff</option>
+                <option value="arpeggio">Arpeggio Progression Pattern</option>
               </select>
             </div>
 
@@ -271,7 +271,7 @@
 
               <label class="flex items-center gap-2 text-xs font-mono text-gray-300 bg-amp-950 px-3.5 py-3 rounded-xl border border-amp-800 hover:border-amber-500/50 cursor-pointer shadow-inset-panel select-none transition">
                 <input id="toggle-trainer-loop" type="checkbox" class="accent-amber-500 cursor-pointer w-4 h-4">
-                <span>Loop Riff</span>
+                <span>Loop Progression</span>
               </label>
 
               <button id="btn-play-tonic" class="px-4 py-3.5 bg-amp-800 hover:bg-amp-700 text-vintage-gold border border-amp-700 rounded-xl font-display font-medium uppercase tracking-wider text-xs md:text-sm transition active:scale-95 flex items-center gap-2 shadow-inset-panel">
@@ -281,7 +281,7 @@
 
               <button id="btn-new-progression" class="px-4 py-3.5 bg-amp-800 hover:bg-amp-700 text-gray-200 border border-amp-700 rounded-xl font-display font-medium uppercase tracking-wider text-xs md:text-sm transition active:scale-95 flex items-center gap-1.5">
                 <i class="fa-solid fa-forward-step"></i>
-                Next Riff
+                Next Progression
               </button>
             </div>
 
@@ -689,7 +689,7 @@
   </div>
 
   <footer class="border-t border-amp-800/80 bg-amp-950 py-4 text-center text-xs text-gray-500 font-mono">
-    RiffMaster Audio Engine • Zero-Dependency Web Audio DSP with Dual-Tier Auto-Resume
+    Chord Progression Trainer Audio Engine • Zero-Dependency Web Audio DSP with Dual-Tier Auto-Resume
   </footer>
 
   <script>
@@ -697,7 +697,8 @@
        1. BACKWARD-COMPATIBLE LOCAL STORAGE PERSISTENCE & ANALYTICS ENGINE
        ========================================================================= */
 
-    const STORE_KEY = 'riffmaster_store_v1';
+    const STORE_KEY = 'chord_progression_store_v1';
+    const LEGACY_STORE_KEY = 'riffmaster_store_v1';
     const CURRENT_SCHEMA_VERSION = 1;
 
     const ALL_DEGREES = ['I', '♭VII', 'IV', 'V', '♭VI', '♭III', 'vi', 'ii', 'i', 'v', '♭II', '♭V'];
@@ -778,7 +779,10 @@
 
     function loadStore() {
       try {
-        const raw = localStorage.getItem(STORE_KEY);
+        let raw = localStorage.getItem(STORE_KEY);
+        if (!raw) {
+          raw = localStorage.getItem(LEGACY_STORE_KEY);
+        }
         if (!raw) return JSON.parse(JSON.stringify(DEFAULT_STORE));
         let parsed = JSON.parse(raw);
         if (!parsed.version || parsed.version !== CURRENT_SCHEMA_VERSION) {
@@ -1278,7 +1282,7 @@
         name: "Grunge Dual Chromatic Borrow",
         numerals: ["I", "♭III", "♭VII", "IV"],
         theory: "Combines two non-diatonic borrowed chords (♭III and ♭VII). The voice leading defies classical functional harmony, creating the defining gritty crunch of early 90s alt-rock.",
-        examples: "Nirvana - 'In Bloom' • Soundgarden - 'Spoonman' • Bush - 'Machinehead' • Alice in Chains - 'The Them Bones' riff rhythm"
+        examples: "Nirvana - 'In Bloom' • Soundgarden - 'Spoonman' • Bush - 'Machinehead' • Alice in Chains - 'The Them Bones' chord progression rhythm"
       },
       {
         name: "Nirvana Chromatic Shift",
@@ -2042,7 +2046,7 @@
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appStore, null, 2));
       const downloadAnchor = document.createElement('a');
       downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `riffmaster_stats_backup_${new Date().toISOString().slice(0,10)}.json`);
+      downloadAnchor.setAttribute("download", `chord_progression_stats_backup_${new Date().toISOString().slice(0,10)}.json`);
       document.body.appendChild(downloadAnchor);
       downloadAnchor.click();
       downloadAnchor.remove();
