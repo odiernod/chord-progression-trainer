@@ -199,32 +199,35 @@
           <!-- MIDDLE ROW: AMP TONE & RHYTHM CONTROLS -->
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-1 text-xs font-mono">
             
-            <!-- 1. Distortion / Drive Level -->
+            <!-- 1. Chord Sound / Amp Tone -->
             <div class="bg-amp-950 p-2.5 rounded-xl border border-amp-800 flex flex-col justify-between">
               <div class="flex items-center justify-between mb-1.5">
-                <span class="text-gray-400 uppercase text-[10px]"><i class="fa-solid fa-fire text-amber-500 mr-1"></i>Amp Drive</span>
+                <span class="text-gray-400 uppercase text-[10px]"><i class="fa-solid fa-sliders text-amber-500 mr-1"></i>Chord Sound</span>
                 <span id="label-drive-preset" class="text-amber-300 font-bold text-[11px]">Plexi Crunch</span>
               </div>
-              <div class="grid grid-cols-4 gap-1">
-                <button class="btn-drive-preset px-1.5 py-1 rounded bg-amp-850 hover:bg-amp-800 text-gray-300 border border-amp-700 text-[10px]" data-drive="clean" title="Clean Warm Tweed">Clean</button>
-                <button class="btn-drive-preset px-1.5 py-1 rounded bg-amp-850 hover:bg-amp-800 text-gray-300 border border-amp-700 text-[10px]" data-drive="breakup" title="Vintage Breakup">Crunch</button>
-                <button class="btn-drive-preset px-1.5 py-1 rounded bg-amber-500 text-black font-bold border border-amber-400 text-[10px]" data-drive="plexi" title="Classic Marshall Plexi">Plexi</button>
-                <button class="btn-drive-preset px-1.5 py-1 rounded bg-amp-850 hover:bg-amp-800 text-gray-300 border border-amp-700 text-[10px]" data-drive="metal" title="High Gain Lead">Lead</button>
+              <div class="grid grid-cols-3 sm:grid-cols-6 gap-1">
+                <button class="btn-drive-preset px-1 py-1 rounded bg-amp-850 hover:bg-amp-800 text-gray-300 border border-amp-700 text-[10px]" data-drive="bass" title="Play Only the Bass Note of Each Chord">Bass</button>
+                <button class="btn-drive-preset px-1 py-1 rounded bg-amp-850 hover:bg-amp-800 text-gray-300 border border-amp-700 text-[10px]" data-drive="pure" title="Crystal Clean Acoustic / Jazz Tone (No Overdrive)">Pure</button>
+                <button class="btn-drive-preset px-1 py-1 rounded bg-amp-850 hover:bg-amp-800 text-gray-300 border border-amp-700 text-[10px]" data-drive="clean" title="Warm Clean Tube Tone">Clean</button>
+                <button class="btn-drive-preset px-1 py-1 rounded bg-amp-850 hover:bg-amp-800 text-gray-300 border border-amp-700 text-[10px]" data-drive="breakup" title="Mild Vintage Breakup">Crunch</button>
+                <button class="btn-drive-preset px-1 py-1 rounded bg-amber-500 text-black font-bold border border-amber-400 text-[10px]" data-drive="plexi" title="Classic Marshall Plexi">Plexi</button>
+                <button class="btn-drive-preset px-1 py-1 rounded bg-amp-850 hover:bg-amp-800 text-gray-300 border border-amp-700 text-[10px]" data-drive="metal" title="High Gain Lead">Lead</button>
               </div>
             </div>
 
             <!-- 2. Guitar Strum Style -->
             <div class="bg-amp-950 p-2.5 rounded-xl border border-amp-800 flex flex-col justify-between">
               <div class="flex items-center justify-between mb-1.5">
-                <span class="text-gray-400 uppercase text-[10px]"><i class="fa-solid fa-hand text-amber-500 mr-1"></i>Guitar Rhythm</span>
+                <span class="text-gray-400 uppercase text-[10px]"><i class="fa-solid fa-hand text-amber-500 mr-1"></i>Chord Rhythm</span>
                 <span class="text-amber-300 font-bold text-[10px]" id="label-active-strum">Rock Strum</span>
               </div>
               <select id="select-strum-style" class="bg-amp-900 text-amber-300 font-mono text-xs rounded border border-amp-700 px-2 py-1 focus:outline-none focus:border-amber-400 cursor-pointer w-full">
                 <option value="standard" selected>Rock Strum (Syncopated)</option>
+                <option value="sustained">Sustained Pad (Clean Whole)</option>
+                <option value="arpeggio">Arpeggio Progression Pattern</option>
                 <option value="chug">Palm-Muted Chug (8ths)</option>
                 <option value="halftime">Half-Time Stomp (Sustained)</option>
                 <option value="shuffle">Blues-Rock Swing Shuffle</option>
-                <option value="arpeggio">Arpeggio Progression Pattern</option>
               </select>
             </div>
 
@@ -247,8 +250,8 @@
             <!-- 4. Voicing & Inversion Mode -->
             <div class="bg-amp-950 p-2.5 rounded-xl border border-amp-800 flex flex-col justify-between">
               <div class="flex items-center justify-between mb-1.5">
-                <span class="text-gray-400 uppercase text-[10px]"><i class="fa-solid fa-sliders text-amber-500 mr-1"></i>Inversions</span>
-                <span class="text-amber-300 text-[10px] font-bold">Bass Engine</span>
+                <span class="text-gray-400 uppercase text-[10px]"><i class="fa-solid fa-layer-group text-amber-500 mr-1"></i>Inversions &amp; Voicing</span>
+                <span class="text-amber-300 text-[10px] font-bold" id="label-voicing-mode">Power 5th</span>
               </div>
               <div class="flex items-center gap-1">
                 <select id="select-inversion-mode" class="bg-amp-900 text-amber-300 font-mono text-xs rounded border border-amp-700 px-2 py-1 focus:outline-none focus:border-amber-400 cursor-pointer w-full">
@@ -256,7 +259,7 @@
                   <option value="random" selected>Random Inversions</option>
                   <option value="always">Always Invert</option>
                 </select>
-                <button id="btn-voicing-toggle" class="px-2 py-1 bg-amp-850 hover:bg-amp-800 border border-amp-700 text-amber-400 rounded font-bold text-[11px] shrink-0" title="Toggle Power vs Triad Voicing">
+                <button id="btn-voicing-toggle" class="px-2 py-1 bg-amp-850 hover:bg-amp-800 border border-amp-700 text-amber-400 rounded font-bold text-[11px] shrink-0" title="Cycle Voicing: Power 5th ➜ Full Triad ➜ Bass Note Only">
                   5th
                 </button>
               </div>
@@ -471,8 +474,8 @@
       <div class="bg-amp-900 rounded-2xl border border-amp-800 p-6 shadow-xl">
         <div class="flex flex-wrap items-center justify-between gap-4 border-b border-amp-800 pb-4">
           <div>
-            <h2 class="text-xl font-bold font-display uppercase tracking-wider text-amber-400">Rock Chord Laboratory</h2>
-            <p class="text-xs text-gray-400">Audition all progression trainer chords &amp; inversions against a tonal center, build custom chains, and track real-time guide tones on the fretboard.</p>
+            <h2 class="text-xl font-bold font-display uppercase tracking-wider text-amber-400">Rock &amp; OmniTune Chord Laboratory</h2>
+            <p class="text-xs text-gray-400">Audition all progression trainer chords &amp; inversions, customize chord sound (from Bass-Only &amp; Crystal Clean to Plexi Crunch), and track guide tones across Guitar, Harmonicas &amp; Ukulele/Bass.</p>
           </div>
 
           <div class="flex items-center gap-3 flex-wrap">
@@ -501,11 +504,61 @@
 
             <!-- Inversion selector for Chord Lab additions -->
             <div class="flex items-center gap-1.5 bg-amp-950 px-3 py-1.5 rounded-xl border border-amp-800 text-xs font-mono">
-              <span class="text-gray-400">Audition Inversion:</span>
+              <span class="text-gray-400">Inversion:</span>
               <select id="sb-inversion-select" class="bg-amp-900 text-amber-300 font-mono text-xs rounded border border-amp-700 px-2 py-1 focus:outline-none focus:border-amber-400 cursor-pointer">
                 <option value="0">Root Position (1)</option>
                 <option value="1">1st Inversion (3rd / Inverted 4th)</option>
                 <option value="2">2nd Inversion (5th in Bass)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chord Lab Sound, Voicing & Rhythm Bar -->
+        <div class="mt-3 pt-1 pb-3 border-b border-amp-800/80 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="text-gray-400 uppercase text-[10px]"><i class="fa-solid fa-volume-high text-amber-500 mr-1"></i>Chord Sound:</span>
+            <div class="flex items-center gap-1 flex-wrap">
+              <button type="button" class="btn-drive-preset px-2 py-1 rounded bg-amp-850 hover:bg-amp-800 text-gray-300 border border-amp-700 text-[10px]" data-drive="bass" title="Play Only the Bass Note of Each Chord">Bass Only</button>
+              <button type="button" class="btn-drive-preset px-2 py-1 rounded bg-amp-850 hover:bg-amp-800 text-gray-300 border border-amp-700 text-[10px]" data-drive="pure" title="Crystal Clean Acoustic / Jazz Tone (Zero Overdrive)">Pure Clean</button>
+              <button type="button" class="btn-drive-preset px-2 py-1 rounded bg-amp-850 hover:bg-amp-800 text-gray-300 border border-amp-700 text-[10px]" data-drive="clean" title="Warm Clean Tube Tone">Warm Clean</button>
+              <button type="button" class="btn-drive-preset px-2 py-1 rounded bg-amp-850 hover:bg-amp-800 text-gray-300 border border-amp-700 text-[10px]" data-drive="breakup" title="Mild Vintage Breakup">Crunch</button>
+              <button type="button" class="btn-drive-preset px-2 py-1 rounded bg-amber-500 text-black font-bold border border-amber-400 text-[10px]" data-drive="plexi" title="Classic Marshall Plexi">Plexi</button>
+              <button type="button" class="btn-drive-preset px-2 py-1 rounded bg-amp-850 hover:bg-amp-800 text-gray-300 border border-amp-700 text-[10px]" data-drive="metal" title="High Gain Lead">Lead</button>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2.5 flex-wrap">
+            <div class="flex items-center gap-1.5 bg-amp-950 px-2.5 py-1 rounded-lg border border-amp-800">
+              <span class="text-gray-400 text-[10px] uppercase">Voicing:</span>
+              <select id="sb-voicing-select" class="bg-amp-900 text-amber-300 font-mono text-xs rounded border border-amp-700 px-2 py-0.5 focus:outline-none focus:border-amber-400 cursor-pointer">
+                <option value="power">Power 5th (R+5)</option>
+                <option value="triad">Full Triad (R+3+5)</option>
+                <option value="bass">Bass Note Only</option>
+              </select>
+            </div>
+
+            <div class="flex items-center gap-1.5 bg-amp-950 px-2.5 py-1 rounded-lg border border-amp-800">
+              <span class="text-gray-400 text-[10px] uppercase">Rhythm:</span>
+              <select id="sb-strum-style" class="bg-amp-900 text-amber-300 font-mono text-xs rounded border border-amp-700 px-2 py-0.5 focus:outline-none focus:border-amber-400 cursor-pointer">
+                <option value="standard">Rock Strum</option>
+                <option value="sustained">Sustained Pad</option>
+                <option value="arpeggio">Arpeggio</option>
+                <option value="chug">Palm-Muted Chug</option>
+                <option value="halftime">Half-Time Stomp</option>
+                <option value="shuffle">Blues Shuffle</option>
+              </select>
+            </div>
+
+            <div class="flex items-center gap-1.5 bg-amp-950 px-2.5 py-1 rounded-lg border border-amp-800">
+              <span class="text-gray-400 text-[10px] uppercase">Drums:</span>
+              <select id="sb-drum-groove" class="bg-amp-900 text-emerald-300 font-mono text-xs rounded border border-amp-700 px-2 py-0.5 focus:outline-none focus:border-amber-400 cursor-pointer">
+                <option value="standard">Standard 4/4</option>
+                <option value="halftime">Half-Time</option>
+                <option value="punk">Punk Double</option>
+                <option value="shuffle">Blues Shuffle</option>
+                <option value="minimal">Kick Pulse</option>
+                <option value="off">Muted (Off)</option>
               </select>
             </div>
           </div>
@@ -783,39 +836,85 @@
           <div id="sb-chain-feedback" class="mt-2 text-xs font-mono hidden"></div>
         </div>
 
-        <!-- OMNITUNE-INSPIRED GUITAR FRETBOARD & REAL-TIME GUIDE TONE VISUALIZER -->
+        <!-- OMNITUNE MULTI-INSTRUMENT (GUITAR, HARMONICAS, UKULELE/BASS) & REAL-TIME GUIDE TONE VISUALIZER -->
         <div class="mt-6 pt-6 border-t border-amp-800 space-y-4">
           <div class="flex flex-wrap items-center justify-between gap-3">
             <div class="flex items-center gap-2.5">
               <div class="w-8 h-8 rounded-lg bg-amber-500/15 border border-amber-500/40 flex items-center justify-center text-amber-400">
-                <i class="fa-solid fa-guitar"></i>
+                <i id="sb-visualizer-icon" class="fa-solid fa-guitar"></i>
               </div>
               <div>
                 <h3 class="text-base font-bold font-display uppercase tracking-wider text-amber-400 flex items-center gap-2">
-                  <span>OmniTune Guitar Fretboard • Live Guide Tone Visualizer</span>
+                  <span id="sb-visualizer-title">OmniTune Instrument • Live Guide Tone Visualizer</span>
                   <span id="sb-fretboard-live-badge" class="hidden px-2 py-0.5 text-[10px] font-mono rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 animate-pulse">● PLAYING</span>
                 </h3>
-                <p class="text-[11px] text-gray-400">Real-time 24-fret neck highlighting the <span class="text-emerald-400 font-semibold">3rd</span> &amp; <span class="text-sky-400 font-semibold">7th</span> guide tones of each chord as your progression plays. Tap any fret to audition &amp; inspect.</p>
+                <p id="sb-visualizer-subtitle" class="text-[11px] text-gray-400">Real-time OmniTune diagram highlighting the <span class="text-emerald-400 font-semibold">3rd</span> &amp; <span class="text-sky-400 font-semibold">7th</span> guide tones of each chord across Guitar, Diatonic &amp; Chromatic Harmonicas, or Bass/Ukulele.</p>
               </div>
             </div>
 
-            <!-- Fretboard Controls (Tuning, Tone Filter, Overlays) -->
+            <!-- Instrument, Tuning/Harp Key, Tone Filter, Overlays -->
             <div class="flex items-center gap-2 flex-wrap text-xs font-mono">
+              <!-- Instrument Selector (Full OmniTune Catalog) -->
               <div class="flex items-center gap-1.5 bg-amp-950 px-2.5 py-1.5 rounded-lg border border-amp-800">
-                <span class="text-gray-400 text-[11px]">Tuning:</span>
-                <select id="sb-tuning-select" class="bg-amp-900 text-amber-300 font-mono text-xs rounded border border-amp-700 px-2 py-0.5 focus:outline-none focus:border-amber-400 cursor-pointer">
-                  <option value="standard" selected>Standard (EADGBE)</option>
-                  <option value="ebstandard">Eb Standard</option>
-                  <option value="dropd">Drop D (DADGBE)</option>
-                  <option value="dadgad">DADGAD</option>
-                  <option value="allfourth">Perfect Fourths (EADGCF)</option>
-                  <option value="ebfourths">Perfect Fourths Eb</option>
-                  <option value="openg">Open G</option>
-                  <option value="opend">Open D</option>
-                  <option value="opene">Open E</option>
-                  <option value="openc">Open C</option>
-                  <option value="bebebe">B E B E B E</option>
+                <span class="text-gray-400 text-[11px]">Instrument:</span>
+                <select id="sb-instrument-select" class="bg-amp-900 text-amber-300 font-mono text-xs rounded border border-amp-700 px-2 py-0.5 focus:outline-none focus:border-amber-400 cursor-pointer max-w-[230px]">
+                  <optgroup label="Fretted Instruments">
+                    <option value="guitar" selected>🎸 Guitar (6-String, 24 Frets)</option>
+                    <option value="ukulele">🎸 Ukulele / 4-String Bass</option>
+                  </optgroup>
+                  <optgroup label="10-Hole Diatonic Harmonicas (OmniTune)">
+                    <option value="diatonicrichter">🎵 Richter Harmonica</option>
+                    <option value="diatonicwildetuned">🎵 Wilde Tuned Harmonica</option>
+                    <option value="diatonicwildeminor">🎵 Wilde Minor Harmonica</option>
+                    <option value="paddywildetuned">🎵 Paddy Wilde Harmonica</option>
+                    <option value="dorianwildealtered">🎵 Dom's 'Dorian Shred' Altered Wilde</option>
+                    <option value="domshredwildeminor">🎵 Dom's 'Shred Minor' 2.5 Octave</option>
+                    <option value="diatonicpowerbender">🎵 PowerBender Harmonica</option>
+                    <option value="powerdrawtuned">🎵 PowerDraw Harmonica</option>
+                    <option value="powerchromatic10tuning">🎵 Power Chromatic 10 Harmonica</option>
+                    <option value="paddyrichtertuned">🎵 Paddy Richter Harmonica</option>
+                    <option value="paddy123tuned">🎵 Paddy Richter Extended Harmonica</option>
+                    <option value="countrytuned">🎵 Country Tuned Harmonica</option>
+                    <option value="melodymakertuned">🎵 Melody Maker Harmonica</option>
+                    <option value="easythirdtuned">🎵 Easy Third Tuned Harmonica</option>
+                    <option value="easydiatonic">🎵 Easy Diatonic Harmonica</option>
+                    <option value="sunnyrbtuned">🎵 Sunny Regular Breath Harmonica</option>
+                    <option value="diatonicminor">🎵 Natural Minor Harmonica</option>
+                    <option value="diminished10">🎵 Diminished 10-Hole Harmonica</option>
+                    <option value="augmented10">🎵 Augmented 10-Hole Harmonica</option>
+                    <option value="wholetone10">🎵 Whole Tone 10-Hole Harmonica</option>
+                  </optgroup>
+                  <optgroup label="Chromatic Harmonicas (12 &amp; 16 Hole)">
+                    <option value="chromatic12solo">🎶 Chromatic 12 (Solo Tuned)</option>
+                    <option value="chromatic12bebop">🎶 Chromatic 12 (Bebop Tuned)</option>
+                    <option value="chromatic12c6">🎶 Chromatic 12 (C6 / Minor 7th)</option>
+                    <option value="chromatic12power">🎶 Chromatic 12 (PowerChromatic)</option>
+                    <option value="chromatic16solo">🎶 Chromatic 16 (Solo Tuned)</option>
+                    <option value="chromatic16bebop">🎶 Chromatic 16 (Bebop Tuned)</option>
+                    <option value="chromatic16c6">🎶 Chromatic 16 (C6 / Minor 7th)</option>
+                    <option value="chromatic16power">🎶 Chromatic 16 (PowerChromatic)</option>
+                  </optgroup>
                 </select>
+              </div>
+
+              <!-- Dynamic Tuning / Harmonica Key Selector -->
+              <div class="flex items-center gap-1.5 bg-amp-950 px-2.5 py-1.5 rounded-lg border border-amp-800">
+                <span id="sb-tuning-label" class="text-gray-400 text-[11px]">Tuning:</span>
+                <select id="sb-tuning-select" class="bg-amp-900 text-amber-300 font-mono text-xs rounded border border-amp-700 px-2 py-0.5 focus:outline-none focus:border-amber-400 cursor-pointer max-w-[210px]">
+                  <option value="standard" selected>Standard EADGBE</option>
+                </select>
+              </div>
+
+              <!-- Harmonica-Specific Controls (Position Sync + Half-Valved) -->
+              <div id="sb-harmonica-controls" class="hidden flex items-center gap-1.5 bg-amp-950 px-2.5 py-1 rounded-lg border border-amp-800 flex-wrap">
+                <span id="sb-harp-position-badge" class="px-1.5 py-0.5 rounded bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[10px] font-bold">2nd Pos (Cross)</span>
+                <button id="btn-sb-pos-1" type="button" class="px-1.5 py-0.5 rounded bg-amp-850 hover:bg-amp-800 border border-amp-700 text-gray-300 hover:text-amber-300 text-[10px]" title="Set Harmonica Key to 1st Position (Straight Harp) for current Song Key">1st Pos</button>
+                <button id="btn-sb-pos-2" type="button" class="px-1.5 py-0.5 rounded bg-amp-850 hover:bg-amp-800 border border-amp-700 text-gray-300 hover:text-amber-300 text-[10px]" title="Set Harmonica Key to 2nd Position (Cross Harp) for current Song Key">2nd Pos</button>
+                <button id="btn-sb-pos-3" type="button" class="px-1.5 py-0.5 rounded bg-amp-850 hover:bg-amp-800 border border-amp-700 text-gray-300 hover:text-amber-300 text-[10px]" title="Set Harmonica Key to 3rd Position (Dorian Minor) for current Song Key">3rd Pos</button>
+                <label id="sb-valved-label" class="flex items-center gap-1 text-[10px] text-emerald-300 ml-1 cursor-pointer" title="Enable Half-Valved Windsaver Bends (VB) on 10-hole harmonica">
+                  <input id="sb-toggle-valved" type="checkbox" class="accent-emerald-500 cursor-pointer">
+                  <span>Half-Valved</span>
+                </label>
               </div>
 
               <div class="flex items-center gap-1.5 bg-amp-950 px-2.5 py-1.5 rounded-lg border border-amp-800">
@@ -871,7 +970,7 @@
             </div>
           </div>
 
-          <!-- Fretboard Canvas Container -->
+          <!-- Instrument Diagram Canvas Container -->
           <div class="bg-amp-950 p-3 rounded-xl border border-amp-800 shadow-inset-panel space-y-2.5">
             <div class="flex items-center justify-between text-[11px] font-mono text-gray-400 flex-wrap gap-2">
               <div class="flex items-center gap-3 flex-wrap">
@@ -881,18 +980,18 @@
                 <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-indigo-500/80 inline-block"></span> <strong class="text-indigo-300">5th (5)</strong></span>
                 <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full border-2 border-dashed border-amber-300/60 inline-block"></span> <span class="text-gray-400">Next / Pinned Ghost</span></span>
               </div>
-              <span class="text-gray-500 text-[10px]">↔ Scroll horizontally on mobile • Tap any fret to pluck &amp; inspect</span>
+              <span id="sb-canvas-help-hint" class="text-gray-500 text-[10px]">↔ Scroll horizontally on mobile • Tap any fret or harmonica hole to audition &amp; inspect</span>
             </div>
 
             <div id="sb-fretboard-scroll-wrapper" class="w-full overflow-x-auto rounded-lg border border-amp-800 bg-amp-900">
-              <canvas id="sb-guitar-canvas" width="1200" height="340" class="block w-full min-w-[980px] h-[320px] sm:h-[340px] cursor-crosshair"></canvas>
+              <canvas id="sb-guitar-canvas" width="1200" height="360" class="block w-full min-w-[980px] h-[340px] sm:h-[360px] cursor-crosshair"></canvas>
             </div>
 
-            <!-- OmniTune Fret Inspector Bar -->
+            <!-- OmniTune Note / Hole / Fret Inspector Bar -->
             <div class="px-3 py-2 rounded-lg bg-amp-900 border border-amp-800 flex items-center justify-between gap-2 flex-wrap text-xs font-mono">
               <div class="flex items-center gap-2 flex-wrap">
-                <span class="px-2 py-0.5 rounded bg-amp-950 border border-amp-700 text-amber-400 font-bold text-[10px] uppercase">Fret Inspector</span>
-                <span id="sb-fret-inspector-text" class="text-gray-300">Tap any fret on the guitar neck to audition its pitch and inspect its guide-tone role across your chord progression.</span>
+                <span id="sb-inspector-badge" class="px-2 py-0.5 rounded bg-amp-950 border border-amp-700 text-amber-400 font-bold text-[10px] uppercase">Note Inspector</span>
+                <span id="sb-fret-inspector-text" class="text-gray-300">Tap any fret or harmonica hole to audition its pitch and inspect its guide-tone role across your chord progression.</span>
               </div>
             </div>
           </div>
@@ -1130,13 +1229,19 @@
     let drumBus = null;
     let audioUnlockAttempted = false;
 
-    // Drive curve presets
+    // Drive & Sound curve presets (from Bass-Only & Crystal Clean to High-Gain Lead)
     const DRIVE_PROFILES = {
-      clean: { k: 3, preGain: 0.95, cabCutoff: 4800, name: 'Warm Tweed' },
-      breakup: { k: 12, preGain: 0.8, cabCutoff: 4500, name: 'Edge of Breakup' },
-      plexi: { k: 26, preGain: 0.65, cabCutoff: 4200, name: 'Plexi Crunch' },
-      metal: { k: 58, preGain: 0.52, cabCutoff: 3800, name: 'High-Gain Lead' }
+      bass:    { k: 0,   preGain: 0.95, cabCutoff: 6500, waveMode: 'pure',   isBassOnly: true,  name: 'Bass Note Only' },
+      pure:    { k: 0,   preGain: 1.00, cabCutoff: 7800, waveMode: 'pure',   isBassOnly: false, name: 'Crystal Clean' },
+      clean:   { k: 1.5, preGain: 0.92, cabCutoff: 5800, waveMode: 'clean',  isBassOnly: false, name: 'Warm Clean' },
+      breakup: { k: 9,   preGain: 0.80, cabCutoff: 4600, waveMode: 'crunch', isBassOnly: false, name: 'Light Crunch' },
+      plexi:   { k: 26,  preGain: 0.65, cabCutoff: 4200, waveMode: 'rock',   isBassOnly: false, name: 'Plexi Crunch' },
+      metal:   { k: 58,  preGain: 0.52, cabCutoff: 3800, waveMode: 'rock',   isBassOnly: false, name: 'High-Gain Lead' }
     };
+
+    function isBassOnlyActive() {
+      return appStore.settings.drivePreset === 'bass' || (typeof STATE !== 'undefined' && STATE.voicing === 'bass');
+    }
 
     function logAudioStatus(msg, isError = false) {
       const diagMsg = document.getElementById('diag-msg');
@@ -1200,11 +1305,17 @@
       }
     }
 
-    // Generate soft-clipping asymmetric analog overdrive curve
+    // Generate soft-clipping asymmetric analog overdrive curve (or pure linear transfer when amount <= 0)
     function generateDistortionCurve(amount = 26) {
       const n_samples = 4096;
       const curve = new Float32Array(n_samples);
-      const k = Math.max(1, amount);
+      if (amount <= 0) {
+        for (let i = 0; i < n_samples; ++i) {
+          curve[i] = (i * 2) / n_samples - 1;
+        }
+        return curve;
+      }
+      const k = Math.max(0.5, amount);
       for (let i = 0; i < n_samples; ++i) {
         const x = (i * 2) / n_samples - 1;
         curve[i] = ((1 + k) * x) / (1 + k * Math.abs(x));
@@ -1213,15 +1324,16 @@
     }
 
     function applyDrivePreset(presetKey) {
-      const profile = DRIVE_PROFILES[presetKey] || DRIVE_PROFILES.plexi;
-      appStore.settings.drivePreset = presetKey;
+      const validKey = DRIVE_PROFILES[presetKey] ? presetKey : 'plexi';
+      const profile = DRIVE_PROFILES[validKey];
+      appStore.settings.drivePreset = validKey;
       saveStore(appStore);
 
       const label = document.getElementById('label-drive-preset');
       if (label) label.textContent = profile.name;
 
       document.querySelectorAll('.btn-drive-preset').forEach(btn => {
-        if (btn.getAttribute('data-drive') === presetKey) {
+        if (btn.getAttribute('data-drive') === validKey) {
           btn.className = 'btn-drive-preset px-1.5 py-1 rounded bg-amber-500 text-black font-bold border border-amber-400 text-[10px]';
         } else {
           btn.className = 'btn-drive-preset px-1.5 py-1 rounded bg-amp-850 hover:bg-amp-800 text-gray-300 border border-amp-700 text-[10px]';
@@ -1285,10 +1397,10 @@
 
         // Bass Bus: Lowpass sub-frequency
         bassBus = audioCtx.createGain();
-        bassBus.gain.setValueAtTime(0.75, audioCtx.currentTime);
+        bassBus.gain.setValueAtTime(0.78, audioCtx.currentTime);
         const bassLowpass = audioCtx.createBiquadFilter();
         bassLowpass.type = 'lowpass';
-        bassLowpass.frequency.setValueAtTime(380, audioCtx.currentTime);
+        bassLowpass.frequency.setValueAtTime(520, audioCtx.currentTime);
         bassBus.connect(bassLowpass);
         bassLowpass.connect(masterGain);
 
@@ -1356,30 +1468,70 @@
       return 440 * Math.pow(2, (midi - 69) / 12);
     }
 
-    function playGuitarNote(freq, startTime, duration = 0.8, velocity = 0.7, isMuted = false) {
+    function playGuitarNote(freq, startTime, duration = 0.8, velocity = 0.7, isMuted = false, forceNoteAudition = false) {
       if (!audioCtx || !guitarBus || audioCtx.state !== 'running') return;
+      if (!forceNoteAudition && isBassOnlyActive()) return;
+
+      const profile = DRIVE_PROFILES[appStore.settings.drivePreset] || DRIVE_PROFILES.plexi;
+      const waveMode = forceNoteAudition && profile.isBassOnly ? 'pure' : (profile.waveMode || 'rock');
 
       const voiceGain = audioCtx.createGain();
-      const detunes = isMuted ? [0] : [-6, 0, 6.5];
+      let voices = [];
 
-      detunes.forEach((cents) => {
+      if (isMuted) {
+        voices = [{ type: 'triangle', cents: 0, gainMul: 1.0 }];
+      } else if (waveMode === 'pure') {
+        // Crystal Clean: Pure sine fundamental + warm triangle body, zero sawtooth buzz
+        voices = [
+          { type: 'sine',     cents: 0,   gainMul: 0.75 },
+          { type: 'triangle', cents: 1.5, gainMul: 0.55 }
+        ];
+      } else if (waveMode === 'clean') {
+        // Warm Tube Clean: Smooth dual triangle chorus + subtle harmonic
+        voices = [
+          { type: 'triangle', cents: -2.5, gainMul: 0.65 },
+          { type: 'triangle', cents: 2.5,  gainMul: 0.65 },
+          { type: 'sine',     cents: 0,    gainMul: 0.35 }
+        ];
+      } else if (waveMode === 'crunch') {
+        // Light Crunch: Triangle body + single mild sawtooth edge
+        voices = [
+          { type: 'triangle', cents: -3.5, gainMul: 0.65 },
+          { type: 'sawtooth', cents: 0,    gainMul: 0.50 },
+          { type: 'triangle', cents: 3.5,  gainMul: 0.65 }
+        ];
+      } else {
+        // Plexi / High-Gain Rock: Classic 3-oscillator detuned sawtooth stack
+        voices = [
+          { type: 'sawtooth', cents: -6.0, gainMul: 0.7 },
+          { type: 'sawtooth', cents: 0,    gainMul: 0.7 },
+          { type: 'sawtooth', cents: 6.5,  gainMul: 0.7 }
+        ];
+      }
+
+      if (isMuted) {
+        voiceGain.gain.setValueAtTime(0.0001, startTime);
+        voiceGain.gain.linearRampToValueAtTime(velocity * 0.25, startTime + 0.01);
+        voiceGain.gain.exponentialRampToValueAtTime(0.0001, startTime + Math.min(duration, 0.12));
+      } else {
+        const peakGain = (waveMode === 'pure' || waveMode === 'clean') ? velocity * 0.36 : velocity * 0.30;
+        const sustainGain = (waveMode === 'pure' || waveMode === 'clean') ? velocity * 0.18 : velocity * 0.12;
+        voiceGain.gain.setValueAtTime(0.0001, startTime);
+        voiceGain.gain.linearRampToValueAtTime(Math.max(0.001, peakGain), startTime + 0.018);
+        voiceGain.gain.exponentialRampToValueAtTime(Math.max(0.0001, sustainGain), startTime + Math.min(0.38, duration * 0.6));
+        voiceGain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+      }
+
+      voices.forEach(({ type, cents, gainMul }) => {
         const osc = audioCtx.createOscillator();
-        osc.type = isMuted ? 'triangle' : 'sawtooth';
+        const oscGain = audioCtx.createGain();
+        osc.type = type;
         osc.frequency.setValueAtTime(freq, startTime);
         osc.detune.setValueAtTime(cents, startTime);
+        oscGain.gain.setValueAtTime(gainMul, startTime);
 
-        if (isMuted) {
-          voiceGain.gain.setValueAtTime(0.0001, startTime);
-          voiceGain.gain.linearRampToValueAtTime(velocity * 0.25, startTime + 0.01);
-          voiceGain.gain.exponentialRampToValueAtTime(0.0001, startTime + Math.min(duration, 0.12));
-        } else {
-          voiceGain.gain.setValueAtTime(0.0001, startTime);
-          voiceGain.gain.linearRampToValueAtTime(Math.max(0.001, velocity * 0.3), startTime + 0.02);
-          voiceGain.gain.exponentialRampToValueAtTime(Math.max(0.0001, velocity * 0.12), startTime + 0.35);
-          voiceGain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
-        }
-
-        osc.connect(voiceGain);
+        osc.connect(oscGain);
+        oscGain.connect(voiceGain);
         osc.start(startTime);
         osc.stop(startTime + (isMuted ? 0.15 : duration + 0.05));
       });
@@ -1389,19 +1541,38 @@
 
     function playBassNote(freq, startTime, duration = 0.8) {
       if (!audioCtx || !bassBus || audioCtx.state !== 'running') return;
-      const osc = audioCtx.createOscillator();
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(freq * 0.5, startTime);
+      const bassOnly = isBassOnlyActive();
+
+      // Fundamental sub-bass triangle
+      const oscSub = audioCtx.createOscillator();
+      oscSub.type = 'triangle';
+      oscSub.frequency.setValueAtTime(freq * 0.5, startTime);
 
       const gain = audioCtx.createGain();
+      const peak = bassOnly ? 0.68 : 0.42;
       gain.gain.setValueAtTime(0.0001, startTime);
-      gain.gain.linearRampToValueAtTime(0.4, startTime + 0.02);
+      gain.gain.linearRampToValueAtTime(peak, startTime + 0.018);
+      if (bassOnly) {
+        gain.gain.exponentialRampToValueAtTime(peak * 0.55, startTime + Math.min(0.35, duration * 0.5));
+      }
       gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
 
-      osc.connect(gain);
+      oscSub.connect(gain);
+      oscSub.start(startTime);
+      oscSub.stop(startTime + duration + 0.05);
+
+      // Add upper octave fundamental + warm harmonic definition so Bass-Only is punchy and audible on all speakers
+      const oscBody = audioCtx.createOscillator();
+      oscBody.type = bassOnly ? 'triangle' : 'sine';
+      oscBody.frequency.setValueAtTime(freq, startTime);
+      const bodyGain = audioCtx.createGain();
+      bodyGain.gain.setValueAtTime(bassOnly ? 0.55 : 0.22, startTime);
+      oscBody.connect(bodyGain);
+      bodyGain.connect(gain);
+      oscBody.start(startTime);
+      oscBody.stop(startTime + duration + 0.05);
+
       gain.connect(bassBus);
-      osc.start(startTime);
-      osc.stop(startTime + duration + 0.05);
     }
 
     function playDrumKick(time, velocity = 0.7) {
@@ -1672,6 +1843,21 @@
       let bassPitch = 0;
       let inversionLabel = 'Root Position';
 
+      if (style === 'bass') {
+        guitarPitches = [];
+        if (inversion === 1) {
+          bassPitch = noteToFreq(thirdNote, 2);
+          inversionLabel = `Bass Only (1st Inv: /${thirdNote})`;
+        } else if (inversion === 2) {
+          bassPitch = noteToFreq(fifthNote, 2);
+          inversionLabel = `Bass Only (2nd Inv: /${fifthNote})`;
+        } else {
+          bassPitch = noteToFreq(rootNote, 2);
+          inversionLabel = `Bass Only (Root: ${rootNote})`;
+        }
+        return { guitarPitches, bassPitch, inversionLabel };
+      }
+
       if (style === 'triad') {
         const rootOct3 = noteToFreq(rootNote, 3);
         const thirdOct3 = noteToFreq(thirdNote, 3);
@@ -1747,7 +1933,10 @@
       sbActiveIndex: 0,
       sbActiveChord: { rn: 'I', inversion: 0 },
       sbPinnedChord: null,
-      sbTuning: 'standard',
+      sbInstrument: appStore.settings.sbInstrument || 'guitar',
+      sbTuning: appStore.settings.sbTuning || 'standard',
+      sbHarpKey: appStore.settings.sbHarpKey || 'd',
+      sbValved: appStore.settings.sbValved || false,
       sbToneMode: 'guide-root',
       sbShowNotes: true,
       sbShowDegrees: true,
@@ -1907,7 +2096,9 @@
       const now = audioCtx.currentTime;
       const { guitarPitches, bassPitch, inversionLabel } = getVoicingFrequencies(root, roman, STATE.voicing, inversion);
 
-      guitarPitches.forEach(f => playGuitarNote(f, now, duration, 0.75));
+      if (!isBassOnlyActive()) {
+        guitarPitches.forEach(f => playGuitarNote(f, now, duration, 0.75));
+      }
       playBassNote(bassPitch, now, duration);
 
       if (!STATE.strictBlindMode || STATE.revealed) {
@@ -2005,6 +2196,16 @@
     }
 
     function scheduleBarGuitar(chordStartTime, beatDuration, barDuration, guitarPitches, strumStyle) {
+      if (isBassOnlyActive() || !guitarPitches || guitarPitches.length === 0) return;
+
+      if (strumStyle === 'sustained') {
+        // Sustained whole-bar pad (ideal for clean chords & harmonica backing)
+        guitarPitches.forEach(f => {
+          playGuitarNote(f, chordStartTime, barDuration * 0.96, 0.78);
+        });
+        return;
+      }
+
       if (strumStyle === 'arpeggio') {
         const eighth = beatDuration / 2;
         for (let step = 0; step < 8; step++) {
@@ -2398,20 +2599,296 @@
        8. CHORD LAB, OMNITUNE FRETBOARD & REAL-TIME GUIDE TONE VISUALIZER
        ========================================================================= */
 
-    // Adapted from domdviice/omnitune (scripts/guitarprogression.js)
-    const OMNITUNE_TUNINGS = {
-      standard: ['E2', 'A2', 'D3', 'G3', 'B3', 'E4'],
-      ebstandard: ['Eb2', 'Ab2', 'Db3', 'Gb3', 'Bb3', 'Eb4'],
-      allfourth: ['E2', 'A2', 'D3', 'G3', 'C4', 'F4'],
-      ebfourths: ['Eb2', 'Ab2', 'Db3', 'Gb3', 'B3', 'E4'],
-      dropd: ['D2', 'A2', 'D3', 'G3', 'B3', 'E4'],
-      dadgad: ['D2', 'A2', 'D3', 'G3', 'A3', 'D4'],
-      openc: ['C2', 'G2', 'C3', 'G3', 'C4', 'E4'],
-      opene: ['E2', 'B2', 'E3', 'G#3', 'B3', 'E4'],
-      bebebe: ['B1', 'E2', 'B2', 'E3', 'B3', 'E4'],
-      openg: ['E2', 'B2', 'G3', 'D4', 'G4', 'E5'],
-      opend: ['D2', 'A2', 'F3', 'C4', 'G4', 'D5']
+    // Adapted from domdviice/omnitune (scripts/tuning_definitions.js & scripts/tuning_engine.js)
+    const OMNITUNE_GUITAR_TUNINGS = {
+      standard:      { label: 'Standard (E A D G B E)', notes: ['E2', 'A2', 'D3', 'G3', 'B3', 'E4'] },
+      ebstandard:    { label: 'Eb Standard (Eb Ab Db Gb Bb Eb)', notes: ['Eb2', 'Ab2', 'Db3', 'Gb3', 'Bb3', 'Eb4'] },
+      dstandard:     { label: 'D Standard (D G C F A D)', notes: ['D2', 'G2', 'C3', 'F3', 'A3', 'D4'] },
+      'c#standard':  { label: 'C# Standard (C# F# B E G# C#)', notes: ['C#2', 'F#2', 'B2', 'E3', 'G#3', 'C#4'] },
+      cstandard:     { label: 'C Standard (C F Bb Eb G C)', notes: ['C2', 'F2', 'Bb2', 'Eb3', 'G3', 'C4'] },
+      bstandard:     { label: 'B Baritone (B E A D F# B)', notes: ['B1', 'E2', 'A2', 'D3', 'F#3', 'B3'] },
+      dropd:         { label: 'Drop D (D A D G B E)', notes: ['D2', 'A2', 'D3', 'G3', 'B3', 'E4'] },
+      'dropc#':      { label: 'Drop C# (C# Ab Db Gb Bb Eb)', notes: ['C#2', 'Ab2', 'Db3', 'Gb3', 'Bb3', 'Eb4'] },
+      dropc:         { label: 'Drop C (C G C F A D)', notes: ['C2', 'G2', 'C3', 'F3', 'A3', 'D4'] },
+      dropb:         { label: 'Drop B (B F# B E G# C#)', notes: ['B1', 'F#2', 'B2', 'E3', 'G#3', 'C#4'] },
+      dropa:         { label: 'Drop A (A E A D F# B)', notes: ['A1', 'E2', 'A2', 'D3', 'F#3', 'B3'] },
+      doubledropd:   { label: 'Double Drop D (D A D G B D)', notes: ['D2', 'A2', 'D3', 'G3', 'B3', 'D4'] },
+      dadgad:        { label: 'DADGAD (Celtic / Modal)', notes: ['D2', 'A2', 'D3', 'G3', 'A3', 'D4'] },
+      'dadf#ad':     { label: 'Open D (D A D F# A D)', notes: ['D2', 'A2', 'D3', 'F#3', 'A3', 'D4'] },
+      dgdgbd:        { label: 'Open G (D G D G B D)', notes: ['D2', 'G2', 'D3', 'G3', 'B3', 'D4'] },
+      cgcgce:        { label: 'Open C (C G C G C E)', notes: ['C2', 'G2', 'C3', 'G3', 'C4', 'E4'] },
+      opene:         { label: 'Open E (E B E G# B E)', notes: ['E2', 'B2', 'E3', 'G#3', 'B3', 'E4'] },
+      opena:         { label: 'Open A (E A E A C# E)', notes: ['E2', 'A2', 'E3', 'A3', 'C#4', 'E4'] },
+      openf:         { label: 'Open F (C F C F A C)', notes: ['C2', 'F2', 'C3', 'F3', 'A3', 'C4'] },
+      opendm:        { label: 'Open D Minor (D A D F A D)', notes: ['D2', 'A2', 'D3', 'F3', 'A3', 'D4'] },
+      opengm:        { label: 'Open G Minor (D G D G Bb D)', notes: ['D2', 'G2', 'D3', 'G3', 'Bb3', 'D4'] },
+      openem:        { label: 'Open E Minor (E B E G B E)', notes: ['E2', 'B2', 'E3', 'G3', 'B3', 'E4'] },
+      openam:        { label: 'Open A Minor (E A E A C E)', notes: ['E2', 'A2', 'E3', 'A3', 'C4', 'E4'] },
+      allfourth:     { label: 'All Fourths (E A D G C F)', notes: ['E2', 'A2', 'D3', 'G3', 'C4', 'F4'] },
+      ebfourths:     { label: 'Eb All Fourths (Eb Ab Db Gb B E)', notes: ['Eb2', 'Ab2', 'Db3', 'Gb3', 'B3', 'E4'] },
+      newstandard:   { label: 'NST / Fripp (C G D A E G)', notes: ['C2', 'G2', 'D3', 'A3', 'E4', 'G4'] },
+      majorthirds:   { label: 'Major Thirds (Ab C E Ab C E)', notes: ['Ab2', 'C3', 'E3', 'Ab3', 'C4', 'E4'] },
+      minorthirds:   { label: 'Minor Thirds (C Eb Gb A C Eb)', notes: ['C3', 'Eb3', 'Gb3', 'A3', 'C4', 'Eb4'] },
+      augmentedfourths: { label: 'Tritones (C F# C F# C F#)', notes: ['C2', 'F#2', 'C3', 'F#3', 'C4', 'F#4'] },
+      bebebe:        { label: 'B E B E B E (Drone)', notes: ['B1', 'E2', 'B2', 'E3', 'B3', 'E4'] },
+      ostrich:       { label: 'Ostrich (E E E E E E)', notes: ['E2', 'E2', 'E3', 'E3', 'E4', 'E4'] }
     };
+
+    const OMNITUNE_UKULELE_TUNINGS = {
+      standard:      { label: 'Ukulele Standard High-G (G4 C4 E4 A4)', notes: ['G4', 'C4', 'E4', 'A4'] },
+      lowg:          { label: 'Ukulele Low-G (G3 C4 E4 A4)', notes: ['G3', 'C4', 'E4', 'A4'] },
+      baritone:      { label: 'Baritone Ukulele (D3 G3 B3 E4)', notes: ['D3', 'G3', 'B3', 'E4'] },
+      bass_standard: { label: '4-String Bass Standard (E1 A1 D2 G2)', notes: ['E1', 'A1', 'D2', 'G2'] },
+      bass_dropd:    { label: '4-String Bass Drop D (D1 A1 D2 G2)', notes: ['D1', 'A1', 'D2', 'G2'] },
+      d_tuning:      { label: 'Ukulele D Tuning (A4 D4 F#4 B4)', notes: ['A4', 'D4', 'F#4', 'B4'] },
+      slack_key:     { label: 'Hawaiian Slack Key (G4 C4 E4 G4)', notes: ['G4', 'C4', 'E4', 'G4'] },
+      fifth:         { label: 'Mandolin / Fifths (G3 D4 A4 E5)', notes: ['G3', 'D4', 'A4', 'E5'] },
+      minor:         { label: 'Minor Ukulele (G4 C4 Eb4 A4)', notes: ['G4', 'C4', 'Eb4', 'A4'] }
+    };
+
+    // All 20 10-Hole Diatonic Harmonica Tunings from domdviice/omnitune
+    const OMNITUNE_HARMONICA_TUNINGS = {
+      diatonicrichter: {
+        label: 'Richter Standard (10-Hole)',
+        baseBlow: [60, 64, 67, 72, 76, 79, 84, 88, 91, 96],
+        baseDraw: [62, 67, 71, 74, 77, 81, 83, 86, 89, 93]
+      },
+      diatonicwildetuned: {
+        label: 'Wilde Tuning (Will Wilde Rock/Blues)',
+        baseBlow: [60, 64, 67, 72, 76, 79, 84, 88, 91, 96],
+        baseDraw: [62, 67, 71, 74, 77, 81, 86, 89, 93, 98]
+      },
+      diatonicwildeminor: {
+        label: 'Wilde Minor (Harmonic/Blues Minor)',
+        baseBlow: [60, 63, 67, 72, 75, 79, 84, 87, 91, 96],
+        baseDraw: [62, 67, 70, 74, 77, 80, 86, 89, 93, 98],
+        isMinor: true,
+        baseKey: 'cm'
+      },
+      paddywildetuned: {
+        label: 'Paddy Wilde (Hole 3 Major 6th + Wilde Upper)',
+        baseBlow: [60, 64, 69, 72, 76, 79, 84, 88, 91, 96],
+        baseDraw: [62, 67, 71, 74, 77, 81, 86, 89, 93, 98]
+      },
+      dorianwildealtered: {
+        label: 'Dorian Wilde Altered',
+        baseBlow: [60, 64, 67, 72, 76, 79, 84, 88, 91, 96],
+        baseDraw: [62, 67, 71, 74, 77, 80, 86, 89, 93, 98]
+      },
+      domshredwildeminor: {
+        label: 'Dom Shred Harmonic Minor (Am Base)',
+        baseBlow: [57, 60, 64, 69, 72, 76, 81, 84, 88, 93],
+        baseDraw: [59, 64, 68, 71, 74, 77, 83, 86, 89, 95],
+        isMinor: true,
+        baseKey: 'am'
+      },
+      diatonicpowerbender: {
+        label: 'PowerBender (Brendan Power)',
+        baseBlow: [60, 64, 67, 72, 74, 77, 81, 84, 88, 91],
+        baseDraw: [62, 67, 71, 74, 76, 79, 83, 86, 89, 93]
+      },
+      powerdrawtuned: {
+        label: 'PowerDraw (Richter Low + Draw Upper)',
+        baseBlow: [60, 64, 67, 72, 76, 79, 83, 86, 89, 93],
+        baseDraw: [62, 67, 71, 74, 77, 81, 84, 88, 91, 96]
+      },
+      powerchromatic10tuning: {
+        label: 'PowerChromatic 10-Hole',
+        baseBlow: [60, 64, 67, 71, 72, 76, 79, 83, 84, 88],
+        baseDraw: [62, 65, 69, 72, 74, 77, 81, 84, 86, 89]
+      },
+      paddyrichtertuned: {
+        label: 'Paddy Richter (Celtic / Folk)',
+        baseBlow: [60, 64, 69, 72, 76, 79, 84, 88, 91, 96],
+        baseDraw: [62, 67, 71, 74, 77, 81, 83, 86, 89, 93]
+      },
+      paddy123tuned: {
+        label: 'Paddy 123 (Circular Low Octave)',
+        baseBlow: [60, 65, 69, 72, 76, 79, 84, 88, 91, 96],
+        baseDraw: [62, 67, 71, 74, 77, 81, 83, 86, 89, 93]
+      },
+      countrytuned: {
+        label: 'Country Tuning (Major 7th on 5 Draw)',
+        baseBlow: [60, 64, 67, 72, 76, 79, 84, 88, 91, 96],
+        baseDraw: [62, 67, 71, 74, 78, 81, 83, 86, 89, 93]
+      },
+      melodymakertuned: {
+        label: 'Melody Maker (Lee Oskar)',
+        baseBlow: [60, 64, 69, 72, 76, 79, 84, 88, 91, 96],
+        baseDraw: [62, 67, 71, 74, 78, 81, 83, 86, 90, 93]
+      },
+      easythirdtuned: {
+        label: 'Easy 3rd (Minor Chord Draw)',
+        baseBlow: [60, 64, 67, 72, 76, 79, 84, 88, 91, 96],
+        baseDraw: [62, 65, 69, 74, 77, 81, 83, 86, 89, 93]
+      },
+      easydiatonic: {
+        label: 'Easy Diatonic (Solo Style)',
+        baseBlow: [60, 64, 67, 72, 76, 79, 84, 88, 91, 96],
+        baseDraw: [62, 65, 69, 74, 77, 81, 83, 86, 89, 95]
+      },
+      sunnyrbtuned: {
+        label: 'Sunny R&B / Natural Minor Cross',
+        baseBlow: [60, 64, 67, 72, 75, 79, 84, 87, 91, 96],
+        baseDraw: [62, 67, 70, 74, 77, 81, 82, 86, 89, 93]
+      },
+      diatonicminor: {
+        label: 'Natural Minor (Standard Minor)',
+        baseBlow: [60, 63, 67, 72, 75, 79, 84, 87, 91, 96],
+        baseDraw: [62, 67, 70, 74, 77, 81, 82, 86, 89, 93],
+        isMinor: true,
+        baseKey: 'cm'
+      },
+      diminished10: {
+        label: 'Diminished (Symmetrical Minor 3rds)',
+        baseBlow: [60, 63, 66, 69, 72, 75, 78, 81, 84, 87],
+        baseDraw: [62, 65, 68, 71, 74, 77, 80, 83, 86, 89]
+      },
+      augmented10: {
+        label: 'Augmented (Symmetrical Major 3rds)',
+        baseBlow: [60, 64, 68, 72, 76, 80, 84, 88, 92, 96],
+        baseDraw: [62, 66, 70, 74, 78, 82, 86, 90, 94, 98]
+      },
+      wholetone10: {
+        label: 'Whole Tone (Dreamy Symmetrical)',
+        baseBlow: [60, 64, 68, 72, 76, 80, 84, 88, 92, 96],
+        baseDraw: [62, 66, 70, 74, 78, 82, 86, 90, 94, 98]
+      }
+    };
+
+    // Chromatic Harmonica Tunings (12-Hole & 16-Hole from domdviice/omnitune)
+    const OMNITUNE_CHROMATIC_TUNINGS = {
+      chromatic12solo: {
+        label: '12-Hole Solo Chromatic',
+        holes: 12,
+        baseBlow: [60, 64, 67, 72, 72, 76, 79, 84, 84, 88, 91, 96],
+        baseDraw: [62, 65, 69, 71, 74, 77, 81, 83, 86, 89, 93, 95]
+      },
+      chromatic12bebop: {
+        label: '12-Hole Bebop Chromatic (Bb on 4/8/12 Draw)',
+        holes: 12,
+        baseBlow: [60, 64, 67, 71, 72, 76, 79, 83, 84, 88, 91, 95],
+        baseDraw: [62, 65, 69, 70, 74, 77, 81, 82, 86, 89, 93, 94]
+      },
+      chromatic12c6: {
+        label: '12-Hole C6 / Lauper Chromatic',
+        holes: 12,
+        baseBlow: [60, 64, 67, 69, 72, 76, 79, 81, 84, 88, 91, 93],
+        baseDraw: [62, 65, 69, 71, 74, 77, 81, 83, 86, 89, 93, 95]
+      },
+      chromatic12power: {
+        label: '12-Hole PowerChromatic',
+        holes: 12,
+        baseBlow: [60, 64, 67, 71, 72, 76, 79, 83, 84, 88, 91, 95],
+        baseDraw: [62, 65, 69, 72, 74, 77, 81, 84, 86, 89, 93, 96]
+      },
+      chromatic16solo: {
+        label: '16-Hole Solo Chromatic (Extended Tenor)',
+        holes: 16,
+        baseBlow: [48, 52, 55, 60, 60, 64, 67, 72, 72, 76, 79, 84, 84, 88, 91, 96],
+        baseDraw: [50, 53, 57, 59, 62, 65, 69, 71, 74, 77, 81, 83, 86, 89, 93, 95]
+      },
+      chromatic16bebop: {
+        label: '16-Hole Bebop Chromatic',
+        holes: 16,
+        baseBlow: [48, 52, 55, 59, 60, 64, 67, 71, 72, 76, 79, 83, 84, 88, 91, 95],
+        baseDraw: [50, 53, 57, 58, 62, 65, 69, 70, 74, 77, 81, 82, 86, 89, 93, 94]
+      },
+      chromatic16c6: {
+        label: '16-Hole C6 / Lauper Chromatic',
+        holes: 16,
+        baseBlow: [48, 52, 55, 57, 60, 64, 67, 69, 72, 76, 79, 81, 84, 88, 91, 93],
+        baseDraw: [50, 53, 57, 59, 62, 65, 69, 71, 74, 77, 81, 83, 86, 89, 93, 95]
+      },
+      chromatic16power: {
+        label: '16-Hole PowerChromatic',
+        holes: 16,
+        baseBlow: [48, 52, 55, 59, 60, 64, 67, 71, 72, 76, 79, 83, 84, 88, 91, 95],
+        baseDraw: [50, 53, 57, 60, 62, 65, 69, 72, 74, 77, 81, 84, 86, 89, 93, 96]
+      }
+    };
+
+    const HARMONICA_KEY_OFFSETS = {
+      'lowc': -12, 'lowd': -10, 'loweb': -9, 'lowe': -8, 'lowf': -7, 'lowf#': -6,
+      'g': -5, 'ab': -4, 'a': -3, 'bb': -2, 'b': -1,
+      'c': 0, 'db': 1, 'd': 2, 'eb': 3, 'e': 4, 'f': 5, 'f#': 6,
+      'highg': 7, 'higha': 9
+    };
+
+    const HARMONICA_MINOR_KEY_OFFSETS = {
+      'lowcm': -12, 'lowdm': -10, 'lowebm': -9, 'lowem': -8, 'lowfm': -7, 'lowf#m': -6,
+      'gm': -5, 'abm': -4, 'am': -3, 'bbm': -2, 'bm': -1,
+      'cm': 0, 'dbm': 1, 'dm': 2, 'ebm': 3, 'em': 4, 'fm': 5, 'f#m': 6,
+      'highgm': 7, 'higham': 9
+    };
+
+    const HARMONICA_KEY_OPTIONS = [
+      { value: 'c', label: 'Key of C (Standard)' },
+      { value: 'g', label: 'Key of G (Cross in D)' },
+      { value: 'a', label: 'Key of A (Cross in E)' },
+      { value: 'd', label: 'Key of D (Cross in A)' },
+      { value: 'f', label: 'Key of F (Cross in C)' },
+      { value: 'bb', label: 'Key of Bb (Cross in F)' },
+      { value: 'eb', label: 'Key of Eb (Cross in Bb)' },
+      { value: 'e', label: 'Key of E (Cross in B)' },
+      { value: 'ab', label: 'Key of Ab (Cross in Eb)' },
+      { value: 'db', label: 'Key of Db (Cross in Ab)' },
+      { value: 'f#', label: 'Key of F# (Cross in C#)' },
+      { value: 'b', label: 'Key of B (Cross in F#)' },
+      { value: 'lowc', label: 'Low C (Sub-Octave)' },
+      { value: 'lowd', label: 'Low D' },
+      { value: 'loweb', label: 'Low Eb' },
+      { value: 'lowe', label: 'Low E' },
+      { value: 'lowf', label: 'Low F' },
+      { value: 'lowf#', label: 'Low F#' },
+      { value: 'highg', label: 'High G' },
+      { value: 'higha', label: 'High A' }
+    ];
+
+    const HARMONICA_MINOR_KEY_OPTIONS = [
+      { value: 'cm', label: 'Key of Cm (C Minor)' },
+      { value: 'am', label: 'Key of Am (A Minor)' },
+      { value: 'gm', label: 'Key of Gm (G Minor)' },
+      { value: 'dm', label: 'Key of Dm (D Minor)' },
+      { value: 'em', label: 'Key of Em (E Minor)' },
+      { value: 'fm', label: 'Key of Fm (F Minor)' },
+      { value: 'bbm', label: 'Key of Bbm (Bb Minor)' },
+      { value: 'ebm', label: 'Key of Ebm (Eb Minor)' },
+      { value: 'abm', label: 'Key of Abm (Ab Minor)' },
+      { value: 'dbm', label: 'Key of Dbm (C# Minor)' },
+      { value: 'f#m', label: 'Key of F#m (F# Minor)' },
+      { value: 'bm', label: 'Key of Bm (B Minor)' },
+      { value: 'lowcm', label: 'Low Cm' },
+      { value: 'lowdm', label: 'Low Dm' },
+      { value: 'lowem', label: 'Low Em' },
+      { value: 'lowfm', label: 'Low Fm' }
+    ];
+
+    function isTenHoleHarmonica(instType) {
+      return Boolean(OMNITUNE_HARMONICA_TUNINGS[instType]);
+    }
+
+    function isChromaticHarmonica(instType) {
+      return Boolean(OMNITUNE_CHROMATIC_TUNINGS[instType]);
+    }
+
+    function isHarmonicaInstrument(instType) {
+      return isTenHoleHarmonica(instType) || isChromaticHarmonica(instType);
+    }
+
+    function midiToOmniPitchInfo(midiVal) {
+      if (midiVal === null || midiVal === undefined) return null;
+      const pitchClass = ((midiVal % 12) + 12) % 12;
+      const octave = Math.floor(midiVal / 12) - 1;
+      const pitchName = CHROMATIC_SCALE[pitchClass];
+      return {
+        midi: midiVal,
+        pitchClass,
+        pitchName,
+        octave,
+        note: `${pitchName}${octave}`
+      };
+    }
 
     function omniNoteToMidi(noteName) {
       const match = /^([A-G])([#b]?)(\d)$/.exec(String(noteName || '').trim());
@@ -2427,24 +2904,351 @@
     function omniFretNoteForString(openNote, fret) {
       const baseMidi = omniNoteToMidi(openNote);
       if (baseMidi === null) return null;
-      const targetMidi = baseMidi + fret;
-      const pitchClass = targetMidi % 12;
-      const octave = Math.floor(targetMidi / 12) - 1;
-      return {
-        note: `${CHROMATIC_SCALE[pitchClass]}${octave}`,
-        pitchName: CHROMATIC_SCALE[pitchClass],
-        pitchClass,
-        octave,
-        midi: targetMidi
-      };
+      return midiToOmniPitchInfo(baseMidi + fret);
     }
 
     function omniGetTuningNotes(tuningKey) {
-      return (OMNITUNE_TUNINGS[tuningKey] || OMNITUNE_TUNINGS.standard).slice();
+      if (STATE.sbInstrument === 'ukulele') {
+        const ukeObj = OMNITUNE_UKULELE_TUNINGS[tuningKey] || OMNITUNE_UKULELE_TUNINGS.standard;
+        return ukeObj.notes.slice();
+      }
+      const gtrObj = OMNITUNE_GUITAR_TUNINGS[tuningKey] || OMNITUNE_GUITAR_TUNINGS.standard;
+      return gtrObj.notes.slice();
     }
 
     function omniGetDisplayTuningNotes(tuningKey) {
       return omniGetTuningNotes(tuningKey).slice().reverse();
+    }
+
+    // Compute 10-Hole Diatonic Harmonica 7-Row Matrix (Blow Bends, Overblows/Valves, Blow, Draw, Draw Bends/Overdraws)
+    // Ported directly from domdviice/omnitune scripts/tuning_engine.js
+    function computeHarmonicaMatrix(blowNotes, drawNotes, isHalfValved = false) {
+      const matrix = Array(7).fill(null).map(() => Array(10).fill(null));
+      for (let i = 0; i < 10; i++) {
+        const B = blowNotes[i];
+        const D = drawNotes[i];
+        matrix[2][i] = B; // Blow reed plate
+        matrix[3][i] = D; // Draw reed plate
+
+        if (D > B) {
+          const diff = D - B;
+          if (diff >= 2) matrix[4][i] = D - 1;
+          if (diff >= 3) matrix[5][i] = D - 2;
+          if (diff >= 4) matrix[6][i] = D - 3;
+          // Overblow or Half-Valve Blow Bend
+          matrix[1][i] = isHalfValved ? B - 1 : D + 1;
+        } else if (B > D) {
+          const diff = B - D;
+          if (diff >= 2) matrix[1][i] = B - 1;
+          if (diff >= 3) matrix[0][i] = B - 2;
+          // Overdraw or Half-Valve Draw Bend
+          matrix[4][i] = isHalfValved ? D - 1 : B + 1;
+        }
+      }
+      return matrix;
+    }
+
+    // Compute 12 or 16 Hole Chromatic Harmonica 4-Row Matrix (Blow Slide-In, Blow Out, Draw Out, Draw Slide-In)
+    function computeChromaticMatrix(blowNotes, drawNotes) {
+      const holeCount = blowNotes.length;
+      const matrix = Array(4).fill(null).map(() => Array(holeCount).fill(null));
+      for (let i = 0; i < holeCount; i++) {
+        matrix[0][i] = blowNotes[i] + 1; // Blow (Slide-In +1 semitone)
+        matrix[1][i] = blowNotes[i];     // Blow (Slide-Out natural)
+        matrix[2][i] = drawNotes[i];     // Draw (Slide-Out natural)
+        matrix[3][i] = drawNotes[i] + 1; // Draw (Slide-In +1 semitone)
+      }
+      return matrix;
+    }
+
+    function getHarmonicaKeyRootPitchClass(harpKey) {
+      const clean = String(harpKey || 'c').toLowerCase().replace(/^low|^high|m$/g, '');
+      const map = {
+        'c': 0, 'c#': 1, 'db': 1, 'd': 2, 'd#': 3, 'eb': 3, 'e': 4,
+        'f': 5, 'f#': 6, 'gb': 6, 'g': 7, 'g#': 8, 'ab': 8, 'a': 9, 'a#': 10, 'bb': 10, 'b': 11
+      };
+      return map[clean] !== undefined ? map[clean] : 0;
+    }
+
+    // Calculate Circle-of-Fifths Harmonica Position relative to Song Key (STATE.sandboxKey)
+    function getHarmonicaPositionInfo() {
+      const songPc = CHROMATIC_SCALE.indexOf(STATE.sandboxKey);
+      const harpPc = getHarmonicaKeyRootPitchClass(STATE.sbHarpKey);
+      // Each position step moves up 7 semitones (perfect 5th) from the harmonica key
+      for (let pos = 1; pos <= 12; pos++) {
+        if ((harpPc + (pos - 1) * 7) % 12 === songPc) {
+          const posNames = {
+            1: '1st Pos (Straight / Ionian)',
+            2: '2nd Pos (Cross / Mixolydian Blues)',
+            3: '3rd Pos (Slant / Dorian Minor)',
+            4: '4th Pos (Aeolian / Natural Minor)',
+            5: '5th Pos (Phrygian)',
+            6: '6th Pos (Locrian)',
+            12: '12th Pos (Lydian / 1st Flat)'
+          };
+          return {
+            position: pos,
+            label: posNames[pos] || `${pos}th Pos`
+          };
+        }
+      }
+      return { position: 1, label: '1st Pos' };
+    }
+
+    // Set harmonica key automatically for 1st (Straight), 2nd (Cross), or 3rd (Dorian) position in STATE.sandboxKey
+    function setHarmonicaPosition(targetPosition) {
+      const songPc = CHROMATIC_SCALE.indexOf(STATE.sandboxKey);
+      // songPc = (harpPc + (targetPosition - 1) * 7) % 12  =>  harpPc = (songPc - (targetPosition - 1) * 7) mod 12
+      const harpPc = ((songPc - (targetPosition - 1) * 7) % 12 + 12) % 12;
+      const pcToMajorHarpKey = ['c', 'db', 'd', 'eb', 'e', 'f', 'f#', 'g', 'ab', 'a', 'bb', 'b'];
+      const pcToMinorHarpKey = ['cm', 'dbm', 'dm', 'ebm', 'em', 'fm', 'f#m', 'gm', 'abm', 'am', 'bbm', 'bm'];
+
+      const instDef = OMNITUNE_HARMONICA_TUNINGS[STATE.sbInstrument];
+      const useMinorKeys = Boolean(instDef && instDef.isMinor);
+      const nextKey = useMinorKeys ? pcToMinorHarpKey[harpPc] : pcToMajorHarpKey[harpPc];
+
+      STATE.sbHarpKey = nextKey;
+      appStore.settings.sbHarpKey = nextKey;
+      saveStore(appStore);
+
+      const tuningSelect = document.getElementById('sb-tuning-select');
+      if (tuningSelect && isHarmonicaInstrument(STATE.sbInstrument)) {
+        tuningSelect.value = nextKey;
+      }
+      STATE.sbSelectedFretTarget = null;
+      renderSandboxFretboard();
+    }
+
+    function populateSandboxTuningDropdown() {
+      const tuningSelect = document.getElementById('sb-tuning-select');
+      const tuningLabel = document.getElementById('sb-tuning-label');
+      const harmControls = document.getElementById('sb-harmonica-controls');
+      const valvedLabel = document.getElementById('sb-valved-label');
+      const visTitle = document.getElementById('sb-visualizer-title');
+      const visIcon = document.getElementById('sb-visualizer-icon');
+      const instSelect = document.getElementById('sb-instrument-select');
+
+      if (instSelect) {
+        instSelect.value = STATE.sbInstrument;
+      }
+      if (!tuningSelect) return;
+
+      tuningSelect.innerHTML = '';
+
+      if (isHarmonicaInstrument(STATE.sbInstrument)) {
+        const instDef = OMNITUNE_HARMONICA_TUNINGS[STATE.sbInstrument] || OMNITUNE_CHROMATIC_TUNINGS[STATE.sbInstrument];
+        const isMinorHarp = Boolean(instDef && instDef.isMinor);
+        const keyList = isMinorHarp ? HARMONICA_MINOR_KEY_OPTIONS : HARMONICA_KEY_OPTIONS;
+
+        if (tuningLabel) tuningLabel.textContent = 'Harp Key:';
+        if (harmControls) {
+          harmControls.classList.remove('hidden');
+          harmControls.classList.add('flex');
+        }
+        if (valvedLabel) {
+          valvedLabel.classList.toggle('hidden', isChromaticHarmonica(STATE.sbInstrument));
+        }
+
+        keyList.forEach(k => {
+          const opt = document.createElement('option');
+          opt.value = k.value;
+          opt.textContent = k.label;
+          tuningSelect.appendChild(opt);
+        });
+
+        // Ensure valid harp key for major vs minor harmonica
+        const validValues = new Set(keyList.map(k => k.value));
+        if (!validValues.has(STATE.sbHarpKey)) {
+          STATE.sbHarpKey = isMinorHarp ? (instDef.baseKey || 'cm') : 'c';
+        }
+        tuningSelect.value = STATE.sbHarpKey;
+
+        if (visTitle && instDef) {
+          visTitle.textContent = `OmniTune ${instDef.label} Guide Tone Visualizer`;
+        }
+        if (visIcon) {
+          visIcon.className = 'fa-solid fa-wind text-amber-400';
+        }
+      } else {
+        if (tuningLabel) tuningLabel.textContent = 'Tuning:';
+        if (harmControls) {
+          harmControls.classList.add('hidden');
+          harmControls.classList.remove('flex');
+        }
+
+        const catalog = STATE.sbInstrument === 'ukulele' ? OMNITUNE_UKULELE_TUNINGS : OMNITUNE_GUITAR_TUNINGS;
+        Object.entries(catalog).forEach(([key, def]) => {
+          const opt = document.createElement('option');
+          opt.value = key;
+          opt.textContent = def.label;
+          tuningSelect.appendChild(opt);
+        });
+
+        if (!catalog[STATE.sbTuning]) {
+          STATE.sbTuning = 'standard';
+        }
+        tuningSelect.value = STATE.sbTuning;
+
+        if (visTitle) {
+          visTitle.textContent = STATE.sbInstrument === 'ukulele'
+            ? 'OmniTune Ukulele & 4-String Bass Guide Tone Visualizer'
+            : 'OmniTune 6-String Guitar Guide Tone Visualizer';
+        }
+        if (visIcon) {
+          visIcon.className = 'fa-solid fa-guitar text-amber-400';
+        }
+      }
+    }
+
+    function buildHarmonicaGridData() {
+      const inst = STATE.sbInstrument;
+      if (isTenHoleHarmonica(inst)) {
+        const def = OMNITUNE_HARMONICA_TUNINGS[inst];
+        let offset = 0;
+        if (def.isMinor) {
+          const baseKey = def.baseKey || 'cm';
+          const baseOff = HARMONICA_MINOR_KEY_OFFSETS[baseKey] || 0;
+          const targetOff = HARMONICA_MINOR_KEY_OFFSETS[STATE.sbHarpKey] !== undefined
+            ? HARMONICA_MINOR_KEY_OFFSETS[STATE.sbHarpKey]
+            : 0;
+          offset = targetOff - baseOff;
+        } else {
+          offset = HARMONICA_KEY_OFFSETS[STATE.sbHarpKey] !== undefined
+            ? HARMONICA_KEY_OFFSETS[STATE.sbHarpKey]
+            : 0;
+        }
+
+        const blowMidi = def.baseBlow.map(n => n + offset);
+        const drawMidi = def.baseDraw.map(n => n + offset);
+        const rawMatrix = computeHarmonicaMatrix(blowMidi, drawMidi, STATE.sbValved);
+
+        const rowNames = [
+          "'' Blow Bend",
+          STATE.sbValved ? "' Blow / Valve" : "' Blow / OB",
+          "BLOW",
+          "DRAW",
+          STATE.sbValved ? "' Draw / Valve" : "' Draw / OD",
+          "'' Draw Bend",
+          "''' Draw Bend"
+        ];
+
+        const cells = [];
+        for (let r = 0; r < 7; r++) {
+          for (let c = 0; c < 10; c++) {
+            const midiVal = rawMatrix[r][c];
+            if (midiVal === null) continue;
+            const pInfo = midiToOmniPitchInfo(midiVal);
+            const B = blowMidi[c];
+            const D = drawMidi[c];
+
+            let badge = '';
+            let actionType = 'reed';
+            if (r === 0) { badge = "BB''"; actionType = 'blow-bend'; }
+            else if (r === 1) {
+              if (D > B) {
+                badge = STATE.sbValved ? 'VB' : 'OB';
+                actionType = STATE.sbValved ? 'valve-bend' : 'overblow';
+              } else {
+                badge = "BB'";
+                actionType = 'blow-bend';
+              }
+            } else if (r === 2) {
+              badge = 'BLOW';
+              actionType = 'blow';
+            } else if (r === 3) {
+              badge = 'DRAW';
+              actionType = 'draw';
+            } else if (r === 4) {
+              if (B > D) {
+                badge = STATE.sbValved ? 'VB' : 'OD';
+                actionType = STATE.sbValved ? 'valve-bend' : 'overdraw';
+              } else {
+                badge = "DB'";
+                actionType = 'draw-bend';
+              }
+            } else if (r === 5) {
+              badge = "DB''";
+              actionType = 'draw-bend';
+            } else if (r === 6) {
+              badge = "DB'''";
+              actionType = 'draw-bend';
+            }
+
+            cells.push({
+              row: r,
+              col: c,
+              holeNumber: c + 1,
+              midi: pInfo.midi,
+              pitchClass: pInfo.pitchClass,
+              pitchName: pInfo.pitchName,
+              note: pInfo.note,
+              badge,
+              actionType,
+              isCoreReed: r === 2 || r === 3
+            });
+          }
+        }
+
+        return {
+          type: 'diatonic10',
+          rows: 7,
+          cols: 10,
+          combSplitAfterRow: 2, // Central comb rail sits between Row 2 (Blow) and Row 3 (Draw)
+          rowNames,
+          cells
+        };
+      }
+
+      if (isChromaticHarmonica(inst)) {
+        const def = OMNITUNE_CHROMATIC_TUNINGS[inst];
+        const offset = HARMONICA_KEY_OFFSETS[STATE.sbHarpKey] !== undefined
+          ? HARMONICA_KEY_OFFSETS[STATE.sbHarpKey]
+          : 0;
+        const blowMidi = def.baseBlow.map(n => n + offset);
+        const drawMidi = def.baseDraw.map(n => n + offset);
+        const rawMatrix = computeChromaticMatrix(blowMidi, drawMidi);
+        const holeCount = def.holes || 12;
+
+        const rowNames = [
+          'Blow (Slide In)',
+          'BLOW (Out)',
+          'DRAW (Out)',
+          'Draw (Slide In)'
+        ];
+
+        const cells = [];
+        for (let r = 0; r < 4; r++) {
+          for (let c = 0; c < holeCount; c++) {
+            const midiVal = rawMatrix[r][c];
+            if (midiVal === null) continue;
+            const pInfo = midiToOmniPitchInfo(midiVal);
+            const badge = r === 0 ? 'B+IN' : (r === 1 ? 'BLOW' : (r === 2 ? 'DRAW' : 'D+IN'));
+            cells.push({
+              row: r,
+              col: c,
+              holeNumber: c + 1,
+              midi: pInfo.midi,
+              pitchClass: pInfo.pitchClass,
+              pitchName: pInfo.pitchName,
+              note: pInfo.note,
+              badge,
+              actionType: (r === 0 || r === 3) ? 'slide-in' : (r === 1 ? 'blow' : 'draw'),
+              isCoreReed: r === 1 || r === 2
+            });
+          }
+        }
+
+        return {
+          type: 'chromatic',
+          rows: 4,
+          cols: holeCount,
+          combSplitAfterRow: 1, // Central comb rail sits between Row 1 (Blow Out) and Row 2 (Draw Out)
+          rowNames,
+          cells
+        };
+      }
+
+      return null;
     }
 
     function isMinorNumeral(roman) {
@@ -2453,7 +3257,8 @@
 
     function getChordSymbolForLab(root, roman) {
       if (isMinorNumeral(roman)) return `${root}m`;
-      return STATE.voicing === 'triad' ? `${root}` : `${root}5`;
+      if (STATE.voicing === 'power') return `${root}5`;
+      return `${root}`;
     }
 
     // Compute full chord harmonic profile including Guide Tones (3rd & 7th)
@@ -2616,21 +3421,27 @@
       const activeProfile = getChordHarmonicProfile(STATE.sandboxKey, activeItem.rn, activeItem.inversion);
 
       if (STATE.sbSelectedFretTarget) {
-        const { fret, note, pitchName, pitchClass, openNote, stringIndex } = STATE.sbSelectedFretTarget;
-        const stringNum = 6 - stringIndex; // 1 = high E, 6 = low E
+        const target = STATE.sbSelectedFretTarget;
+        const { note, pitchName, pitchClass } = target;
         const roleInfo = activeProfile.getRoleForPitchClass(pitchClass);
 
-        const parts = [`Fret ${fret} • String ${stringNum} (${openNote}) : ${note}`];
+        const parts = [];
+        if (target.isHarmonicaCell) {
+          parts.push(`Hole ${target.holeNumber} (${target.badge}) : ${note}`);
+        } else {
+          const totalStrings = omniGetTuningNotes(STATE.sbTuning).length;
+          const stringNum = totalStrings - target.stringIndex;
+          parts.push(`Fret ${target.fret} • String ${stringNum} (${target.openNote}) : ${note}`);
+        }
+
         if (roleInfo) {
           parts.push(`⚡ ${roleInfo.label} in ${activeProfile.chordSymbol} (${activeItem.rn})`);
         } else {
-          // Calculate chromatic interval from active chord root
           const semi = (pitchClass - activeProfile.rootPc + 12) % 12;
           const degNames = ['R', '♭2', '2', '♭3', '3', '4', '♭5', '5', '♭6', '6', '♭7', '7'];
           parts.push(`Interval ${degNames[semi]} (${pitchName}) vs ${activeProfile.chordSymbol}`);
         }
 
-        // Check guide tone matches across the custom progression chain
         const chainMatches = [];
         STATE.sandboxCustomProg.forEach((cItem, idx) => {
           const rn = typeof cItem === 'string' ? cItem : cItem.rn;
@@ -2646,8 +3457,271 @@
 
         inspectorEl.textContent = parts.join('  |  ');
       } else {
-        inspectorEl.textContent = `Active: ${activeProfile.chordSymbol} (${activeItem.rn} in Key of ${STATE.sandboxKey}) — Guide Tones: ${activeProfile.thirdDegreeLabel} = ${activeProfile.thirdNote}, ${activeProfile.seventhDegreeLabel} = ${activeProfile.seventhNote}. Tap any fret to pluck & inspect!`;
+        const actionHint = isHarmonicaInstrument(STATE.sbInstrument)
+          ? 'Tap any harmonica hole, bend, overblow, or slide cell to audition & inspect!'
+          : 'Tap any fret on the neck to pluck & inspect!';
+        inspectorEl.textContent = `Active: ${activeProfile.chordSymbol} (${activeItem.rn} in Key of ${STATE.sandboxKey}) — Guide Tones: ${activeProfile.thirdDegreeLabel} = ${activeProfile.thirdNote}, ${activeProfile.seventhDegreeLabel} = ${activeProfile.seventhNote}. ${actionHint}`;
       }
+    }
+
+    function renderHarmonicaDiagram(ctx, cssWidth, cssHeight, activeProfile, nextProfile, nextItem, pinnedProfile) {
+      const grid = buildHarmonicaGridData();
+      if (!grid) return;
+
+      const posBadge = document.getElementById('sb-harp-position-badge');
+      if (posBadge) {
+        const posInfo = getHarmonicaPositionInfo();
+        posBadge.textContent = posInfo.label;
+      }
+
+      const boardWidth = cssWidth;
+      const boardHeight = cssHeight;
+      const leftPad = 108;
+      const rightPad = 18;
+      const topPad = 14;
+      const bottomPad = 14;
+      const combRailHeight = 26;
+
+      const usableWidth = boardWidth - leftPad - rightPad;
+      const usableHeight = boardHeight - topPad - bottomPad - combRailHeight;
+      const cellW = usableWidth / grid.cols;
+      const cellH = usableHeight / grid.rows;
+
+      ctx.clearRect(0, 0, boardWidth, boardHeight);
+      ctx.fillStyle = '#0b0d12';
+      ctx.fillRect(0, 0, boardWidth, boardHeight);
+
+      function getRowTopY(r) {
+        const extra = r > grid.combSplitAfterRow ? combRailHeight : 0;
+        return topPad + (r * cellH) + extra;
+      }
+
+      // Draw Row Headers on Left
+      for (let r = 0; r < grid.rows; r++) {
+        const ry = getRowTopY(r) + cellH / 2;
+        const isCore = (grid.type === 'diatonic10' && (r === 2 || r === 3)) ||
+                       (grid.type === 'chromatic' && (r === 1 || r === 2));
+        ctx.fillStyle = isCore ? '#f59e0b' : '#94a3b8';
+        ctx.font = `${isCore ? 'bold 10.5px' : '9.5px'} "JetBrains Mono", monospace`;
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(grid.rowNames[r], leftPad - 10, ry);
+      }
+
+      // Draw Central Metallic Comb Rail with Hole Numbers 1..N
+      const combY = topPad + ((grid.combSplitAfterRow + 1) * cellH);
+      const combGrad = ctx.createLinearGradient(0, combY, 0, combY + combRailHeight);
+      combGrad.addColorStop(0, '#1e293b');
+      combGrad.addColorStop(0.5, '#0f172a');
+      combGrad.addColorStop(1, '#1e293b');
+      ctx.fillStyle = combGrad;
+      ctx.fillRect(leftPad, combY, usableWidth, combRailHeight);
+
+      ctx.strokeStyle = '#475569';
+      ctx.lineWidth = 1.2;
+      ctx.strokeRect(leftPad, combY, usableWidth, combRailHeight);
+
+      ctx.fillStyle = '#f59e0b';
+      ctx.font = 'bold 10px "JetBrains Mono", monospace';
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(`HOLE (${STATE.sbHarpKey.toUpperCase()})`, leftPad - 10, combY + combRailHeight / 2);
+
+      for (let c = 0; c < grid.cols; c++) {
+        const cx = leftPad + (c * cellW) + cellW / 2;
+        ctx.fillStyle = '#f8fafc';
+        ctx.font = 'bold 11.5px "JetBrains Mono", monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(String(c + 1), cx, combY + combRailHeight / 2 + 0.5);
+      }
+
+      // Prepare Ghost Sources (Next Chord in Progression + Optional Pinned Chord)
+      const ghostSources = [];
+      if (STATE.sbShowNextGhost && nextProfile) {
+        ghostSources.push({ profile: nextProfile, isNext: true });
+      }
+      if (pinnedProfile && (!nextProfile || !STATE.sbShowNextGhost || pinnedProfile.roman !== nextProfile.roman)) {
+        ghostSources.push({ profile: pinnedProfile, isNext: false });
+      }
+
+      const hitBoxes = [];
+
+      // Draw each cell in the harmonica matrix
+      grid.cells.forEach(cell => {
+        const x = leftPad + (cell.col * cellW);
+        const y = getRowTopY(cell.row);
+        const pad = 2.5;
+        const bx = x + pad;
+        const by = y + pad;
+        const bw = cellW - pad * 2;
+        const bh = cellH - pad * 2;
+        const cx = bx + bw / 2;
+        const cy = by + bh / 2;
+
+        hitBoxes.push({
+          ...cell,
+          x: bx,
+          y: by,
+          w: bw,
+          h: bh,
+          cx,
+          cy
+        });
+
+        const rawActiveRole = activeProfile.getRoleForPitchClass(cell.pitchClass);
+        const isActiveVisible = rawActiveRole && activeProfile.isRoleVisibleInMode(rawActiveRole.role, STATE.sbToneMode);
+        const activeRole = isActiveVisible ? rawActiveRole : null;
+
+        let ghostRole = null;
+        for (const gSrc of ghostSources) {
+          const gr = gSrc.profile.getRoleForPitchClass(cell.pitchClass);
+          if (gr && gSrc.profile.isRoleVisibleInMode(gr.role, STATE.sbToneMode) && (gr.isGuideTone || gr.role === 'root')) {
+            ghostRole = gr;
+            break;
+          }
+        }
+
+        // Base Cell Background
+        ctx.save();
+        ctx.beginPath();
+        if (ctx.roundRect) {
+          ctx.roundRect(bx, by, bw, bh, 6);
+        } else {
+          ctx.rect(bx, by, bw, bh);
+        }
+
+        if (activeRole) {
+          ctx.fillStyle = activeRole.color;
+          ctx.globalAlpha = activeRole.isGuideTone ? 0.92 : (activeRole.role === 'root' ? 0.9 : 0.72);
+          ctx.fill();
+
+          ctx.globalAlpha = 1;
+          ctx.lineWidth = activeRole.isGuideTone ? 2.4 : 1.6;
+          ctx.strokeStyle = activeRole.isGuideTone ? '#ffffff' : (activeRole.role === 'root' ? '#fde68a' : '#cbd5e1');
+          ctx.stroke();
+        } else if (ghostRole) {
+          ctx.fillStyle = ghostRole.color;
+          ctx.globalAlpha = 0.24;
+          ctx.fill();
+
+          ctx.globalAlpha = 0.85;
+          ctx.setLineDash([4, 2]);
+          ctx.lineWidth = 1.6;
+          ctx.strokeStyle = '#fbbf24';
+          ctx.stroke();
+        } else {
+          // Inactive reed or bend cell
+          if (cell.isCoreReed) {
+            ctx.fillStyle = '#181e29';
+            ctx.strokeStyle = '#334155';
+            ctx.lineWidth = 1.2;
+          } else if (cell.actionType === 'overblow' || cell.actionType === 'overdraw') {
+            ctx.fillStyle = '#171324';
+            ctx.strokeStyle = '#3b2d54';
+            ctx.lineWidth = 1;
+          } else {
+            ctx.fillStyle = '#121620';
+            ctx.strokeStyle = '#222938';
+            ctx.lineWidth = 1;
+          }
+          ctx.fill();
+          ctx.stroke();
+        }
+        ctx.restore();
+
+        // Outer glowing halo for active Guide Tones (3rd & 7th)
+        if (activeRole && activeRole.isGuideTone) {
+          ctx.save();
+          ctx.beginPath();
+          if (ctx.roundRect) {
+            ctx.roundRect(bx - 1.5, by - 1.5, bw + 3, bh + 3, 7);
+          } else {
+            ctx.rect(bx - 1.5, by - 1.5, bw + 3, bh + 3);
+          }
+          ctx.strokeStyle = activeRole.ringColor;
+          ctx.lineWidth = 2;
+          ctx.globalAlpha = 0.85;
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        // Dashed Ghost Halo when an active chord tone is ALSO a ghost tone for the next chord
+        if (activeRole && ghostRole) {
+          ctx.save();
+          ctx.beginPath();
+          if (ctx.roundRect) {
+            ctx.roundRect(bx + 2, by + 2, bw - 4, bh - 4, 4);
+          } else {
+            ctx.rect(bx + 2, by + 2, bw - 4, bh - 4);
+          }
+          ctx.setLineDash([3, 2]);
+          ctx.strokeStyle = '#fde047';
+          ctx.lineWidth = 1.6;
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        // Top-Left Corner Action Badge (BB', DB', OB, OD, VB, BLOW, DRAW)
+        ctx.save();
+        ctx.font = 'bold 7.5px "JetBrains Mono", monospace';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'top';
+        ctx.fillStyle = activeRole
+          ? (activeRole.role === 'root' ? 'rgba(9,10,13,0.75)' : 'rgba(255,255,255,0.85)')
+          : (cell.actionType === 'overblow' || cell.actionType === 'overdraw' ? '#c084fc' : '#64748b');
+        ctx.fillText(cell.badge, bx + 4, by + 3);
+        ctx.restore();
+
+        // Center Primary Label (Degree + Note or Note)
+        const primaryParts = [];
+        if (activeRole && STATE.sbShowDegrees) {
+          primaryParts.push(activeRole.degree);
+        } else if (!activeRole && ghostRole && STATE.sbShowDegrees) {
+          primaryParts.push(ghostRole.degree);
+        }
+        if (STATE.sbShowNotes || (!STATE.sbShowDegrees)) {
+          primaryParts.push(cell.pitchName);
+        }
+        const labelStr = primaryParts.join(' • ');
+
+        ctx.save();
+        ctx.font = `${activeRole ? 'bold 10.5px' : 'bold 9.5px'} "JetBrains Mono", monospace`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        if (activeRole) {
+          ctx.fillStyle = activeRole.role === 'root' ? '#090a0d' : '#ffffff';
+        } else if (ghostRole) {
+          ctx.fillStyle = '#fde68a';
+        } else {
+          ctx.fillStyle = cell.isCoreReed ? '#94a3b8' : '#64748b';
+        }
+        ctx.fillText(labelStr, cx, cy + 3);
+        ctx.restore();
+
+        // Selected Cell Reticle
+        if (
+          STATE.sbSelectedFretTarget &&
+          STATE.sbSelectedFretTarget.isHarmonicaCell &&
+          STATE.sbSelectedFretTarget.row === cell.row &&
+          STATE.sbSelectedFretTarget.col === cell.col
+        ) {
+          ctx.save();
+          ctx.beginPath();
+          if (ctx.roundRect) {
+            ctx.roundRect(bx - 2, by - 2, bw + 4, bh + 4, 7);
+          } else {
+            ctx.rect(bx - 2, by - 2, bw + 4, bh + 4);
+          }
+          ctx.strokeStyle = '#f59e0b';
+          ctx.lineWidth = 2.8;
+          ctx.stroke();
+          ctx.restore();
+        }
+      });
+
+      STATE.sbHarmonicaHitBoxes = hitBoxes;
+      updateFretboardInspectorUI();
     }
 
     function renderSandboxFretboard() {
@@ -2726,10 +3800,18 @@
           : 'px-2.5 py-1 rounded bg-amp-850 hover:bg-amp-800 border border-amp-700 text-gray-300 hover:text-amber-300 text-[11px]';
       }
 
-      // Geometry setup (OmniTune 24-fret layout)
+      // Branch to OmniTune Harmonica Diagram when a harmonica instrument is active
+      if (isHarmonicaInstrument(STATE.sbInstrument)) {
+        renderHarmonicaDiagram(ctx, cssWidth, cssHeight, activeProfile, nextProfile, nextItem, pinnedProfile);
+        return;
+      }
+
+      STATE.sbHarmonicaHitBoxes = [];
+
+      // Geometry setup (OmniTune 24-fret layout for Guitar / Ukulele / 4-String Bass)
       const boardWidth = cssWidth;
       const boardHeight = cssHeight;
-      const leftPad = 44;
+      const leftPad = 48;
       const rightPad = 28;
       const topPad = 34;
       const bottomPad = 30;
@@ -2789,7 +3871,7 @@
         ctx.stroke();
       }
 
-      // Horizontal Guitar Strings (high string at top, thicker wound strings at bottom)
+      // Horizontal Strings (high string at top, thicker wound strings at bottom)
       for (let i = 0; i < stringCount; i += 1) {
         const y = topPad + (i * stringSpacing);
         ctx.beginPath();
@@ -2940,7 +4022,6 @@
       // PASS 3: Active Chord Guide Tones (3rd & 7th) — Prominent Glowing Highlight
       guidePositions.forEach(({ x, y, roleInfo }) => {
         ctx.save();
-        // Outer glow halo
         ctx.beginPath();
         ctx.strokeStyle = roleInfo.ringColor;
         ctx.lineWidth = 2.5;
@@ -2948,7 +4029,6 @@
         ctx.arc(x, y, 15, 0, Math.PI * 2);
         ctx.stroke();
 
-        // Main Guide Tone Circle
         ctx.beginPath();
         ctx.fillStyle = roleInfo.color;
         ctx.globalAlpha = 1;
@@ -2961,7 +4041,7 @@
         ctx.restore();
       });
 
-      // PASS 3.5: Overlapping Next-Chord Ghost Halo (for common tones or when last chord wraps to identical first chord)
+      // PASS 3.5: Overlapping Next-Chord Ghost Halo
       [...nonGuidePositions, ...guidePositions].forEach(({ x, y, hasGhostOverlap }) => {
         if (!hasGhostOverlap) return;
         ctx.save();
@@ -2999,7 +4079,7 @@
       });
 
       // PASS 5: Interactive Selected Fret Reticle
-      if (STATE.sbSelectedFretTarget) {
+      if (STATE.sbSelectedFretTarget && !STATE.sbSelectedFretTarget.isHarmonicaCell) {
         const selX = leftPad + (STATE.sbSelectedFretTarget.fret * fretSpacing);
         const selY = topPad + (STATE.sbSelectedFretTarget.displayStringIndex * stringSpacing);
         ctx.save();
@@ -3023,7 +4103,36 @@
       const cssX = clientX - rect.left;
       const cssY = clientY - rect.top;
 
-      const leftPad = 44;
+      if (isHarmonicaInstrument(STATE.sbInstrument)) {
+        const hit = (STATE.sbHarmonicaHitBoxes || []).find(box =>
+          cssX >= box.x && cssX <= (box.x + box.w) &&
+          cssY >= box.y && cssY <= (box.y + box.h)
+        );
+        if (!hit) return;
+
+        STATE.sbSelectedFretTarget = {
+          isHarmonicaCell: true,
+          row: hit.row,
+          col: hit.col,
+          holeNumber: hit.holeNumber,
+          badge: hit.badge,
+          note: hit.note,
+          pitchName: hit.pitchName,
+          pitchClass: hit.pitchClass,
+          midi: hit.midi
+        };
+
+        renderSandboxFretboard();
+
+        const ready = await ensureAudioContext();
+        if (ready && audioCtx) {
+          const freq = 440 * Math.pow(2, (hit.midi - 69) / 12);
+          playGuitarNote(freq, audioCtx.currentTime, 0.75, 0.85, false, true);
+        }
+        return;
+      }
+
+      const leftPad = 48;
       const rightPad = 28;
       const topPad = 34;
       const bottomPad = 30;
@@ -3048,6 +4157,7 @@
       if (!fretInfo) return;
 
       STATE.sbSelectedFretTarget = {
+        isHarmonicaCell: false,
         stringIndex: physicalStringIndex,
         displayStringIndex,
         fret,
@@ -3060,11 +4170,11 @@
 
       renderSandboxFretboard();
 
-      // Audition the tapped guitar fret note through the WebAudio amp engine
+      // Audition the tapped fret note (forceNoteAudition = true so single fret taps sound even in Bass-Only chord mode)
       const ready = await ensureAudioContext();
       if (ready && audioCtx) {
         const freq = 440 * Math.pow(2, (fretInfo.midi - 69) / 12);
-        playGuitarNote(freq, audioCtx.currentTime, 0.75, 0.8);
+        playGuitarNote(freq, audioCtx.currentTime, 0.75, 0.85, false, true);
       }
     }
 
@@ -3439,51 +4549,123 @@
         }
       });
 
-      // Drive Preset Selector Buttons
+      // Drive Preset Selector Buttons (Trainer + Chord Lab)
       document.querySelectorAll('.btn-drive-preset').forEach(btn => {
         btn.addEventListener('click', () => {
+          const prevBassOnly = isBassOnlyActive();
           const driveKey = btn.getAttribute('data-drive');
           applyDrivePreset(driveKey);
+          const nowBassOnly = isBassOnlyActive();
+          if (STATE.sbIsPlaying && prevBassOnly !== nowBassOnly) {
+            STATE.sbLoopTimeouts.forEach(t => clearTimeout(t));
+            STATE.sbLoopTimeouts = [];
+            stopAllActiveNodes();
+            scheduleSandboxLoopIteration();
+          }
         });
       });
       applyDrivePreset(appStore.settings.drivePreset || 'plexi');
 
-      // Strum Style Selector
-      elements.selectStrumStyle.value = STATE.strumStyle;
-      elements.selectStrumStyle.addEventListener('change', (e) => {
-        STATE.strumStyle = e.target.value;
-        appStore.settings.strumStyle = STATE.strumStyle;
+      // Unified Strum Style Selector (Trainer + Chord Lab)
+      const sbStrumStyle = document.getElementById('sb-strum-style');
+      function updateStrumStyle(newStyle) {
+        STATE.strumStyle = newStyle;
+        appStore.settings.strumStyle = newStyle;
         saveStore(appStore);
-        const opt = e.target.options[e.target.selectedIndex];
-        elements.labelActiveStrum.textContent = opt.textContent.split(' ')[0] + ' ' + (opt.textContent.split(' ')[1] || '');
-      });
-
-      // Drum Groove Selector
-      elements.selectDrumGroove.value = STATE.drumGroove;
-      elements.selectDrumGroove.addEventListener('change', (e) => {
-        STATE.drumGroove = e.target.value;
-        appStore.settings.drumGroove = STATE.drumGroove;
-        saveStore(appStore);
-        const opt = e.target.options[e.target.selectedIndex];
-        elements.labelActiveDrum.textContent = opt.textContent.split(' ')[0] + ' ' + (opt.textContent.split(' ')[1] || '');
-      });
-
-      // Voicing Toggle (Power 5th vs Full Triad)
-      elements.btnVoicingToggle.addEventListener('click', () => {
-        if (STATE.voicing === 'power') {
-          STATE.voicing = 'triad';
-          elements.btnVoicingToggle.textContent = 'Triad';
-          elements.btnVoicingToggle.className = 'px-2 py-1 bg-amber-500 text-black rounded font-bold text-[11px] shrink-0';
-        } else {
-          STATE.voicing = 'power';
-          elements.btnVoicingToggle.textContent = '5th';
-          elements.btnVoicingToggle.className = 'px-2 py-1 bg-amp-850 hover:bg-amp-800 border border-amp-700 text-amber-400 rounded font-bold text-[11px] shrink-0';
+        if (elements.selectStrumStyle) {
+          elements.selectStrumStyle.value = newStyle;
+          const opt = elements.selectStrumStyle.options[elements.selectStrumStyle.selectedIndex];
+          if (opt && elements.labelActiveStrum) {
+            elements.labelActiveStrum.textContent = opt.textContent.split(' ')[0] + ' ' + (opt.textContent.split(' ')[1] || '');
+          }
         }
-        appStore.settings.voicing = STATE.voicing;
+        if (sbStrumStyle) sbStrumStyle.value = newStyle;
+        if (STATE.sbIsPlaying) {
+          STATE.sbLoopTimeouts.forEach(t => clearTimeout(t));
+          STATE.sbLoopTimeouts = [];
+          stopAllActiveNodes();
+          scheduleSandboxLoopIteration();
+        }
+      }
+      updateStrumStyle(STATE.strumStyle);
+      elements.selectStrumStyle.addEventListener('change', (e) => updateStrumStyle(e.target.value));
+      if (sbStrumStyle) {
+        sbStrumStyle.addEventListener('change', (e) => updateStrumStyle(e.target.value));
+      }
+
+      // Unified Drum Groove Selector (Trainer + Chord Lab)
+      const sbDrumGroove = document.getElementById('sb-drum-groove');
+      function updateDrumGroove(newGroove) {
+        STATE.drumGroove = newGroove;
+        appStore.settings.drumGroove = newGroove;
         saveStore(appStore);
+        if (elements.selectDrumGroove) {
+          elements.selectDrumGroove.value = newGroove;
+          const opt = elements.selectDrumGroove.options[elements.selectDrumGroove.selectedIndex];
+          if (opt && elements.labelActiveDrum) {
+            elements.labelActiveDrum.textContent = opt.textContent.split(' ')[0] + ' ' + (opt.textContent.split(' ')[1] || '');
+          }
+        }
+        if (sbDrumGroove) sbDrumGroove.value = newGroove;
+        if (STATE.sbIsPlaying) {
+          STATE.sbLoopTimeouts.forEach(t => clearTimeout(t));
+          STATE.sbLoopTimeouts = [];
+          stopAllActiveNodes();
+          scheduleSandboxLoopIteration();
+        }
+      }
+      updateDrumGroove(STATE.drumGroove);
+      elements.selectDrumGroove.addEventListener('change', (e) => updateDrumGroove(e.target.value));
+      if (sbDrumGroove) {
+        sbDrumGroove.addEventListener('change', (e) => updateDrumGroove(e.target.value));
+      }
+
+      // Unified Voicing Mode (Power 5th vs Full Triad vs Bass Root Only)
+      const sbVoicingSelect = document.getElementById('sb-voicing-select');
+      const labelVoicingMode = document.getElementById('label-voicing-mode');
+      function updateVoicingMode(newVoicing) {
+        STATE.voicing = newVoicing;
+        appStore.settings.voicing = newVoicing;
+        saveStore(appStore);
+
+        if (elements.btnVoicingToggle) {
+          if (newVoicing === 'triad') {
+            elements.btnVoicingToggle.textContent = 'Triad';
+            elements.btnVoicingToggle.className = 'px-2 py-1 bg-amber-500 text-black rounded font-bold text-[11px] shrink-0';
+            if (labelVoicingMode) labelVoicingMode.textContent = 'Full Triad';
+          } else if (newVoicing === 'bass') {
+            elements.btnVoicingToggle.textContent = 'Bass';
+            elements.btnVoicingToggle.className = 'px-2 py-1 bg-emerald-500 text-black rounded font-bold text-[11px] shrink-0';
+            if (labelVoicingMode) labelVoicingMode.textContent = 'Bass Root Only';
+          } else {
+            elements.btnVoicingToggle.textContent = '5th';
+            elements.btnVoicingToggle.className = 'px-2 py-1 bg-amp-850 hover:bg-amp-800 border border-amp-700 text-amber-400 rounded font-bold text-[11px] shrink-0';
+            if (labelVoicingMode) labelVoicingMode.textContent = 'Power 5th';
+          }
+        }
+        if (sbVoicingSelect) {
+          sbVoicingSelect.value = newVoicing;
+        }
         updateSandboxPadLabels();
         renderSandboxSequence();
+
+        if (STATE.sbIsPlaying) {
+          STATE.sbLoopTimeouts.forEach(t => clearTimeout(t));
+          STATE.sbLoopTimeouts = [];
+          stopAllActiveNodes();
+          scheduleSandboxLoopIteration();
+        }
+      }
+      updateVoicingMode(STATE.voicing);
+
+      elements.btnVoicingToggle.addEventListener('click', () => {
+        const order = ['power', 'triad', 'bass'];
+        const nextIdx = (order.indexOf(STATE.voicing) + 1) % order.length;
+        updateVoicingMode(order[nextIdx]);
       });
+      if (sbVoicingSelect) {
+        sbVoicingSelect.addEventListener('change', (e) => updateVoicingMode(e.target.value));
+      }
 
       // Inversion Mode dropdown listener
       elements.selectInversionMode.value = STATE.inversionMode;
@@ -3575,11 +4757,58 @@
         renderSandboxSequence();
       });
 
-      // Fretboard Controls & OmniTune Audition Buttons
+      // Multi-Instrument & Tuning / Harmonica Controls (OmniTune Engine)
+      const sbInstrumentSelect = document.getElementById('sb-instrument-select');
       const sbTuningSelect = document.getElementById('sb-tuning-select');
+      const btnSbPos1 = document.getElementById('btn-sb-pos-1');
+      const btnSbPos2 = document.getElementById('btn-sb-pos-2');
+      const btnSbPos3 = document.getElementById('btn-sb-pos-3');
+      const sbToggleValved = document.getElementById('sb-toggle-valved');
+
+      populateSandboxTuningDropdown();
+
+      if (sbInstrumentSelect) {
+        sbInstrumentSelect.addEventListener('change', (e) => {
+          STATE.sbInstrument = e.target.value;
+          appStore.settings.sbInstrument = STATE.sbInstrument;
+          saveStore(appStore);
+          STATE.sbSelectedFretTarget = null;
+          populateSandboxTuningDropdown();
+          renderSandboxFretboard();
+        });
+      }
+
       if (sbTuningSelect) {
         sbTuningSelect.addEventListener('change', (e) => {
-          STATE.sbTuning = e.target.value;
+          if (isHarmonicaInstrument(STATE.sbInstrument)) {
+            STATE.sbHarpKey = e.target.value;
+            appStore.settings.sbHarpKey = STATE.sbHarpKey;
+          } else {
+            STATE.sbTuning = e.target.value;
+            appStore.settings.sbTuning = STATE.sbTuning;
+          }
+          saveStore(appStore);
+          STATE.sbSelectedFretTarget = null;
+          renderSandboxFretboard();
+        });
+      }
+
+      if (btnSbPos1) {
+        btnSbPos1.addEventListener('click', () => setHarmonicaPosition(1));
+      }
+      if (btnSbPos2) {
+        btnSbPos2.addEventListener('click', () => setHarmonicaPosition(2));
+      }
+      if (btnSbPos3) {
+        btnSbPos3.addEventListener('click', () => setHarmonicaPosition(3));
+      }
+
+      if (sbToggleValved) {
+        sbToggleValved.checked = Boolean(STATE.sbValved);
+        sbToggleValved.addEventListener('change', (e) => {
+          STATE.sbValved = e.target.checked;
+          appStore.settings.sbValved = STATE.sbValved;
+          saveStore(appStore);
           STATE.sbSelectedFretTarget = null;
           renderSandboxFretboard();
         });
