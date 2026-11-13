@@ -1228,6 +1228,38 @@
     let bassBus = null;
     let drumBus = null;
     let audioUnlockAttempted = false;
+    const activeAudioNodes = new Set();
+
+    function registerActiveAudioSource(source, gainNode = null) {
+      if (!source) return;
+      const entry = { source, gainNode };
+      activeAudioNodes.add(entry);
+      source.onended = () => {
+        activeAudioNodes.delete(entry);
+      };
+    }
+
+    function stopAllActiveNodes() {
+      const now = audioCtx ? audioCtx.currentTime : 0;
+      activeAudioNodes.forEach(({ source, gainNode }) => {
+        try {
+          if (gainNode && audioCtx) {
+            gainNode.gain.cancelScheduledValues(now);
+            gainNode.gain.setValueAtTime(0.0001, now);
+          }
+        } catch (e) {}
+        try {
+          source.stop(0);
+        } catch (e) {}
+        try {
+          source.disconnect();
+        } catch (e) {}
+        try {
+          if (gainNode) gainNode.disconnect();
+        } catch (e) {}
+      });
+      activeAudioNodes.clear();
+    }
 
     // Drive & Sound curve presets (from Bass-Only & Crystal Clean to High-Gain Lead)
     const DRIVE_PROFILES = {
@@ -1494,7 +1526,7 @@
           { type: 'sine',     cents: 0,    gainMul: 0.35 }
         ];
       } else if (waveMode === 'crunch') {
-        // Light Crunch: Triangle body + single mild sawtooth edge
+        // Light Crunch: Triangle body + single sawtooth edge
         voices = [
           { type: 'triangle', cents: -3.5, gainMul: 0.65 },
           { type: 'sawtooth', cents: 0,    gainMul: 0.50 },
@@ -1534,6 +1566,7 @@
         oscGain.connect(voiceGain);
         osc.start(startTime);
         osc.stop(startTime + (isMuted ? 0.15 : duration + 0.05));
+        registerActiveAudioSource(osc, voiceGain);
       });
 
       voiceGain.connect(guitarBus);
@@ -1560,6 +1593,7 @@
       oscSub.connect(gain);
       oscSub.start(startTime);
       oscSub.stop(startTime + duration + 0.05);
+      registerActiveAudioSource(oscSub, gain);
 
       // Add upper octave fundamental + warm harmonic definition so Bass-Only is punchy and audible on all speakers
       const oscBody = audioCtx.createOscillator();
@@ -1571,6 +1605,7 @@
       bodyGain.connect(gain);
       oscBody.start(startTime);
       oscBody.stop(startTime + duration + 0.05);
+      registerActiveAudioSource(oscBody, gain);
 
       gain.connect(bassBus);
     }
@@ -1589,6 +1624,7 @@
       gain.connect(drumBus);
       osc.start(time);
       osc.stop(time + 0.25);
+      registerActiveAudioSource(osc, gain);
     }
 
     function playDrumSnare(time, velocity = 0.35) {
@@ -1605,6 +1641,7 @@
       gain.connect(drumBus);
       osc.start(time);
       osc.stop(time + 0.14);
+      registerActiveAudioSource(osc, gain);
 
       // Noise burst
       const buffer = audioCtx.createBuffer(1, Math.floor(audioCtx.sampleRate * 0.14), audioCtx.sampleRate);
@@ -1625,6 +1662,8 @@
       noiseFilter.connect(noiseGain);
       noiseGain.connect(drumBus);
       noise.start(time);
+      noise.stop(time + 0.14);
+      registerActiveAudioSource(noise, noiseGain);
     }
 
     function playDrumHiHat(time, open = false, velocity = 0.2) {
@@ -1657,6 +1696,7 @@
 
       noise.start(time);
       noise.stop(time + duration + 0.02);
+      registerActiveAudioSource(noise, gain);
     }
 
     async function triggerSoundTest() {
@@ -2015,6 +2055,7 @@
       STATE.trainerIntervals.forEach(i => clearInterval(i));
       STATE.trainerIntervals = [];
       STATE.isPlaying = false;
+      stopAllActiveNodes();
 
       const isLooping = elements.toggleTrainerLoop?.checked || STATE.trainerLoop;
       if (elements.btnPlayProgression) {
@@ -4182,6 +4223,7 @@
       STATE.sbLoopTimeouts.forEach(t => clearTimeout(t));
       STATE.sbLoopTimeouts = [];
       STATE.sbIsPlaying = false;
+      stopAllActiveNodes();
 
       const btn = document.getElementById('btn-sb-play');
       const text = document.getElementById('sb-play-text');
@@ -4457,6 +4499,24 @@
         elements.labelKeyCenter.className = 'text-lg font-bold font-mono text-emerald-400';
       });
 
+      // Helper to reschedule whichever engine (Trainer or Chord Lab) is currently playing
+      function rescheduleActivePlaybackIfPlaying() {
+        if (STATE.sbIsPlaying) {
+          STATE.sbLoopTimeouts.forEach(t => clearTimeout(t));
+          STATE.sbLoopTimeouts = [];
+          stopAllActiveNodes();
+          scheduleSandboxLoopIteration();
+        }
+        if (STATE.isPlaying) {
+          STATE.trainerTimeouts.forEach(t => clearTimeout(t));
+          STATE.trainerTimeouts = [];
+          STATE.trainerIntervals.forEach(i => clearInterval(i));
+          STATE.trainerIntervals = [];
+          stopAllActiveNodes();
+          scheduleTrainerLoopIteration();
+        }
+      }
+
       // Unified BPM Controls (Progression Trainer + Chord Lab)
       const inputBpm = document.getElementById('input-bpm');
       const sbSliderBpm = document.getElementById('sb-slider-bpm');
@@ -4478,13 +4538,7 @@
         if (sbSliderBpm) sbSliderBpm.value = String(clamped);
         if (sbInputBpm && document.activeElement !== sbInputBpm) sbInputBpm.value = String(clamped);
 
-        // If Chord Lab chain is actively playing, reschedule cleanly at the new tempo
-        if (STATE.sbIsPlaying) {
-          STATE.sbLoopTimeouts.forEach(t => clearTimeout(t));
-          STATE.sbLoopTimeouts = [];
-          stopAllActiveNodes();
-          scheduleSandboxLoopIteration();
-        }
+        rescheduleActivePlaybackIfPlaying();
       }
 
       // Initialize BPM control values
@@ -4552,23 +4606,16 @@
       // Drive Preset Selector Buttons (Trainer + Chord Lab)
       document.querySelectorAll('.btn-drive-preset').forEach(btn => {
         btn.addEventListener('click', () => {
-          const prevBassOnly = isBassOnlyActive();
           const driveKey = btn.getAttribute('data-drive');
           applyDrivePreset(driveKey);
-          const nowBassOnly = isBassOnlyActive();
-          if (STATE.sbIsPlaying && prevBassOnly !== nowBassOnly) {
-            STATE.sbLoopTimeouts.forEach(t => clearTimeout(t));
-            STATE.sbLoopTimeouts = [];
-            stopAllActiveNodes();
-            scheduleSandboxLoopIteration();
-          }
+          rescheduleActivePlaybackIfPlaying();
         });
       });
       applyDrivePreset(appStore.settings.drivePreset || 'plexi');
 
       // Unified Strum Style Selector (Trainer + Chord Lab)
       const sbStrumStyle = document.getElementById('sb-strum-style');
-      function updateStrumStyle(newStyle) {
+      function updateStrumStyle(newStyle, shouldReschedule = true) {
         STATE.strumStyle = newStyle;
         appStore.settings.strumStyle = newStyle;
         saveStore(appStore);
@@ -4580,14 +4627,9 @@
           }
         }
         if (sbStrumStyle) sbStrumStyle.value = newStyle;
-        if (STATE.sbIsPlaying) {
-          STATE.sbLoopTimeouts.forEach(t => clearTimeout(t));
-          STATE.sbLoopTimeouts = [];
-          stopAllActiveNodes();
-          scheduleSandboxLoopIteration();
-        }
+        if (shouldReschedule) rescheduleActivePlaybackIfPlaying();
       }
-      updateStrumStyle(STATE.strumStyle);
+      updateStrumStyle(STATE.strumStyle, false);
       elements.selectStrumStyle.addEventListener('change', (e) => updateStrumStyle(e.target.value));
       if (sbStrumStyle) {
         sbStrumStyle.addEventListener('change', (e) => updateStrumStyle(e.target.value));
@@ -4595,7 +4637,7 @@
 
       // Unified Drum Groove Selector (Trainer + Chord Lab)
       const sbDrumGroove = document.getElementById('sb-drum-groove');
-      function updateDrumGroove(newGroove) {
+      function updateDrumGroove(newGroove, shouldReschedule = true) {
         STATE.drumGroove = newGroove;
         appStore.settings.drumGroove = newGroove;
         saveStore(appStore);
@@ -4607,14 +4649,9 @@
           }
         }
         if (sbDrumGroove) sbDrumGroove.value = newGroove;
-        if (STATE.sbIsPlaying) {
-          STATE.sbLoopTimeouts.forEach(t => clearTimeout(t));
-          STATE.sbLoopTimeouts = [];
-          stopAllActiveNodes();
-          scheduleSandboxLoopIteration();
-        }
+        if (shouldReschedule) rescheduleActivePlaybackIfPlaying();
       }
-      updateDrumGroove(STATE.drumGroove);
+      updateDrumGroove(STATE.drumGroove, false);
       elements.selectDrumGroove.addEventListener('change', (e) => updateDrumGroove(e.target.value));
       if (sbDrumGroove) {
         sbDrumGroove.addEventListener('change', (e) => updateDrumGroove(e.target.value));
@@ -4623,7 +4660,7 @@
       // Unified Voicing Mode (Power 5th vs Full Triad vs Bass Root Only)
       const sbVoicingSelect = document.getElementById('sb-voicing-select');
       const labelVoicingMode = document.getElementById('label-voicing-mode');
-      function updateVoicingMode(newVoicing) {
+      function updateVoicingMode(newVoicing, shouldReschedule = true) {
         STATE.voicing = newVoicing;
         appStore.settings.voicing = newVoicing;
         saveStore(appStore);
@@ -4649,14 +4686,9 @@
         updateSandboxPadLabels();
         renderSandboxSequence();
 
-        if (STATE.sbIsPlaying) {
-          STATE.sbLoopTimeouts.forEach(t => clearTimeout(t));
-          STATE.sbLoopTimeouts = [];
-          stopAllActiveNodes();
-          scheduleSandboxLoopIteration();
-        }
+        if (shouldReschedule) rescheduleActivePlaybackIfPlaying();
       }
-      updateVoicingMode(STATE.voicing);
+      updateVoicingMode(STATE.voicing, false);
 
       elements.btnVoicingToggle.addEventListener('click', () => {
         const order = ['power', 'triad', 'bass'];
