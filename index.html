@@ -185,11 +185,14 @@
               </div>
             </div>
 
-            <!-- Tempo Slider -->
+            <!-- Tempo Slider & Input -->
             <div class="flex items-center gap-2 bg-amp-950 px-3 py-1.5 rounded-lg border border-amp-800 shadow-inset-panel">
               <span class="text-xs font-mono text-gray-400">TEMPO</span>
-              <input id="slider-bpm" type="range" min="70" max="145" value="105" class="w-20 sm:w-28 accent-amber-500 cursor-pointer">
-              <span id="label-bpm" class="text-xs font-mono font-bold text-amber-400 w-12 text-right">105 BPM</span>
+              <input id="slider-bpm" type="range" min="40" max="220" value="105" class="w-20 sm:w-28 accent-amber-500 cursor-pointer">
+              <div class="flex items-center gap-1">
+                <input id="input-bpm" type="number" min="40" max="220" value="105" class="w-12 bg-amp-900 text-amber-400 font-mono font-bold text-xs text-center rounded border border-amp-700 py-0.5 focus:outline-none focus:border-amber-400">
+                <span id="label-bpm" class="text-[11px] font-mono font-bold text-amber-400">BPM</span>
+              </div>
             </div>
           </div>
 
@@ -481,6 +484,18 @@
                 <button class="sb-key-btn px-2.5 py-1 rounded text-xs font-mono font-bold bg-amp-800 text-gray-300 hover:text-white" data-key="D">D</button>
                 <button class="sb-key-btn px-2.5 py-1 rounded text-xs font-mono font-bold bg-amp-800 text-gray-300 hover:text-white" data-key="G">G</button>
                 <button class="sb-key-btn px-2.5 py-1 rounded text-xs font-mono font-bold bg-amp-800 text-gray-300 hover:text-white" data-key="C">C</button>
+              </div>
+            </div>
+
+            <!-- Tempo / BPM Control for Chord Lab -->
+            <div class="flex items-center gap-2 bg-amp-950 px-3 py-1.5 rounded-xl border border-amp-800 text-xs font-mono">
+              <span class="text-gray-400">TEMPO:</span>
+              <button id="btn-sb-bpm-down" type="button" class="w-5 h-5 rounded bg-amp-850 hover:bg-amp-800 border border-amp-700 text-gray-300 hover:text-amber-400 flex items-center justify-center font-bold" title="Decrease BPM by 5">-</button>
+              <input id="sb-slider-bpm" type="range" min="40" max="220" value="105" class="w-20 sm:w-24 accent-amber-500 cursor-pointer">
+              <button id="btn-sb-bpm-up" type="button" class="w-5 h-5 rounded bg-amp-850 hover:bg-amp-800 border border-amp-700 text-gray-300 hover:text-amber-400 flex items-center justify-center font-bold" title="Increase BPM by 5">+</button>
+              <div class="flex items-center gap-1">
+                <input id="sb-input-bpm" type="number" min="40" max="220" value="105" class="w-12 bg-amp-900 text-amber-400 font-mono font-bold text-xs text-center rounded border border-amp-700 py-0.5 focus:outline-none focus:border-amber-400">
+                <span class="text-[11px] font-bold text-amber-400">BPM</span>
               </div>
             </div>
 
@@ -849,7 +864,7 @@
 
             <!-- Step & Pin Controls (OmniTune Audition Controller) -->
             <div class="flex items-center gap-1.5 flex-wrap">
-              <span id="sb-fb-next-chord-hint" class="text-[11px] text-gray-400 mr-1 hidden md:inline"></span>
+              <span id="sb-fb-next-chord-hint" class="text-[11px] text-amber-300/90 mr-1 font-mono"></span>
               <button id="btn-sb-prev-chord" type="button" class="px-2.5 py-1 rounded bg-amp-850 hover:bg-amp-800 border border-amp-700 text-gray-300 hover:text-white text-[11px]" title="Step to previous chord in chain">◀ Prev</button>
               <button id="btn-sb-next-chord" type="button" class="px-2.5 py-1 rounded bg-amp-850 hover:bg-amp-800 border border-amp-700 text-gray-300 hover:text-white text-[11px]" title="Step to next chord in chain">Next ▶</button>
               <button id="btn-sb-pin-chord" type="button" class="px-2.5 py-1 rounded bg-amp-850 hover:bg-amp-800 border border-amp-700 text-gray-300 hover:text-amber-300 text-[11px]" title="Pin current chord as a persistent baseline reference on the fretboard">📌 Pin Base</button>
@@ -2577,13 +2592,17 @@
 
     function getNextSandboxChordItem() {
       const chain = STATE.sandboxCustomProg;
-      if (chain.length > 1 && STATE.sbActiveIndex >= 0 && STATE.sbActiveIndex < chain.length) {
-        const nextIdx = (STATE.sbActiveIndex + 1) % chain.length;
+      if (chain.length >= 1) {
+        const currentIdx = (STATE.sbActiveIndex >= 0 && STATE.sbActiveIndex < chain.length)
+          ? STATE.sbActiveIndex
+          : (chain.length - 1);
+        const nextIdx = (currentIdx + 1) % chain.length;
         const item = chain[nextIdx];
         return {
           rn: typeof item === 'string' ? item : item.rn,
           inversion: typeof item === 'object' && item.inversion !== undefined ? item.inversion : 0,
-          index: nextIdx
+          index: nextIdx,
+          isWrappedToFirst: currentIdx === chain.length - 1
         };
       }
       return null;
@@ -2688,13 +2707,15 @@
       if (fifthNoteEl) fifthNoteEl.textContent = activeProfile.fifthNote;
 
       if (nextHintEl) {
-        if (pinnedProfile) {
-          nextHintEl.textContent = `📌 Base: ${pinnedProfile.chordSymbol} (${pinnedProfile.roman})`;
-        } else if (nextProfile) {
-          nextHintEl.textContent = `Next ➜ ${nextProfile.chordSymbol} (${nextProfile.roman}) [3rd:${nextProfile.thirdNote}, 7th:${nextProfile.seventhNote}]`;
-        } else {
-          nextHintEl.textContent = '';
+        const hintParts = [];
+        if (STATE.sbShowNextGhost && nextProfile && nextItem) {
+          const targetLabel = nextItem.isWrappedToFirst ? '#1 First' : `#${nextItem.index + 1}`;
+          hintParts.push(`👻 Next (${targetLabel}) ➜ ${nextProfile.chordSymbol} (${nextProfile.roman}) [3rd:${nextProfile.thirdNote}, 7th:${nextProfile.seventhNote}]`);
         }
+        if (pinnedProfile) {
+          hintParts.push(`📌 Base: ${pinnedProfile.chordSymbol} (${pinnedProfile.roman})`);
+        }
+        nextHintEl.textContent = hintParts.join('  •  ');
       }
 
       if (pinBtn) {
@@ -2800,38 +2821,80 @@
         ctx.fillText(String(fret), textX, boardHeight - 5);
       }
 
-      // PASS 1: Ghost / Context Layer (Pinned Base Chord OR Next Chord in Progression)
-      const ghostProfile = pinnedProfile || (STATE.sbShowNextGhost ? nextProfile : null);
-      if (ghostProfile && ghostProfile.roman !== activeProfile.roman) {
+      // Collect Ghost Positions (Next Chord in Progression + Optional Pinned Base Chord)
+      const ghostSources = [];
+      if (STATE.sbShowNextGhost && nextProfile) {
+        ghostSources.push({ profile: nextProfile, isNext: true });
+      }
+      if (pinnedProfile && (!nextProfile || !STATE.sbShowNextGhost || pinnedProfile.roman !== nextProfile.roman)) {
+        ghostSources.push({ profile: pinnedProfile, isNext: false });
+      }
+
+      const standaloneGhostPositions = [];
+      const overlappingGhostKeys = new Set();
+
+      ghostSources.forEach(({ profile: gProf }) => {
         lowToHighStrings.forEach((openNote, stringIndex) => {
           const displayIdx = stringCount - 1 - stringIndex;
           const y = topPad + (displayIdx * stringSpacing);
           for (let fret = 0; fret <= maxFret; fret += 1) {
             const fretInfo = omniFretNoteForString(openNote, fret);
             if (!fretInfo) continue;
-            const ghostRole = ghostProfile.getRoleForPitchClass(fretInfo.pitchClass);
-            if (!ghostRole || !ghostProfile.isRoleVisibleInMode(ghostRole.role, STATE.sbToneMode)) continue;
+            const ghostRole = gProf.getRoleForPitchClass(fretInfo.pitchClass);
+            if (!ghostRole || !gProf.isRoleVisibleInMode(ghostRole.role, STATE.sbToneMode)) continue;
 
             // Only draw ghost if it's a guide tone or root
             if (!ghostRole.isGuideTone && ghostRole.role !== 'root') continue;
 
-            const x = leftPad + (fret * fretSpacing);
-            ctx.save();
-            ctx.beginPath();
-            ctx.globalAlpha = 0.28;
-            ctx.fillStyle = ghostRole.color;
-            ctx.arc(x, y, 10.5, 0, Math.PI * 2);
-            ctx.fill();
-
-            ctx.globalAlpha = 0.65;
-            ctx.setLineDash([3, 2]);
-            ctx.strokeStyle = '#fbbf24';
-            ctx.lineWidth = 1.5;
-            ctx.stroke();
-            ctx.restore();
+            const activeRole = activeProfile.getRoleForPitchClass(fretInfo.pitchClass);
+            const isOverlappingActive = activeRole && activeProfile.isRoleVisibleInMode(activeRole.role, STATE.sbToneMode);
+            if (isOverlappingActive) {
+              overlappingGhostKeys.add(`${stringIndex}:${fret}`);
+            } else {
+              const x = leftPad + (fret * fretSpacing);
+              standaloneGhostPositions.push({ x, y, fret, stringIndex, fretInfo, ghostRole });
+            }
           }
         });
-      }
+      });
+
+      // PASS 1: Non-overlapping Ghost / Next Chord Tones
+      standaloneGhostPositions.forEach(({ x, y, fretInfo, ghostRole }) => {
+        ctx.save();
+        ctx.beginPath();
+        ctx.globalAlpha = 0.32;
+        ctx.fillStyle = ghostRole.color;
+        ctx.arc(x, y, 10.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.globalAlpha = 0.78;
+        ctx.setLineDash([3, 2]);
+        ctx.strokeStyle = '#fbbf24';
+        ctx.lineWidth = 1.6;
+        ctx.stroke();
+        ctx.restore();
+
+        if (STATE.sbShowDegrees) {
+          ctx.save();
+          ctx.globalAlpha = 0.65;
+          ctx.fillStyle = '#fde68a';
+          ctx.font = 'bold 9px "JetBrains Mono", monospace';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(ghostRole.degree, x, y + 0.5);
+          ctx.restore();
+        }
+        if (STATE.sbShowNotes) {
+          ctx.save();
+          ctx.globalAlpha = 0.55;
+          ctx.fillStyle = '#fcd34d';
+          ctx.font = 'bold 8.5px "JetBrains Mono", monospace';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'alphabetic';
+          ctx.fillText(fretInfo.pitchName, x, y - 14);
+          ctx.restore();
+        }
+      });
 
       // Collect Active Chord Fret Positions
       const nonGuidePositions = [];
@@ -2849,7 +2912,8 @@
           if (!roleInfo || !activeProfile.isRoleVisibleInMode(roleInfo.role, STATE.sbToneMode)) continue;
 
           const x = leftPad + (fret * fretSpacing);
-          const item = { x, y, fret, stringIndex, fretInfo, roleInfo };
+          const hasGhostOverlap = overlappingGhostKeys.has(`${stringIndex}:${fret}`);
+          const item = { x, y, fret, stringIndex, fretInfo, roleInfo, hasGhostOverlap };
           if (roleInfo.isGuideTone) {
             guidePositions.push(item);
           } else {
@@ -2893,6 +2957,20 @@
 
         ctx.strokeStyle = '#ffffff';
         ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.restore();
+      });
+
+      // PASS 3.5: Overlapping Next-Chord Ghost Halo (for common tones or when last chord wraps to identical first chord)
+      [...nonGuidePositions, ...guidePositions].forEach(({ x, y, hasGhostOverlap }) => {
+        if (!hasGhostOverlap) return;
+        ctx.save();
+        ctx.beginPath();
+        ctx.setLineDash([3, 3]);
+        ctx.strokeStyle = '#fbbf24';
+        ctx.lineWidth = 1.8;
+        ctx.globalAlpha = 0.85;
+        ctx.arc(x, y, 17.5, 0, Math.PI * 2);
         ctx.stroke();
         ctx.restore();
       });
@@ -3013,8 +3091,13 @@
 
     function clearSandboxVisualHighlight() {
       document.querySelectorAll('.sb-chain-chip').forEach(chip => {
-        chip.classList.remove('ring-2', 'ring-amber-400', 'bg-amber-500/30', 'scale-105');
+        chip.classList.remove(
+          'ring-2', 'ring-amber-400', 'bg-amber-500/30', 'scale-105',
+          'border-dashed', 'border-sky-400/80', 'ring-1', 'ring-sky-400/50'
+        );
         chip.classList.add('bg-amp-850');
+        const ghostBadge = chip.querySelector('.sb-chip-ghost-badge');
+        if (ghostBadge) ghostBadge.classList.add('hidden');
       });
     }
 
@@ -3025,6 +3108,18 @@
         chips[index].classList.remove('bg-amp-850');
         chips[index].classList.add('ring-2', 'ring-amber-400', 'bg-amber-500/30', 'scale-105');
         chips[index].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+      // Highlight the next chord (wrapping from the last chord to the first chord #1) when ghosting is enabled
+      if (STATE.sbShowNextGhost && chips.length >= 1) {
+        const currentIdx = (index >= 0 && index < chips.length) ? index : (chips.length - 1);
+        const nextIdx = (currentIdx + 1) % chips.length;
+        if (chips[nextIdx]) {
+          if (nextIdx !== currentIdx) {
+            chips[nextIdx].classList.add('border-dashed', 'border-sky-400/80', 'ring-1', 'ring-sky-400/50');
+          }
+          const ghostBadge = chips[nextIdx].querySelector('.sb-chip-ghost-badge');
+          if (ghostBadge) ghostBadge.classList.remove('hidden');
+        }
       }
     }
 
@@ -3122,17 +3217,15 @@
         const rn = typeof item === 'string' ? item : item.rn;
         const inv = typeof item === 'object' && item.inversion !== undefined ? item.inversion : 0;
         const profile = getChordHarmonicProfile(STATE.sandboxKey, rn, inv);
-        const isActive = index === STATE.sbActiveIndex;
 
         const chip = document.createElement('div');
-        chip.className = `sb-chain-chip cursor-pointer px-3 py-1.5 rounded-lg border border-amber-500/40 text-amber-300 font-mono font-bold text-xs flex items-center gap-1.5 shrink-0 transition-all duration-150 ${
-          isActive ? 'ring-2 ring-amber-400 bg-amber-500/30 scale-105' : 'bg-amp-850 hover:bg-amp-800'
-        }`;
+        chip.className = 'sb-chain-chip cursor-pointer px-3 py-1.5 rounded-lg border border-amber-500/40 text-amber-300 font-mono font-bold text-xs flex items-center gap-1.5 shrink-0 transition-all duration-150 bg-amp-850 hover:bg-amp-800';
         chip.innerHTML = `
           <span class="text-[10px] text-gray-400 font-normal">#${index + 1}</span>
           <span>${getChordSymbolForLab(profile.rootNote, rn)} (${rn})</span>
           <span class="text-[9px] px-1 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-normal" title="Guide Tones (3rd & 7th)">${profile.thirdDegreeLabel}:${profile.thirdNote}•${profile.seventhDegreeLabel}:${profile.seventhNote}</span>
           <span class="text-[10px] px-1 py-0.5 rounded bg-amp-950 text-gray-400 font-normal">${inv === 0 ? 'Root' : (inv === 1 ? '1st Inv' : '2nd Inv')}</span>
+          <span class="sb-chip-ghost-badge hidden text-[9px] px-1 py-0.5 rounded bg-sky-500/20 text-sky-300 border border-sky-400/40 font-normal" title="Ghost preview on fretboard">👻 Ghost</span>
           <button title="Remove chord" class="sb-chip-remove text-gray-400 hover:text-rose-400 ml-1 text-xs">✕</button>
         `;
 
@@ -3159,6 +3252,7 @@
         display.appendChild(chip);
       });
 
+      highlightSandboxChip(STATE.sbActiveIndex);
       renderSandboxFretboard();
     }
 
@@ -3253,15 +3347,82 @@
         elements.labelKeyCenter.className = 'text-lg font-bold font-mono text-emerald-400';
       });
 
-      // BPM slider
-      elements.sliderBpm.value = STATE.bpm;
-      elements.labelBpm.textContent = `${STATE.bpm} BPM`;
-      elements.sliderBpm.addEventListener('input', (e) => {
-        STATE.bpm = parseInt(e.target.value, 10);
-        elements.labelBpm.textContent = `${STATE.bpm} BPM`;
-        appStore.settings.bpm = STATE.bpm;
+      // Unified BPM Controls (Progression Trainer + Chord Lab)
+      const inputBpm = document.getElementById('input-bpm');
+      const sbSliderBpm = document.getElementById('sb-slider-bpm');
+      const sbInputBpm = document.getElementById('sb-input-bpm');
+      const btnSbBpmDown = document.getElementById('btn-sb-bpm-down');
+      const btnSbBpmUp = document.getElementById('btn-sb-bpm-up');
+
+      function updateBpm(rawBpm) {
+        const parsed = parseInt(rawBpm, 10);
+        if (isNaN(parsed)) return;
+        const clamped = Math.max(40, Math.min(220, parsed));
+        STATE.bpm = clamped;
+        appStore.settings.bpm = clamped;
         saveStore(appStore);
-      });
+
+        if (elements.sliderBpm) elements.sliderBpm.value = String(clamped);
+        if (inputBpm && document.activeElement !== inputBpm) inputBpm.value = String(clamped);
+        if (elements.labelBpm) elements.labelBpm.textContent = 'BPM';
+        if (sbSliderBpm) sbSliderBpm.value = String(clamped);
+        if (sbInputBpm && document.activeElement !== sbInputBpm) sbInputBpm.value = String(clamped);
+
+        // If Chord Lab chain is actively playing, reschedule cleanly at the new tempo
+        if (STATE.sbIsPlaying) {
+          STATE.sbLoopTimeouts.forEach(t => clearTimeout(t));
+          STATE.sbLoopTimeouts = [];
+          stopAllActiveNodes();
+          scheduleSandboxLoopIteration();
+        }
+      }
+
+      // Initialize BPM control values
+      if (elements.sliderBpm) elements.sliderBpm.value = String(STATE.bpm);
+      if (inputBpm) inputBpm.value = String(STATE.bpm);
+      if (sbSliderBpm) sbSliderBpm.value = String(STATE.bpm);
+      if (sbInputBpm) sbInputBpm.value = String(STATE.bpm);
+
+      if (elements.sliderBpm) {
+        elements.sliderBpm.addEventListener('input', (e) => {
+          updateBpm(e.target.value);
+          if (inputBpm) inputBpm.value = String(STATE.bpm);
+        });
+      }
+      if (inputBpm) {
+        inputBpm.addEventListener('input', (e) => updateBpm(e.target.value));
+        inputBpm.addEventListener('change', (e) => {
+          updateBpm(e.target.value);
+          inputBpm.value = String(STATE.bpm);
+        });
+      }
+      if (sbSliderBpm) {
+        sbSliderBpm.addEventListener('input', (e) => {
+          updateBpm(e.target.value);
+          if (sbInputBpm) sbInputBpm.value = String(STATE.bpm);
+        });
+      }
+      if (sbInputBpm) {
+        sbInputBpm.addEventListener('input', (e) => updateBpm(e.target.value));
+        sbInputBpm.addEventListener('change', (e) => {
+          updateBpm(e.target.value);
+          sbInputBpm.value = String(STATE.bpm);
+        });
+      }
+      if (btnSbBpmDown) {
+        btnSbBpmDown.addEventListener('click', () => {
+          updateBpm(STATE.bpm - 5);
+          if (sbInputBpm) sbInputBpm.value = String(STATE.bpm);
+          if (inputBpm) inputBpm.value = String(STATE.bpm);
+        });
+      }
+      if (btnSbBpmUp) {
+        btnSbBpmUp.addEventListener('click', () => {
+          updateBpm(STATE.bpm + 5);
+          if (sbInputBpm) sbInputBpm.value = String(STATE.bpm);
+          if (inputBpm) inputBpm.value = String(STATE.bpm);
+        });
+      }
 
       // Blind mode toggle
       elements.toggleBlindMode.checked = STATE.strictBlindMode;
@@ -3464,6 +3625,7 @@
           btnSbToggleGhost.className = STATE.sbShowNextGhost
             ? 'px-2.5 py-1.5 rounded-lg bg-sky-500/20 border border-sky-500/50 text-sky-300 hover:bg-sky-500/30 transition text-[11px] font-bold'
             : 'px-2.5 py-1.5 rounded-lg bg-amp-950 border border-amp-800 text-gray-400 hover:text-gray-200 transition text-[11px] font-bold';
+          highlightSandboxChip(STATE.sbActiveIndex);
           renderSandboxFretboard();
         });
       }
