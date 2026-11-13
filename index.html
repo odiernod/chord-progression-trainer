@@ -469,7 +469,7 @@
         <div class="flex flex-wrap items-center justify-between gap-4 border-b border-amp-800 pb-4">
           <div>
             <h2 class="text-xl font-bold font-display uppercase tracking-wider text-amber-400">Rock Chord Laboratory</h2>
-            <p class="text-xs text-gray-400">Audition chords &amp; inversions against a tonal center and build your own custom chord chains to hear how degrees connect.</p>
+            <p class="text-xs text-gray-400">Audition all progression trainer chords &amp; inversions against a tonal center, build custom chains, and track real-time guide tones on the fretboard.</p>
           </div>
 
           <div class="flex items-center gap-3 flex-wrap">
@@ -496,81 +496,253 @@
           </div>
         </div>
 
-        <!-- Chord Pad Grid -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
-          <div class="sb-pad group cursor-pointer p-4 bg-amp-850 hover:bg-amp-800 rounded-xl border-2 border-amp-700 hover:border-amber-500 transition active:scale-95" data-rn="I">
-            <div class="flex justify-between items-center">
-              <span class="text-2xl font-mono font-bold text-vintage-gold">I</span>
-              <span class="sb-chord-name text-xs font-mono font-bold text-gray-400 bg-amp-950 px-2 py-0.5 rounded">A5</span>
-            </div>
-            <p class="text-xs text-gray-400 mt-2">The home base. Full resolution and grounded power.</p>
+        <!-- Primary Rock Degrees (Matches Progression Trainer Primary Palette) -->
+        <div class="mt-5">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] font-mono text-amber-400/90 uppercase tracking-wider font-bold">
+              <i class="fa-solid fa-bolt text-amber-400 mr-1"></i>Primary Rock Degrees (I, ♭VII, IV, V, ♭VI, ♭III)
+            </span>
+            <span class="text-[11px] font-mono text-gray-400">Tap any card to audition, inspect guide tones &amp; append to chain</span>
           </div>
-
-          <div class="sb-pad group cursor-pointer p-4 bg-amp-850 hover:bg-amp-800 rounded-xl border-2 border-amp-700 hover:border-amber-500 transition active:scale-95" data-rn="♭VII">
-            <div class="flex justify-between items-center">
-              <span class="text-2xl font-mono font-bold text-vintage-gold">♭VII</span>
-              <span class="sb-chord-name text-xs font-mono font-bold text-gray-400 bg-amp-950 px-2 py-0.5 rounded">G5</span>
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+            <div class="sb-pad group cursor-pointer p-3.5 bg-amp-850 hover:bg-amp-800 rounded-xl border-2 border-amp-700 hover:border-amber-500 transition active:scale-95 flex flex-col justify-between" data-rn="I">
+              <div>
+                <div class="flex justify-between items-center">
+                  <span class="text-xl font-mono font-bold text-vintage-gold">I</span>
+                  <span class="sb-chord-name text-xs font-mono font-bold text-amber-300 bg-amp-950 px-2 py-0.5 rounded border border-amp-800">A5</span>
+                </div>
+                <div class="text-[10px] font-mono text-gray-400 mt-0.5">Tonic Root</div>
+                <p class="text-[11px] text-gray-400 mt-1.5 leading-snug">The home base. Full resolution and grounded power.</p>
+              </div>
+              <div class="sb-guide-badge mt-2.5 pt-1.5 border-t border-amp-700/60 text-[10px] font-mono text-emerald-400 flex items-center justify-between">
+                <span>Guide:</span>
+                <span class="sb-guide-notes font-bold">3:C# • ♭7:G</span>
+              </div>
             </div>
-            <p class="text-xs text-gray-400 mt-2">Mixolydian step-down. Heavy, swaggering rock cadence.</p>
-          </div>
 
-          <div class="sb-pad group cursor-pointer p-4 bg-amp-850 hover:bg-amp-800 rounded-xl border-2 border-amp-700 hover:border-amber-500 transition active:scale-95" data-rn="IV">
-            <div class="flex justify-between items-center">
-              <span class="text-2xl font-mono font-bold text-vintage-gold">IV</span>
-              <span class="sb-chord-name text-xs font-mono font-bold text-gray-400 bg-amp-950 px-2 py-0.5 rounded">D5</span>
+            <div class="sb-pad group cursor-pointer p-3.5 bg-amp-850 hover:bg-amp-800 rounded-xl border-2 border-amp-700 hover:border-amber-500 transition active:scale-95 flex flex-col justify-between" data-rn="♭VII">
+              <div>
+                <div class="flex justify-between items-center">
+                  <span class="text-xl font-mono font-bold text-vintage-gold">♭VII</span>
+                  <span class="sb-chord-name text-xs font-mono font-bold text-amber-300 bg-amp-950 px-2 py-0.5 rounded border border-amp-800">G5</span>
+                </div>
+                <div class="text-[10px] font-mono text-gray-400 mt-0.5">Subtonic</div>
+                <p class="text-[11px] text-gray-400 mt-1.5 leading-snug">Mixolydian step-down. Heavy, swaggering rock cadence.</p>
+              </div>
+              <div class="sb-guide-badge mt-2.5 pt-1.5 border-t border-amp-700/60 text-[10px] font-mono text-emerald-400 flex items-center justify-between">
+                <span>Guide:</span>
+                <span class="sb-guide-notes font-bold">3:B • ♭7:F</span>
+              </div>
             </div>
-            <p class="text-xs text-gray-400 mt-2">Subdominant lift. Bright, expansive, resolving cleanly to the I.</p>
-          </div>
 
-          <div class="sb-pad group cursor-pointer p-4 bg-amp-850 hover:bg-amp-800 rounded-xl border-2 border-amp-700 hover:border-amber-500 transition active:scale-95" data-rn="V">
-            <div class="flex justify-between items-center">
-              <span class="text-2xl font-mono font-bold text-vintage-gold">V</span>
-              <span class="sb-chord-name text-xs font-mono font-bold text-gray-400 bg-amp-950 px-2 py-0.5 rounded">E5</span>
+            <div class="sb-pad group cursor-pointer p-3.5 bg-amp-850 hover:bg-amp-800 rounded-xl border-2 border-amp-700 hover:border-amber-500 transition active:scale-95 flex flex-col justify-between" data-rn="IV">
+              <div>
+                <div class="flex justify-between items-center">
+                  <span class="text-xl font-mono font-bold text-vintage-gold">IV</span>
+                  <span class="sb-chord-name text-xs font-mono font-bold text-amber-300 bg-amp-950 px-2 py-0.5 rounded border border-amp-800">D5</span>
+                </div>
+                <div class="text-[10px] font-mono text-gray-400 mt-0.5">Subdominant</div>
+                <p class="text-[11px] text-gray-400 mt-1.5 leading-snug">Subdominant lift. Bright, expansive, resolving cleanly to I.</p>
+              </div>
+              <div class="sb-guide-badge mt-2.5 pt-1.5 border-t border-amp-700/60 text-[10px] font-mono text-emerald-400 flex items-center justify-between">
+                <span>Guide:</span>
+                <span class="sb-guide-notes font-bold">3:F# • ♭7:C</span>
+              </div>
             </div>
-            <p class="text-xs text-gray-400 mt-2">Dominant anchor. Strongest pull back toward tonic.</p>
-          </div>
 
-          <div class="sb-pad group cursor-pointer p-4 bg-amp-850 hover:bg-amp-800 rounded-xl border-2 border-amp-700 hover:border-amber-500 transition active:scale-95" data-rn="♭VI">
-            <div class="flex justify-between items-center">
-              <span class="text-2xl font-mono font-bold text-vintage-gold">♭VI</span>
-              <span class="sb-chord-name text-xs font-mono font-bold text-gray-400 bg-amp-950 px-2 py-0.5 rounded">F5</span>
+            <div class="sb-pad group cursor-pointer p-3.5 bg-amp-850 hover:bg-amp-800 rounded-xl border-2 border-amp-700 hover:border-amber-500 transition active:scale-95 flex flex-col justify-between" data-rn="V">
+              <div>
+                <div class="flex justify-between items-center">
+                  <span class="text-xl font-mono font-bold text-vintage-gold">V</span>
+                  <span class="sb-chord-name text-xs font-mono font-bold text-amber-300 bg-amp-950 px-2 py-0.5 rounded border border-amp-800">E5</span>
+                </div>
+                <div class="text-[10px] font-mono text-gray-400 mt-0.5">Dominant</div>
+                <p class="text-[11px] text-gray-400 mt-1.5 leading-snug">Dominant anchor. Strongest pull back toward tonic.</p>
+              </div>
+              <div class="sb-guide-badge mt-2.5 pt-1.5 border-t border-amp-700/60 text-[10px] font-mono text-emerald-400 flex items-center justify-between">
+                <span>Guide:</span>
+                <span class="sb-guide-notes font-bold">3:G# • ♭7:D</span>
+              </div>
             </div>
-            <p class="text-xs text-gray-400 mt-2">Aeolian punch. Dark, heroic, cinematic tension.</p>
-          </div>
 
-          <div class="sb-pad group cursor-pointer p-4 bg-amp-850 hover:bg-amp-800 rounded-xl border-2 border-amp-700 hover:border-amber-500 transition active:scale-95" data-rn="♭III">
-            <div class="flex justify-between items-center">
-              <span class="text-2xl font-mono font-bold text-vintage-gold">♭III</span>
-              <span class="sb-chord-name text-xs font-mono font-bold text-gray-400 bg-amp-950 px-2 py-0.5 rounded">C5</span>
+            <div class="sb-pad group cursor-pointer p-3.5 bg-amp-850 hover:bg-amp-800 rounded-xl border-2 border-amp-700 hover:border-amber-500 transition active:scale-95 flex flex-col justify-between" data-rn="♭VI">
+              <div>
+                <div class="flex justify-between items-center">
+                  <span class="text-xl font-mono font-bold text-vintage-gold">♭VI</span>
+                  <span class="sb-chord-name text-xs font-mono font-bold text-amber-300 bg-amp-950 px-2 py-0.5 rounded border border-amp-800">F5</span>
+                </div>
+                <div class="text-[10px] font-mono text-gray-400 mt-0.5">Minor 6th</div>
+                <p class="text-[11px] text-gray-400 mt-1.5 leading-snug">Aeolian punch. Dark, heroic, cinematic tension.</p>
+              </div>
+              <div class="sb-guide-badge mt-2.5 pt-1.5 border-t border-amp-700/60 text-[10px] font-mono text-emerald-400 flex items-center justify-between">
+                <span>Guide:</span>
+                <span class="sb-guide-notes font-bold">3:A • 7:E</span>
+              </div>
             </div>
-            <p class="text-xs text-gray-400 mt-2">Pentatonic blues stab. Sudden gritty lift.</p>
-          </div>
 
-          <div class="sb-pad group cursor-pointer p-4 bg-amp-850 hover:bg-amp-800 rounded-xl border-2 border-amp-700 hover:border-amber-500 transition active:scale-95" data-rn="vi">
-            <div class="flex justify-between items-center">
-              <span class="text-2xl font-mono font-bold text-gray-200">vi</span>
-              <span class="sb-chord-name text-xs font-mono font-bold text-gray-400 bg-amp-950 px-2 py-0.5 rounded">F#m</span>
+            <div class="sb-pad group cursor-pointer p-3.5 bg-amp-850 hover:bg-amp-800 rounded-xl border-2 border-amp-700 hover:border-amber-500 transition active:scale-95 flex flex-col justify-between" data-rn="♭III">
+              <div>
+                <div class="flex justify-between items-center">
+                  <span class="text-xl font-mono font-bold text-vintage-gold">♭III</span>
+                  <span class="sb-chord-name text-xs font-mono font-bold text-amber-300 bg-amp-950 px-2 py-0.5 rounded border border-amp-800">C5</span>
+                </div>
+                <div class="text-[10px] font-mono text-gray-400 mt-0.5">Minor 3rd</div>
+                <p class="text-[11px] text-gray-400 mt-1.5 leading-snug">Pentatonic blues stab. Sudden gritty lift.</p>
+              </div>
+              <div class="sb-guide-badge mt-2.5 pt-1.5 border-t border-amp-700/60 text-[10px] font-mono text-emerald-400 flex items-center justify-between">
+                <span>Guide:</span>
+                <span class="sb-guide-notes font-bold">3:E • 7:B</span>
+              </div>
             </div>
-            <p class="text-xs text-gray-400 mt-2">Relative minor sadness. Melodic rock &amp; ballad turn.</p>
-          </div>
-
-          <div class="sb-pad group cursor-pointer p-4 bg-amp-850 hover:bg-amp-800 rounded-xl border-2 border-amp-700 hover:border-amber-500 transition active:scale-95" data-rn="♭II">
-            <div class="flex justify-between items-center">
-              <span class="text-2xl font-mono font-bold text-gray-200">♭II</span>
-              <span class="sb-chord-name text-xs font-mono font-bold text-gray-400 bg-amp-950 px-2 py-0.5 rounded">Bb5</span>
-            </div>
-            <p class="text-xs text-gray-400 mt-2">Phrygian slam. Extreme heavy tension.</p>
           </div>
         </div>
 
-        <!-- Custom Chord Chain Builder Deck with Dedicated Playback -->
-        <div class="mt-8 pt-6 border-t border-amp-800">
+        <!-- Secondary, Minor & Chromatic Degrees (All Remaining Trainer Palette & Progression Chords) -->
+        <div class="mt-5">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] font-mono text-gray-300 uppercase tracking-wider font-bold">
+              <i class="fa-solid fa-layer-group text-amber-500/80 mr-1"></i>Secondary, Minor &amp; Modal Degrees (i, vi, ii, iv, v, III, ♭II, ♭V)
+            </span>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2.5">
+            <div class="sb-pad group cursor-pointer p-3 bg-amp-950/90 hover:bg-amp-800 rounded-xl border border-amp-700 hover:border-amber-500/80 transition active:scale-95 flex flex-col justify-between" data-rn="i">
+              <div>
+                <div class="flex justify-between items-center">
+                  <span class="text-lg font-mono font-bold text-gray-200 group-hover:text-amber-400">i</span>
+                  <span class="sb-chord-name text-[11px] font-mono font-bold text-gray-300 bg-amp-900 px-1.5 py-0.5 rounded border border-amp-800">Am</span>
+                </div>
+                <div class="text-[9px] font-mono text-amber-400/70">Minor Root</div>
+                <p class="text-[10px] text-gray-400 mt-1 leading-snug">Minor tonic home. Defiant, dark rock &amp; metal base.</p>
+              </div>
+              <div class="sb-guide-badge mt-2 pt-1 border-t border-amp-800 text-[9px] font-mono text-emerald-400 flex items-center justify-between">
+                <span>Guide:</span>
+                <span class="sb-guide-notes font-bold">♭3:C • ♭7:G</span>
+              </div>
+            </div>
+
+            <div class="sb-pad group cursor-pointer p-3 bg-amp-950/90 hover:bg-amp-800 rounded-xl border border-amp-700 hover:border-amber-500/80 transition active:scale-95 flex flex-col justify-between" data-rn="vi">
+              <div>
+                <div class="flex justify-between items-center">
+                  <span class="text-lg font-mono font-bold text-gray-200 group-hover:text-amber-400">vi</span>
+                  <span class="sb-chord-name text-[11px] font-mono font-bold text-gray-300 bg-amp-900 px-1.5 py-0.5 rounded border border-amp-800">F#m</span>
+                </div>
+                <div class="text-[9px] font-mono text-amber-400/70">Rel Minor</div>
+                <p class="text-[10px] text-gray-400 mt-1 leading-snug">Relative minor sadness. Melodic rock &amp; ballad turn.</p>
+              </div>
+              <div class="sb-guide-badge mt-2 pt-1 border-t border-amp-800 text-[9px] font-mono text-emerald-400 flex items-center justify-between">
+                <span>Guide:</span>
+                <span class="sb-guide-notes font-bold">♭3:A • ♭7:E</span>
+              </div>
+            </div>
+
+            <div class="sb-pad group cursor-pointer p-3 bg-amp-950/90 hover:bg-amp-800 rounded-xl border border-amp-700 hover:border-amber-500/80 transition active:scale-95 flex flex-col justify-between" data-rn="ii">
+              <div>
+                <div class="flex justify-between items-center">
+                  <span class="text-lg font-mono font-bold text-gray-200 group-hover:text-amber-400">ii</span>
+                  <span class="sb-chord-name text-[11px] font-mono font-bold text-gray-300 bg-amp-900 px-1.5 py-0.5 rounded border border-amp-800">Bm</span>
+                </div>
+                <div class="text-[9px] font-mono text-amber-400/70">Supertonic</div>
+                <p class="text-[10px] text-gray-400 mt-1 leading-snug">Diatonic minor 2nd. Smooth pre-dominant setup.</p>
+              </div>
+              <div class="sb-guide-badge mt-2 pt-1 border-t border-amp-800 text-[9px] font-mono text-emerald-400 flex items-center justify-between">
+                <span>Guide:</span>
+                <span class="sb-guide-notes font-bold">♭3:D • ♭7:A</span>
+              </div>
+            </div>
+
+            <div class="sb-pad group cursor-pointer p-3 bg-amp-950/90 hover:bg-amp-800 rounded-xl border border-amp-700 hover:border-amber-500/80 transition active:scale-95 flex flex-col justify-between" data-rn="iv">
+              <div>
+                <div class="flex justify-between items-center">
+                  <span class="text-lg font-mono font-bold text-gray-200 group-hover:text-amber-400">iv</span>
+                  <span class="sb-chord-name text-[11px] font-mono font-bold text-gray-300 bg-amp-900 px-1.5 py-0.5 rounded border border-amp-800">Dm</span>
+                </div>
+                <div class="text-[9px] font-mono text-amber-400/70">Minor 4th</div>
+                <p class="text-[10px] text-gray-400 mt-1 leading-snug">Minor subdominant. Classic minor blues &amp; dark lift.</p>
+              </div>
+              <div class="sb-guide-badge mt-2 pt-1 border-t border-amp-800 text-[9px] font-mono text-emerald-400 flex items-center justify-between">
+                <span>Guide:</span>
+                <span class="sb-guide-notes font-bold">♭3:F • ♭7:C</span>
+              </div>
+            </div>
+
+            <div class="sb-pad group cursor-pointer p-3 bg-amp-950/90 hover:bg-amp-800 rounded-xl border border-amp-700 hover:border-amber-500/80 transition active:scale-95 flex flex-col justify-between" data-rn="v">
+              <div>
+                <div class="flex justify-between items-center">
+                  <span class="text-lg font-mono font-bold text-gray-200 group-hover:text-amber-400">v</span>
+                  <span class="sb-chord-name text-[11px] font-mono font-bold text-gray-300 bg-amp-900 px-1.5 py-0.5 rounded border border-amp-800">Em</span>
+                </div>
+                <div class="text-[9px] font-mono text-amber-400/70">Minor 5th</div>
+                <p class="text-[10px] text-gray-400 mt-1 leading-snug">Modal minor dominant. Moody blues &amp; Aeolian turn.</p>
+              </div>
+              <div class="sb-guide-badge mt-2 pt-1 border-t border-amp-800 text-[9px] font-mono text-emerald-400 flex items-center justify-between">
+                <span>Guide:</span>
+                <span class="sb-guide-notes font-bold">♭3:G • ♭7:D</span>
+              </div>
+            </div>
+
+            <div class="sb-pad group cursor-pointer p-3 bg-amp-950/90 hover:bg-amp-800 rounded-xl border border-amp-700 hover:border-amber-500/80 transition active:scale-95 flex flex-col justify-between" data-rn="III">
+              <div>
+                <div class="flex justify-between items-center">
+                  <span class="text-lg font-mono font-bold text-gray-200 group-hover:text-amber-400">III</span>
+                  <span class="sb-chord-name text-[11px] font-mono font-bold text-gray-300 bg-amp-900 px-1.5 py-0.5 rounded border border-amp-800">C#5</span>
+                </div>
+                <div class="text-[9px] font-mono text-amber-400/70">Mediant Maj</div>
+                <p class="text-[10px] text-gray-400 mt-1 leading-snug">Chromatic mediant crunch &amp; heavy alt-rock leap.</p>
+              </div>
+              <div class="sb-guide-badge mt-2 pt-1 border-t border-amp-800 text-[9px] font-mono text-emerald-400 flex items-center justify-between">
+                <span>Guide:</span>
+                <span class="sb-guide-notes font-bold">3:F • ♭7:B</span>
+              </div>
+            </div>
+
+            <div class="sb-pad group cursor-pointer p-3 bg-amp-950/90 hover:bg-amp-800 rounded-xl border border-amp-700 hover:border-amber-500/80 transition active:scale-95 flex flex-col justify-between" data-rn="♭II">
+              <div>
+                <div class="flex justify-between items-center">
+                  <span class="text-lg font-mono font-bold text-gray-200 group-hover:text-amber-400">♭II</span>
+                  <span class="sb-chord-name text-[11px] font-mono font-bold text-gray-300 bg-amp-900 px-1.5 py-0.5 rounded border border-amp-800">Bb5</span>
+                </div>
+                <div class="text-[9px] font-mono text-amber-400/70">Phrygian</div>
+                <p class="text-[10px] text-gray-400 mt-1 leading-snug">Phrygian half-step slam. Extreme heavy metal tension.</p>
+              </div>
+              <div class="sb-guide-badge mt-2 pt-1 border-t border-amp-800 text-[9px] font-mono text-emerald-400 flex items-center justify-between">
+                <span>Guide:</span>
+                <span class="sb-guide-notes font-bold">3:D • ♭7:G#</span>
+              </div>
+            </div>
+
+            <div class="sb-pad group cursor-pointer p-3 bg-amp-950/90 hover:bg-amp-800 rounded-xl border border-amp-700 hover:border-amber-500/80 transition active:scale-95 flex flex-col justify-between" data-rn="♭V">
+              <div>
+                <div class="flex justify-between items-center">
+                  <span class="text-lg font-mono font-bold text-gray-200 group-hover:text-amber-400">♭V</span>
+                  <span class="sb-chord-name text-[11px] font-mono font-bold text-gray-300 bg-amp-900 px-1.5 py-0.5 rounded border border-amp-800">D#5</span>
+                </div>
+                <div class="text-[9px] font-mono text-amber-400/70">Tritone</div>
+                <p class="text-[10px] text-gray-400 mt-1 leading-snug">Blue-note tritone stab. Heavy doom &amp; metal riffing.</p>
+              </div>
+              <div class="sb-guide-badge mt-2 pt-1 border-t border-amp-800 text-[9px] font-mono text-emerald-400 flex items-center justify-between">
+                <span>Guide:</span>
+                <span class="sb-guide-notes font-bold">3:G • ♭7:C#</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Custom Chord Chain Builder Deck with Dedicated Playback & Trainer Presets -->
+        <div class="mt-6 pt-5 border-t border-amp-800">
           <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
             <div>
               <span class="text-xs font-mono uppercase text-amber-400 font-bold tracking-wider">Custom Progression Chain:</span>
-              <p class="text-[11px] text-gray-400">Click any chord card above to append it. Tap Play Chain to hear your sequence.</p>
+              <p class="text-[11px] text-gray-400">Click any chord card above to append it, or load a preset from the Progression Trainer below.</p>
             </div>
             <div class="flex items-center gap-2 flex-wrap">
+              <!-- Load Trainer Progression Preset -->
+              <div class="flex items-center gap-1.5 bg-amp-950 px-2.5 py-1.5 rounded-lg border border-amp-800 text-xs font-mono">
+                <i class="fa-solid fa-list-ul text-amber-400 text-[10px]"></i>
+                <select id="sb-preset-progression" class="bg-amp-900 text-gray-200 font-mono text-xs rounded border border-amp-700 px-2 py-0.5 focus:outline-none focus:border-amber-400 cursor-pointer max-w-[220px] sm:max-w-[260px]">
+                  <option value="">Load Trainer Progression...</option>
+                </select>
+              </div>
+
               <label class="flex items-center gap-1.5 text-xs font-mono text-gray-400 bg-amp-950 px-3 py-1.5 rounded-lg border border-amp-800 cursor-pointer">
                 <input id="sb-toggle-loop" type="checkbox" checked class="accent-amber-500 cursor-pointer">
                 <span>Continuous Loop</span>
@@ -590,10 +762,125 @@
 
           <!-- Chain Chips Container with Active Highlighting -->
           <div id="sb-sequence-display" class="min-h-[64px] p-3 rounded-xl bg-amp-950 border border-amp-800 flex items-center gap-2.5 overflow-x-auto text-sm font-mono shadow-inset-panel">
-            <span class="text-gray-500 text-xs">No chords added yet. Tap any chord card above to begin building your sequence!</span>
+            <span class="text-gray-500 text-xs">No chords added yet. Tap any chord card above or choose a Trainer Progression preset to begin!</span>
           </div>
 
           <div id="sb-chain-feedback" class="mt-2 text-xs font-mono hidden"></div>
+        </div>
+
+        <!-- OMNITUNE-INSPIRED GUITAR FRETBOARD & REAL-TIME GUIDE TONE VISUALIZER -->
+        <div class="mt-6 pt-6 border-t border-amp-800 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-amber-500/15 border border-amber-500/40 flex items-center justify-center text-amber-400">
+                <i class="fa-solid fa-guitar"></i>
+              </div>
+              <div>
+                <h3 class="text-base font-bold font-display uppercase tracking-wider text-amber-400 flex items-center gap-2">
+                  <span>OmniTune Guitar Fretboard • Live Guide Tone Visualizer</span>
+                  <span id="sb-fretboard-live-badge" class="hidden px-2 py-0.5 text-[10px] font-mono rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 animate-pulse">● PLAYING</span>
+                </h3>
+                <p class="text-[11px] text-gray-400">Real-time 24-fret neck highlighting the <span class="text-emerald-400 font-semibold">3rd</span> &amp; <span class="text-sky-400 font-semibold">7th</span> guide tones of each chord as your progression plays. Tap any fret to audition &amp; inspect.</p>
+              </div>
+            </div>
+
+            <!-- Fretboard Controls (Tuning, Tone Filter, Overlays) -->
+            <div class="flex items-center gap-2 flex-wrap text-xs font-mono">
+              <div class="flex items-center gap-1.5 bg-amp-950 px-2.5 py-1.5 rounded-lg border border-amp-800">
+                <span class="text-gray-400 text-[11px]">Tuning:</span>
+                <select id="sb-tuning-select" class="bg-amp-900 text-amber-300 font-mono text-xs rounded border border-amp-700 px-2 py-0.5 focus:outline-none focus:border-amber-400 cursor-pointer">
+                  <option value="standard" selected>Standard (EADGBE)</option>
+                  <option value="ebstandard">Eb Standard</option>
+                  <option value="dropd">Drop D (DADGBE)</option>
+                  <option value="dadgad">DADGAD</option>
+                  <option value="allfourth">Perfect Fourths (EADGCF)</option>
+                  <option value="ebfourths">Perfect Fourths Eb</option>
+                  <option value="openg">Open G</option>
+                  <option value="opend">Open D</option>
+                  <option value="opene">Open E</option>
+                  <option value="openc">Open C</option>
+                  <option value="bebebe">B E B E B E</option>
+                </select>
+              </div>
+
+              <div class="flex items-center gap-1.5 bg-amp-950 px-2.5 py-1.5 rounded-lg border border-amp-800">
+                <span class="text-gray-400 text-[11px]">Show Tones:</span>
+                <select id="sb-tone-mode-select" class="bg-amp-900 text-emerald-300 font-mono text-xs rounded border border-amp-700 px-2 py-0.5 focus:outline-none focus:border-amber-400 cursor-pointer">
+                  <option value="guide-root" selected>Guide Tones + Root (R, 3, 7)</option>
+                  <option value="guide-only">Guide Tones Only (3rd &amp; 7th)</option>
+                  <option value="full-7th">Full 7th Chord (R, 3, 5, 7)</option>
+                  <option value="triad">Triad Voicing (R, 3, 5)</option>
+                  <option value="power">Power Chord (R, 5)</option>
+                </select>
+              </div>
+
+              <button id="btn-sb-toggle-notes" type="button" class="px-2.5 py-1.5 rounded-lg bg-amber-500/20 border border-amber-500/50 text-amber-300 hover:bg-amber-500/30 transition text-[11px] font-bold">
+                Notes: ON
+              </button>
+              <button id="btn-sb-toggle-degrees" type="button" class="px-2.5 py-1.5 rounded-lg bg-amber-500/20 border border-amber-500/50 text-amber-300 hover:bg-amber-500/30 transition text-[11px] font-bold">
+                Degrees: ON
+              </button>
+              <button id="btn-sb-toggle-ghost" type="button" class="px-2.5 py-1.5 rounded-lg bg-sky-500/20 border border-sky-500/50 text-sky-300 hover:bg-sky-500/30 transition text-[11px] font-bold" title="Overlay translucent ghost tones of the next chord in the progression">
+                Next Chord Ghost: ON
+              </button>
+            </div>
+          </div>
+
+          <!-- Active Chord & Guide Tones Live Readout Strip -->
+          <div class="bg-amp-950 p-3 rounded-xl border border-amp-800 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+            <div class="flex items-center gap-3 flex-wrap">
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded bg-amber-500 text-black font-bold uppercase text-[10px]" id="sb-fb-status-badge">ACTIVE CHORD</span>
+                <span id="sb-fb-active-chord-label" class="text-sm font-bold text-amber-300">A (I) — Key of A</span>
+              </div>
+              <span class="text-gray-600 hidden sm:inline">|</span>
+              <div id="sb-fb-guide-summary" class="flex items-center gap-2 flex-wrap">
+                <span class="px-2 py-0.5 rounded bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-bold">
+                  3rd Guide Tone: <span id="sb-fb-guide-3rd">C# (3)</span>
+                </span>
+                <span class="px-2 py-0.5 rounded bg-sky-500/20 border border-sky-500/40 text-sky-300 font-bold">
+                  7th Guide Tone: <span id="sb-fb-guide-7th">G (♭7)</span>
+                </span>
+                <span class="px-2 py-0.5 rounded bg-amber-500/15 border border-amber-500/30 text-amber-300">
+                  Root: <span id="sb-fb-root-note">A</span> • 5th: <span id="sb-fb-fifth-note">E</span>
+                </span>
+              </div>
+            </div>
+
+            <!-- Step & Pin Controls (OmniTune Audition Controller) -->
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <span id="sb-fb-next-chord-hint" class="text-[11px] text-gray-400 mr-1 hidden md:inline"></span>
+              <button id="btn-sb-prev-chord" type="button" class="px-2.5 py-1 rounded bg-amp-850 hover:bg-amp-800 border border-amp-700 text-gray-300 hover:text-white text-[11px]" title="Step to previous chord in chain">◀ Prev</button>
+              <button id="btn-sb-next-chord" type="button" class="px-2.5 py-1 rounded bg-amp-850 hover:bg-amp-800 border border-amp-700 text-gray-300 hover:text-white text-[11px]" title="Step to next chord in chain">Next ▶</button>
+              <button id="btn-sb-pin-chord" type="button" class="px-2.5 py-1 rounded bg-amp-850 hover:bg-amp-800 border border-amp-700 text-gray-300 hover:text-amber-300 text-[11px]" title="Pin current chord as a persistent baseline reference on the fretboard">📌 Pin Base</button>
+            </div>
+          </div>
+
+          <!-- Fretboard Canvas Container -->
+          <div class="bg-amp-950 p-3 rounded-xl border border-amp-800 shadow-inset-panel space-y-2.5">
+            <div class="flex items-center justify-between text-[11px] font-mono text-gray-400 flex-wrap gap-2">
+              <div class="flex items-center gap-3 flex-wrap">
+                <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-500 inline-block ring-2 ring-emerald-300/60"></span> <strong class="text-emerald-300">3rd / ♭3</strong> Guide Tone</span>
+                <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-sky-500 inline-block ring-2 ring-sky-300/60"></span> <strong class="text-sky-300">7th / ♭7</strong> Guide Tone</span>
+                <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-500 inline-block border border-white/60"></span> <strong class="text-amber-300">Root (R)</strong></span>
+                <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-indigo-500/80 inline-block"></span> <strong class="text-indigo-300">5th (5)</strong></span>
+                <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full border-2 border-dashed border-amber-300/60 inline-block"></span> <span class="text-gray-400">Next / Pinned Ghost</span></span>
+              </div>
+              <span class="text-gray-500 text-[10px]">↔ Scroll horizontally on mobile • Tap any fret to pluck &amp; inspect</span>
+            </div>
+
+            <div id="sb-fretboard-scroll-wrapper" class="w-full overflow-x-auto rounded-lg border border-amp-800 bg-amp-900">
+              <canvas id="sb-guitar-canvas" width="1200" height="340" class="block w-full min-w-[980px] h-[320px] sm:h-[340px] cursor-crosshair"></canvas>
+            </div>
+
+            <!-- OmniTune Fret Inspector Bar -->
+            <div class="px-3 py-2 rounded-lg bg-amp-900 border border-amp-800 flex items-center justify-between gap-2 flex-wrap text-xs font-mono">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="px-2 py-0.5 rounded bg-amp-950 border border-amp-700 text-amber-400 font-bold text-[10px] uppercase">Fret Inspector</span>
+                <span id="sb-fret-inspector-text" class="text-gray-300">Tap any fret on the guitar neck to audition its pitch and inspect its guide-tone role across your chord progression.</span>
+              </div>
+            </div>
+          </div>
         </div>
 
       </div>
@@ -1433,10 +1720,24 @@
       trainerTimeouts: [],
       trainerIntervals: [],
       sandboxKey: 'A',
-      sandboxCustomProg: [],
+      sandboxCustomProg: [
+        { rn: 'I', inversion: 0 },
+        { rn: '♭VII', inversion: 0 },
+        { rn: 'IV', inversion: 0 },
+        { rn: 'I', inversion: 0 }
+      ],
       sandboxInversionSelect: 0,
       sbIsPlaying: false,
-      sbLoopTimeouts: []
+      sbLoopTimeouts: [],
+      sbActiveIndex: 0,
+      sbActiveChord: { rn: 'I', inversion: 0 },
+      sbPinnedChord: null,
+      sbTuning: 'standard',
+      sbToneMode: 'guide-root',
+      sbShowNotes: true,
+      sbShowDegrees: true,
+      sbShowNextGhost: true,
+      sbSelectedFretTarget: null
     };
 
     const elements = {
@@ -2079,8 +2380,615 @@
     }
 
     /* =========================================================================
-       8. CHORD LAB & SANDBOX DECK
+       8. CHORD LAB, OMNITUNE FRETBOARD & REAL-TIME GUIDE TONE VISUALIZER
        ========================================================================= */
+
+    // Adapted from domdviice/omnitune (scripts/guitarprogression.js)
+    const OMNITUNE_TUNINGS = {
+      standard: ['E2', 'A2', 'D3', 'G3', 'B3', 'E4'],
+      ebstandard: ['Eb2', 'Ab2', 'Db3', 'Gb3', 'Bb3', 'Eb4'],
+      allfourth: ['E2', 'A2', 'D3', 'G3', 'C4', 'F4'],
+      ebfourths: ['Eb2', 'Ab2', 'Db3', 'Gb3', 'B3', 'E4'],
+      dropd: ['D2', 'A2', 'D3', 'G3', 'B3', 'E4'],
+      dadgad: ['D2', 'A2', 'D3', 'G3', 'A3', 'D4'],
+      openc: ['C2', 'G2', 'C3', 'G3', 'C4', 'E4'],
+      opene: ['E2', 'B2', 'E3', 'G#3', 'B3', 'E4'],
+      bebebe: ['B1', 'E2', 'B2', 'E3', 'B3', 'E4'],
+      openg: ['E2', 'B2', 'G3', 'D4', 'G4', 'E5'],
+      opend: ['D2', 'A2', 'F3', 'C4', 'G4', 'D5']
+    };
+
+    function omniNoteToMidi(noteName) {
+      const match = /^([A-G])([#b]?)(\d)$/.exec(String(noteName || '').trim());
+      if (!match) return null;
+      const letter = match[1];
+      const accidental = match[2] || '';
+      const octave = Number(match[3]);
+      const key = accidental === 'b' ? `${letter}b` : `${letter}${accidental}`;
+      const semitone = NOTE_SEMITONES[key] !== undefined ? NOTE_SEMITONES[key] : 0;
+      return ((octave + 1) * 12) + semitone;
+    }
+
+    function omniFretNoteForString(openNote, fret) {
+      const baseMidi = omniNoteToMidi(openNote);
+      if (baseMidi === null) return null;
+      const targetMidi = baseMidi + fret;
+      const pitchClass = targetMidi % 12;
+      const octave = Math.floor(targetMidi / 12) - 1;
+      return {
+        note: `${CHROMATIC_SCALE[pitchClass]}${octave}`,
+        pitchName: CHROMATIC_SCALE[pitchClass],
+        pitchClass,
+        octave,
+        midi: targetMidi
+      };
+    }
+
+    function omniGetTuningNotes(tuningKey) {
+      return (OMNITUNE_TUNINGS[tuningKey] || OMNITUNE_TUNINGS.standard).slice();
+    }
+
+    function omniGetDisplayTuningNotes(tuningKey) {
+      return omniGetTuningNotes(tuningKey).slice().reverse();
+    }
+
+    function isMinorNumeral(roman) {
+      return roman === 'i' || roman === 'ii' || roman === 'iii' || roman === 'iv' || roman === 'v' || roman === 'vi';
+    }
+
+    function getChordSymbolForLab(root, roman) {
+      if (isMinorNumeral(roman)) return `${root}m`;
+      return STATE.voicing === 'triad' ? `${root}` : `${root}5`;
+    }
+
+    // Compute full chord harmonic profile including Guide Tones (3rd & 7th)
+    function getChordHarmonicProfile(key, roman, inversion = 0) {
+      const rootNote = getChordRoot(key, roman);
+      const rootPc = CHROMATIC_SCALE.indexOf(rootNote);
+      const minor = isMinorNumeral(roman);
+
+      const thirdSemitones = minor ? 3 : 4;
+      const thirdDegreeLabel = minor ? '♭3' : '3';
+      const thirdPc = (rootPc + thirdSemitones) % 12;
+      const thirdNote = CHROMATIC_SCALE[thirdPc];
+
+      const fifthPc = (rootPc + 7) % 12;
+      const fifthNote = CHROMATIC_SCALE[fifthPc];
+
+      // In rock/modal harmony: ♭VI and ♭III carry Maj7 (7) guide tones; minor & dominant/rock degrees carry ♭7 guide tones
+      const useMaj7 = (roman === '♭VI' || roman === '♭III');
+      const seventhSemitones = useMaj7 ? 11 : 10;
+      const seventhDegreeLabel = useMaj7 ? '7' : '♭7';
+      const seventhPc = (rootPc + seventhSemitones) % 12;
+      const seventhNote = CHROMATIC_SCALE[seventhPc];
+
+      const invShort = inversion === 1 ? `/${thirdNote}` : (inversion === 2 ? `/${fifthNote}` : '');
+      const chordSymbol = getChordSymbolForLab(rootNote, roman) + invShort;
+
+      function getRoleForPitchClass(pc) {
+        if (pc === thirdPc) {
+          return {
+            role: 'guide-3rd',
+            degree: thirdDegreeLabel,
+            isGuideTone: true,
+            color: '#10b981',
+            ringColor: '#6ee7b7',
+            label: `${thirdDegreeLabel} Guide Tone (${thirdNote})`
+          };
+        }
+        if (pc === seventhPc) {
+          return {
+            role: 'guide-7th',
+            degree: seventhDegreeLabel,
+            isGuideTone: true,
+            color: '#0ea5e9',
+            ringColor: '#7dd3fc',
+            label: `${seventhDegreeLabel} Guide Tone (${seventhNote})`
+          };
+        }
+        if (pc === rootPc) {
+          return {
+            role: 'root',
+            degree: 'R',
+            isGuideTone: false,
+            color: '#f59e0b',
+            ringColor: '#fde68a',
+            label: `Root (${rootNote})`
+          };
+        }
+        if (pc === fifthPc) {
+          return {
+            role: 'fifth',
+            degree: '5',
+            isGuideTone: false,
+            color: '#6366f1',
+            ringColor: '#a5b4fc',
+            label: `5th (${fifthNote})`
+          };
+        }
+        return null;
+      }
+
+      function isRoleVisibleInMode(role, mode) {
+        if (!role) return false;
+        if (mode === 'guide-only') return role === 'guide-3rd' || role === 'guide-7th';
+        if (mode === 'guide-root') return role === 'guide-3rd' || role === 'guide-7th' || role === 'root';
+        if (mode === 'full-7th') return role === 'root' || role === 'guide-3rd' || role === 'fifth' || role === 'guide-7th';
+        if (mode === 'triad') return role === 'root' || role === 'guide-3rd' || role === 'fifth';
+        if (mode === 'power') return role === 'root' || role === 'fifth';
+        return true;
+      }
+
+      return {
+        key,
+        roman,
+        inversion,
+        rootNote,
+        rootPc,
+        isMinor: minor,
+        thirdDegreeLabel,
+        thirdPc,
+        thirdNote,
+        fifthPc,
+        fifthNote,
+        seventhDegreeLabel,
+        seventhPc,
+        seventhNote,
+        chordSymbol,
+        getRoleForPitchClass,
+        isRoleVisibleInMode
+      };
+    }
+
+    function updateSandboxPadLabels() {
+      document.querySelectorAll('.sb-pad').forEach(pad => {
+        const rn = pad.getAttribute('data-rn');
+        const profile = getChordHarmonicProfile(STATE.sandboxKey, rn, 0);
+        const nameEl = pad.querySelector('.sb-chord-name');
+        if (nameEl) {
+          nameEl.textContent = getChordSymbolForLab(profile.rootNote, rn);
+        }
+        const guideEl = pad.querySelector('.sb-guide-notes');
+        if (guideEl) {
+          guideEl.textContent = `${profile.thirdDegreeLabel}:${profile.thirdNote} • ${profile.seventhDegreeLabel}:${profile.seventhNote}`;
+        }
+      });
+    }
+
+    function getActiveSandboxChordItem() {
+      const chain = STATE.sandboxCustomProg;
+      if (chain.length > 0 && STATE.sbActiveIndex >= 0 && STATE.sbActiveIndex < chain.length) {
+        const item = chain[STATE.sbActiveIndex];
+        return {
+          rn: typeof item === 'string' ? item : item.rn,
+          inversion: typeof item === 'object' && item.inversion !== undefined ? item.inversion : 0,
+          index: STATE.sbActiveIndex
+        };
+      }
+      if (STATE.sbActiveChord && STATE.sbActiveChord.rn) {
+        return {
+          rn: STATE.sbActiveChord.rn,
+          inversion: STATE.sbActiveChord.inversion || 0,
+          index: -1
+        };
+      }
+      return { rn: 'I', inversion: 0, index: -1 };
+    }
+
+    function getNextSandboxChordItem() {
+      const chain = STATE.sandboxCustomProg;
+      if (chain.length > 1 && STATE.sbActiveIndex >= 0 && STATE.sbActiveIndex < chain.length) {
+        const nextIdx = (STATE.sbActiveIndex + 1) % chain.length;
+        const item = chain[nextIdx];
+        return {
+          rn: typeof item === 'string' ? item : item.rn,
+          inversion: typeof item === 'object' && item.inversion !== undefined ? item.inversion : 0,
+          index: nextIdx
+        };
+      }
+      return null;
+    }
+
+    function updateFretboardInspectorUI() {
+      const inspectorEl = document.getElementById('sb-fret-inspector-text');
+      if (!inspectorEl) return;
+
+      const activeItem = getActiveSandboxChordItem();
+      const activeProfile = getChordHarmonicProfile(STATE.sandboxKey, activeItem.rn, activeItem.inversion);
+
+      if (STATE.sbSelectedFretTarget) {
+        const { fret, note, pitchName, pitchClass, openNote, stringIndex } = STATE.sbSelectedFretTarget;
+        const stringNum = 6 - stringIndex; // 1 = high E, 6 = low E
+        const roleInfo = activeProfile.getRoleForPitchClass(pitchClass);
+
+        const parts = [`Fret ${fret} • String ${stringNum} (${openNote}) : ${note}`];
+        if (roleInfo) {
+          parts.push(`⚡ ${roleInfo.label} in ${activeProfile.chordSymbol} (${activeItem.rn})`);
+        } else {
+          // Calculate chromatic interval from active chord root
+          const semi = (pitchClass - activeProfile.rootPc + 12) % 12;
+          const degNames = ['R', '♭2', '2', '♭3', '3', '4', '♭5', '5', '♭6', '6', '♭7', '7'];
+          parts.push(`Interval ${degNames[semi]} (${pitchName}) vs ${activeProfile.chordSymbol}`);
+        }
+
+        // Check guide tone matches across the custom progression chain
+        const chainMatches = [];
+        STATE.sandboxCustomProg.forEach((cItem, idx) => {
+          const rn = typeof cItem === 'string' ? cItem : cItem.rn;
+          const prof = getChordHarmonicProfile(STATE.sandboxKey, rn, 0);
+          const r = prof.getRoleForPitchClass(pitchClass);
+          if (r && r.isGuideTone) {
+            chainMatches.push(`#${idx + 1} ${prof.rootNote} (${rn}): ${r.degree}`);
+          }
+        });
+        if (chainMatches.length > 0) {
+          parts.push(`Guide Tone in Chain: ${chainMatches.join(', ')}`);
+        }
+
+        inspectorEl.textContent = parts.join('  |  ');
+      } else {
+        inspectorEl.textContent = `Active: ${activeProfile.chordSymbol} (${activeItem.rn} in Key of ${STATE.sandboxKey}) — Guide Tones: ${activeProfile.thirdDegreeLabel} = ${activeProfile.thirdNote}, ${activeProfile.seventhDegreeLabel} = ${activeProfile.seventhNote}. Tap any fret to pluck & inspect!`;
+      }
+    }
+
+    function renderSandboxFretboard() {
+      const canvas = document.getElementById('sb-guitar-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const dpr = window.devicePixelRatio || 1;
+      const cssWidth = canvas.clientWidth || 1140;
+      const cssHeight = canvas.clientHeight || 340;
+
+      canvas.width = Math.round(cssWidth * dpr);
+      canvas.height = Math.round(cssHeight * dpr);
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.scale(dpr, dpr);
+
+      const activeItem = getActiveSandboxChordItem();
+      const activeProfile = getChordHarmonicProfile(STATE.sandboxKey, activeItem.rn, activeItem.inversion);
+      const nextItem = getNextSandboxChordItem();
+      const nextProfile = nextItem ? getChordHarmonicProfile(STATE.sandboxKey, nextItem.rn, nextItem.inversion) : null;
+      const pinnedProfile = STATE.sbPinnedChord
+        ? getChordHarmonicProfile(STATE.sandboxKey, STATE.sbPinnedChord.rn, STATE.sbPinnedChord.inversion || 0)
+        : null;
+
+      // Update Live Guide Tone Header Readout
+      const statusBadge = document.getElementById('sb-fb-status-badge');
+      const liveBadge = document.getElementById('sb-fretboard-live-badge');
+      const activeChordLabel = document.getElementById('sb-fb-active-chord-label');
+      const guide3rdEl = document.getElementById('sb-fb-guide-3rd');
+      const guide7thEl = document.getElementById('sb-fb-guide-7th');
+      const rootNoteEl = document.getElementById('sb-fb-root-note');
+      const fifthNoteEl = document.getElementById('sb-fb-fifth-note');
+      const nextHintEl = document.getElementById('sb-fb-next-chord-hint');
+      const pinBtn = document.getElementById('btn-sb-pin-chord');
+
+      if (statusBadge) {
+        if (STATE.sbIsPlaying && activeItem.index >= 0) {
+          statusBadge.textContent = `PLAYING BAR #${activeItem.index + 1}`;
+          statusBadge.className = 'px-2 py-0.5 rounded bg-emerald-500 text-black font-bold uppercase text-[10px]';
+        } else if (activeItem.index >= 0) {
+          statusBadge.textContent = `CHAIN #${activeItem.index + 1}`;
+          statusBadge.className = 'px-2 py-0.5 rounded bg-amber-500 text-black font-bold uppercase text-[10px]';
+        } else {
+          statusBadge.textContent = 'AUDITIONING';
+          statusBadge.className = 'px-2 py-0.5 rounded bg-amber-500 text-black font-bold uppercase text-[10px]';
+        }
+      }
+      if (liveBadge) {
+        liveBadge.classList.toggle('hidden', !STATE.sbIsPlaying);
+      }
+      if (activeChordLabel) {
+        const invText = activeItem.inversion === 1 ? ' [1st Inv]' : (activeItem.inversion === 2 ? ' [2nd Inv]' : '');
+        activeChordLabel.textContent = `${activeProfile.chordSymbol} (${activeProfile.roman})${invText} — Key of ${STATE.sandboxKey}`;
+      }
+      if (guide3rdEl) guide3rdEl.textContent = `${activeProfile.thirdNote} (${activeProfile.thirdDegreeLabel})`;
+      if (guide7thEl) guide7thEl.textContent = `${activeProfile.seventhNote} (${activeProfile.seventhDegreeLabel})`;
+      if (rootNoteEl) rootNoteEl.textContent = activeProfile.rootNote;
+      if (fifthNoteEl) fifthNoteEl.textContent = activeProfile.fifthNote;
+
+      if (nextHintEl) {
+        if (pinnedProfile) {
+          nextHintEl.textContent = `📌 Base: ${pinnedProfile.chordSymbol} (${pinnedProfile.roman})`;
+        } else if (nextProfile) {
+          nextHintEl.textContent = `Next ➜ ${nextProfile.chordSymbol} (${nextProfile.roman}) [3rd:${nextProfile.thirdNote}, 7th:${nextProfile.seventhNote}]`;
+        } else {
+          nextHintEl.textContent = '';
+        }
+      }
+
+      if (pinBtn) {
+        const isPinnedCurrent = STATE.sbPinnedChord && STATE.sbPinnedChord.rn === activeItem.rn;
+        pinBtn.textContent = isPinnedCurrent ? '📌 Unpin Base' : (STATE.sbPinnedChord ? `📌 Pin (${STATE.sbPinnedChord.rn} Pinned)` : '📌 Pin Base');
+        pinBtn.className = isPinnedCurrent
+          ? 'px-2.5 py-1 rounded bg-amber-500 text-black font-bold border border-amber-400 text-[11px]'
+          : 'px-2.5 py-1 rounded bg-amp-850 hover:bg-amp-800 border border-amp-700 text-gray-300 hover:text-amber-300 text-[11px]';
+      }
+
+      // Geometry setup (OmniTune 24-fret layout)
+      const boardWidth = cssWidth;
+      const boardHeight = cssHeight;
+      const leftPad = 44;
+      const rightPad = 28;
+      const topPad = 34;
+      const bottomPad = 30;
+      const maxFret = 24;
+
+      const displayStrings = omniGetDisplayTuningNotes(STATE.sbTuning);
+      const lowToHighStrings = omniGetTuningNotes(STATE.sbTuning);
+      const stringCount = displayStrings.length;
+      const usableWidth = boardWidth - leftPad - rightPad;
+      const usableHeight = boardHeight - topPad - bottomPad;
+      const fretSpacing = usableWidth / maxFret;
+      const stringSpacing = usableHeight / Math.max(stringCount - 1, 1);
+
+      // Clear & Draw Dark Studio Fretboard Background
+      ctx.clearRect(0, 0, boardWidth, boardHeight);
+      ctx.fillStyle = '#0d0f14';
+      ctx.fillRect(0, 0, boardWidth, boardHeight);
+
+      // Rosewood / Ebony Fretboard Surface
+      const neckGrad = ctx.createLinearGradient(0, topPad, 0, topPad + usableHeight);
+      neckGrad.addColorStop(0, '#181c26');
+      neckGrad.addColorStop(0.5, '#131720');
+      neckGrad.addColorStop(1, '#181c26');
+      ctx.fillStyle = neckGrad;
+      ctx.fillRect(leftPad, topPad, usableWidth, usableHeight);
+
+      // Fret Inlay Markers: 3, 5, 7, 9, 12 (double), 15, 17, 19, 21, 24 (double)
+      [3, 5, 7, 9, 12, 15, 17, 19, 21, 24].forEach(markerFret => {
+        if (markerFret > maxFret) return;
+        const x = leftPad + (markerFret - 0.5) * fretSpacing;
+        const y = topPad + usableHeight / 2;
+        ctx.fillStyle = 'rgba(148, 163, 184, 0.18)';
+
+        if (markerFret === 12 || markerFret === 24) {
+          const dy = usableHeight * 0.28;
+          ctx.beginPath();
+          ctx.arc(x, y - dy, 5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.beginPath();
+          ctx.arc(x, y + dy, 5, 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          ctx.beginPath();
+          ctx.arc(x, y, 5.5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      });
+
+      // Vertical Nut & Fret Wires
+      for (let fret = 0; fret <= maxFret; fret += 1) {
+        const x = leftPad + (fret * fretSpacing);
+        ctx.beginPath();
+        ctx.moveTo(x, topPad);
+        ctx.lineTo(x, topPad + usableHeight);
+        ctx.strokeStyle = fret === 0 ? '#f59e0b' : '#2f3545';
+        ctx.lineWidth = fret === 0 ? 4 : 1.2;
+        ctx.stroke();
+      }
+
+      // Horizontal Guitar Strings (high string at top, thicker wound strings at bottom)
+      for (let i = 0; i < stringCount; i += 1) {
+        const y = topPad + (i * stringSpacing);
+        ctx.beginPath();
+        ctx.moveTo(leftPad, y);
+        ctx.lineTo(leftPad + usableWidth, y);
+        ctx.strokeStyle = '#64748b';
+        ctx.lineWidth = 1.0 + (i * 0.35);
+        ctx.stroke();
+      }
+
+      // Open String Tuning Labels at Left
+      displayStrings.forEach((openNote, displayIdx) => {
+        const y = topPad + (displayIdx * stringSpacing);
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = 'bold 11px "JetBrains Mono", monospace';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(openNote, 6, y);
+      });
+
+      // Fret Numbers along Bottom
+      ctx.font = 'bold 11px "JetBrains Mono", monospace';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'bottom';
+      const highlightFrets = new Set([0, 3, 5, 7, 9, 12, 15, 17, 19, 21, 24]);
+      for (let fret = 0; fret <= maxFret; fret += 1) {
+        const textX = leftPad + (fret * fretSpacing);
+        ctx.fillStyle = highlightFrets.has(fret) ? '#f59e0b' : '#64748b';
+        ctx.fillText(String(fret), textX, boardHeight - 5);
+      }
+
+      // PASS 1: Ghost / Context Layer (Pinned Base Chord OR Next Chord in Progression)
+      const ghostProfile = pinnedProfile || (STATE.sbShowNextGhost ? nextProfile : null);
+      if (ghostProfile && ghostProfile.roman !== activeProfile.roman) {
+        lowToHighStrings.forEach((openNote, stringIndex) => {
+          const displayIdx = stringCount - 1 - stringIndex;
+          const y = topPad + (displayIdx * stringSpacing);
+          for (let fret = 0; fret <= maxFret; fret += 1) {
+            const fretInfo = omniFretNoteForString(openNote, fret);
+            if (!fretInfo) continue;
+            const ghostRole = ghostProfile.getRoleForPitchClass(fretInfo.pitchClass);
+            if (!ghostRole || !ghostProfile.isRoleVisibleInMode(ghostRole.role, STATE.sbToneMode)) continue;
+
+            // Only draw ghost if it's a guide tone or root
+            if (!ghostRole.isGuideTone && ghostRole.role !== 'root') continue;
+
+            const x = leftPad + (fret * fretSpacing);
+            ctx.save();
+            ctx.beginPath();
+            ctx.globalAlpha = 0.28;
+            ctx.fillStyle = ghostRole.color;
+            ctx.arc(x, y, 10.5, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.globalAlpha = 0.65;
+            ctx.setLineDash([3, 2]);
+            ctx.strokeStyle = '#fbbf24';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+            ctx.restore();
+          }
+        });
+      }
+
+      // Collect Active Chord Fret Positions
+      const nonGuidePositions = [];
+      const guidePositions = [];
+
+      lowToHighStrings.forEach((openNote, stringIndex) => {
+        const displayIdx = stringCount - 1 - stringIndex;
+        const y = topPad + (displayIdx * stringSpacing);
+
+        for (let fret = 0; fret <= maxFret; fret += 1) {
+          const fretInfo = omniFretNoteForString(openNote, fret);
+          if (!fretInfo) continue;
+
+          const roleInfo = activeProfile.getRoleForPitchClass(fretInfo.pitchClass);
+          if (!roleInfo || !activeProfile.isRoleVisibleInMode(roleInfo.role, STATE.sbToneMode)) continue;
+
+          const x = leftPad + (fret * fretSpacing);
+          const item = { x, y, fret, stringIndex, fretInfo, roleInfo };
+          if (roleInfo.isGuideTone) {
+            guidePositions.push(item);
+          } else {
+            nonGuidePositions.push(item);
+          }
+        }
+      });
+
+      // PASS 2: Active Chord Root & 5th Tones
+      nonGuidePositions.forEach(({ x, y, roleInfo }) => {
+        ctx.save();
+        ctx.beginPath();
+        ctx.fillStyle = roleInfo.color;
+        ctx.globalAlpha = roleInfo.role === 'root' ? 0.95 : 0.8;
+        ctx.arc(x, y, roleInfo.role === 'root' ? 12 : 10.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.strokeStyle = roleInfo.role === 'root' ? '#ffffff' : '#cbd5e1';
+        ctx.lineWidth = roleInfo.role === 'root' ? 2 : 1.2;
+        ctx.stroke();
+        ctx.restore();
+      });
+
+      // PASS 3: Active Chord Guide Tones (3rd & 7th) — Prominent Glowing Highlight
+      guidePositions.forEach(({ x, y, roleInfo }) => {
+        ctx.save();
+        // Outer glow halo
+        ctx.beginPath();
+        ctx.strokeStyle = roleInfo.ringColor;
+        ctx.lineWidth = 2.5;
+        ctx.globalAlpha = 0.85;
+        ctx.arc(x, y, 15, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Main Guide Tone Circle
+        ctx.beginPath();
+        ctx.fillStyle = roleInfo.color;
+        ctx.globalAlpha = 1;
+        ctx.arc(x, y, 12.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.restore();
+      });
+
+      // PASS 4: Scale Degrees & Note Names
+      [...nonGuidePositions, ...guidePositions].forEach(({ x, y, fretInfo, roleInfo }) => {
+        if (STATE.sbShowDegrees) {
+          ctx.save();
+          ctx.fillStyle = roleInfo.role === 'root' ? '#090a0d' : '#ffffff';
+          ctx.font = 'bold 10.5px "JetBrains Mono", monospace';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(roleInfo.degree, x, y + 0.5);
+          ctx.restore();
+        }
+
+        if (STATE.sbShowNotes) {
+          ctx.save();
+          ctx.fillStyle = roleInfo.isGuideTone ? '#a7f3d0' : '#e2e8f0';
+          ctx.font = 'bold 9.5px "JetBrains Mono", monospace';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'alphabetic';
+          ctx.fillText(fretInfo.pitchName, x, y - 15);
+          ctx.restore();
+        }
+      });
+
+      // PASS 5: Interactive Selected Fret Reticle
+      if (STATE.sbSelectedFretTarget) {
+        const selX = leftPad + (STATE.sbSelectedFretTarget.fret * fretSpacing);
+        const selY = topPad + (STATE.sbSelectedFretTarget.displayStringIndex * stringSpacing);
+        ctx.save();
+        ctx.beginPath();
+        ctx.strokeStyle = '#f59e0b';
+        ctx.lineWidth = 3;
+        ctx.arc(selX, selY, 18, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      updateFretboardInspectorUI();
+    }
+
+    async function handleSandboxFretboardTap(evt) {
+      const canvas = document.getElementById('sb-guitar-canvas');
+      if (!canvas) return;
+      const rect = canvas.getBoundingClientRect();
+      const clientX = evt.touches ? evt.touches[0].clientX : evt.clientX;
+      const clientY = evt.touches ? evt.touches[0].clientY : evt.clientY;
+      const cssX = clientX - rect.left;
+      const cssY = clientY - rect.top;
+
+      const leftPad = 44;
+      const rightPad = 28;
+      const topPad = 34;
+      const bottomPad = 30;
+      const maxFret = 24;
+
+      const lowToHighStrings = omniGetTuningNotes(STATE.sbTuning);
+      const stringCount = lowToHighStrings.length;
+      const usableWidth = (canvas.clientWidth || 1140) - leftPad - rightPad;
+      const usableHeight = (canvas.clientHeight || 340) - topPad - bottomPad;
+      const fretSpacing = usableWidth / maxFret;
+      const stringSpacing = usableHeight / Math.max(stringCount - 1, 1);
+
+      const rawFret = Math.round((cssX - leftPad) / fretSpacing);
+      const fret = Math.max(0, Math.min(maxFret, rawFret));
+
+      const rawDisplayString = Math.round((cssY - topPad) / stringSpacing);
+      const displayStringIndex = Math.max(0, Math.min(stringCount - 1, rawDisplayString));
+      const physicalStringIndex = stringCount - 1 - displayStringIndex;
+
+      const openNote = lowToHighStrings[physicalStringIndex];
+      const fretInfo = omniFretNoteForString(openNote, fret);
+      if (!fretInfo) return;
+
+      STATE.sbSelectedFretTarget = {
+        stringIndex: physicalStringIndex,
+        displayStringIndex,
+        fret,
+        note: fretInfo.note,
+        pitchName: fretInfo.pitchName,
+        pitchClass: fretInfo.pitchClass,
+        midi: fretInfo.midi,
+        openNote
+      };
+
+      renderSandboxFretboard();
+
+      // Audition the tapped guitar fret note through the WebAudio amp engine
+      const ready = await ensureAudioContext();
+      if (ready && audioCtx) {
+        const freq = 440 * Math.pow(2, (fretInfo.midi - 69) / 12);
+        playGuitarNote(freq, audioCtx.currentTime, 0.75, 0.8);
+      }
+    }
 
     function stopSandboxChainPlayback() {
       STATE.sbLoopTimeouts.forEach(t => clearTimeout(t));
@@ -2096,6 +3004,11 @@
       if (icon) icon.className = 'fa-solid fa-play';
 
       clearSandboxVisualHighlight();
+      if (STATE.sandboxCustomProg.length > 0) {
+        const activeIdx = Math.max(0, Math.min(STATE.sbActiveIndex, STATE.sandboxCustomProg.length - 1));
+        highlightSandboxChip(activeIdx);
+      }
+      renderSandboxFretboard();
     }
 
     function clearSandboxVisualHighlight() {
@@ -2170,7 +3083,10 @@
         const delayMs = Math.max(0, (chordStartTime - audioCtx.currentTime) * 1000);
         const tVisual = setTimeout(() => {
           if (!STATE.sbIsPlaying) return;
+          STATE.sbActiveIndex = index;
+          STATE.sbActiveChord = { rn: roman, inversion: inv };
           highlightSandboxChip(index);
+          renderSandboxFretboard();
         }, delayMs);
         STATE.sbLoopTimeouts.push(tVisual);
       });
@@ -2193,31 +3109,57 @@
     function renderSandboxSequence() {
       const display = document.getElementById('sb-sequence-display');
       if (STATE.sandboxCustomProg.length === 0) {
-        display.innerHTML = '<span class="text-gray-500 text-xs">No chords added yet. Tap any chord card above to begin building your sequence!</span>';
+        display.innerHTML = '<span class="text-gray-500 text-xs">No chords added yet. Tap any chord card above or choose a Trainer Progression preset to begin!</span>';
+        renderSandboxFretboard();
         return;
       }
       display.innerHTML = '';
+      if (STATE.sbActiveIndex >= STATE.sandboxCustomProg.length) {
+        STATE.sbActiveIndex = Math.max(0, STATE.sandboxCustomProg.length - 1);
+      }
+
       STATE.sandboxCustomProg.forEach((item, index) => {
         const rn = typeof item === 'string' ? item : item.rn;
         const inv = typeof item === 'object' && item.inversion !== undefined ? item.inversion : 0;
-        const root = getChordRoot(STATE.sandboxKey, rn);
+        const profile = getChordHarmonicProfile(STATE.sandboxKey, rn, inv);
+        const isActive = index === STATE.sbActiveIndex;
 
         const chip = document.createElement('div');
-        chip.className = 'sb-chain-chip px-3 py-1.5 rounded-lg bg-amp-850 border border-amber-500/40 text-amber-300 font-mono font-bold text-xs flex items-center gap-1.5 shrink-0 transition-all duration-150';
+        chip.className = `sb-chain-chip cursor-pointer px-3 py-1.5 rounded-lg border border-amber-500/40 text-amber-300 font-mono font-bold text-xs flex items-center gap-1.5 shrink-0 transition-all duration-150 ${
+          isActive ? 'ring-2 ring-amber-400 bg-amber-500/30 scale-105' : 'bg-amp-850 hover:bg-amp-800'
+        }`;
         chip.innerHTML = `
-          <span class="text-[10px] text-gray-500 font-normal">#${index + 1}</span>
-          <span>${root}5 (${rn})</span>
+          <span class="text-[10px] text-gray-400 font-normal">#${index + 1}</span>
+          <span>${getChordSymbolForLab(profile.rootNote, rn)} (${rn})</span>
+          <span class="text-[9px] px-1 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-normal" title="Guide Tones (3rd & 7th)">${profile.thirdDegreeLabel}:${profile.thirdNote}•${profile.seventhDegreeLabel}:${profile.seventhNote}</span>
           <span class="text-[10px] px-1 py-0.5 rounded bg-amp-950 text-gray-400 font-normal">${inv === 0 ? 'Root' : (inv === 1 ? '1st Inv' : '2nd Inv')}</span>
-          <button title="Remove chord" class="text-gray-400 hover:text-rose-400 ml-1 text-xs">✕</button>
+          <button title="Remove chord" class="sb-chip-remove text-gray-400 hover:text-rose-400 ml-1 text-xs">✕</button>
         `;
-        chip.querySelector('button').addEventListener('click', (e) => {
+
+        // Clicking a chip auditions that chord and shows its guide tones on the fretboard
+        chip.addEventListener('click', () => {
+          STATE.sbActiveIndex = index;
+          STATE.sbActiveChord = { rn, inversion: inv };
+          highlightSandboxChip(index);
+          renderSandboxFretboard();
+          if (!STATE.sbIsPlaying) {
+            playSingleChord(profile.rootNote, rn, 0.85, inv);
+          }
+        });
+
+        chip.querySelector('.sb-chip-remove').addEventListener('click', (e) => {
           e.stopPropagation();
           stopSandboxChainPlayback();
           STATE.sandboxCustomProg.splice(index, 1);
+          if (STATE.sbActiveIndex >= STATE.sandboxCustomProg.length) {
+            STATE.sbActiveIndex = Math.max(0, STATE.sandboxCustomProg.length - 1);
+          }
           renderSandboxSequence();
         });
         display.appendChild(chip);
       });
+
+      renderSandboxFretboard();
     }
 
     /* =========================================================================
@@ -2267,6 +3209,7 @@
         tabTrainer.className = 'px-3 py-1 rounded font-medium text-xs sm:text-sm text-gray-400 hover:text-gray-200 transition-colors font-display uppercase tracking-wider';
         viewSandbox.classList.remove('hidden');
         viewTrainer.classList.add('hidden');
+        requestAnimationFrame(() => renderSandboxFretboard());
       });
 
       // Trainer Deck Controls
@@ -2377,6 +3320,8 @@
         }
         appStore.settings.voicing = STATE.voicing;
         saveStore(appStore);
+        updateSandboxPadLabels();
+        renderSandboxSequence();
       });
 
       // Inversion Mode dropdown listener
@@ -2401,6 +3346,28 @@
         });
       });
 
+      // Populate Trainer Progression Presets in Chord Lab
+      const sbPresetSelect = document.getElementById('sb-preset-progression');
+      if (sbPresetSelect) {
+        ROCK_PROGRESSIONS.forEach((prog, idx) => {
+          const opt = document.createElement('option');
+          opt.value = String(idx);
+          opt.textContent = `${prog.name} (${prog.numerals.join(' - ')})`;
+          sbPresetSelect.appendChild(opt);
+        });
+        sbPresetSelect.addEventListener('change', (e) => {
+          const idx = parseInt(e.target.value, 10);
+          if (!isNaN(idx) && ROCK_PROGRESSIONS[idx]) {
+            stopSandboxChainPlayback();
+            const currentInv = STATE.sandboxInversionSelect || 0;
+            STATE.sandboxCustomProg = ROCK_PROGRESSIONS[idx].numerals.map(rn => ({ rn, inversion: currentInv }));
+            STATE.sbActiveIndex = 0;
+            STATE.sbActiveChord = STATE.sandboxCustomProg[0];
+            renderSandboxSequence();
+          }
+        });
+      }
+
       // Sandbox Inversion Selector
       const sbInversionSelect = document.getElementById('sb-inversion-select');
       if (sbInversionSelect) {
@@ -2409,7 +3376,7 @@
         });
       }
 
-      // Chord Lab Pad Buttons: Audition and append with chosen inversion
+      // Chord Lab Pad Buttons: Audition, append with chosen inversion, and update fretboard guide tones
       document.querySelectorAll('.sb-pad').forEach(pad => {
         pad.addEventListener('click', () => {
           const rn = pad.getAttribute('data-rn');
@@ -2417,6 +3384,8 @@
           const currentInv = STATE.sandboxInversionSelect || 0;
           playSingleChord(root, rn, 0.9, currentInv);
           STATE.sandboxCustomProg.push({ rn, inversion: currentInv });
+          STATE.sbActiveIndex = STATE.sandboxCustomProg.length - 1;
+          STATE.sbActiveChord = { rn, inversion: currentInv };
           renderSandboxSequence();
         });
       });
@@ -2430,11 +3399,7 @@
           });
           btn.className = 'sb-key-btn px-2.5 py-1 rounded text-xs font-mono font-bold bg-amber-500 text-black';
           STATE.sandboxKey = btn.getAttribute('data-key');
-          document.querySelectorAll('.sb-pad').forEach(pad => {
-            const rn = pad.getAttribute('data-rn');
-            const root = getChordRoot(STATE.sandboxKey, rn);
-            pad.querySelector('.sb-chord-name').textContent = `${root}5`;
-          });
+          updateSandboxPadLabels();
           renderSandboxSequence();
         });
       });
@@ -2444,7 +3409,121 @@
       document.getElementById('btn-sb-clear').addEventListener('click', () => {
         stopSandboxChainPlayback();
         STATE.sandboxCustomProg = [];
+        STATE.sbActiveIndex = 0;
+        if (sbPresetSelect) sbPresetSelect.value = '';
         renderSandboxSequence();
+      });
+
+      // Fretboard Controls & OmniTune Audition Buttons
+      const sbTuningSelect = document.getElementById('sb-tuning-select');
+      if (sbTuningSelect) {
+        sbTuningSelect.addEventListener('change', (e) => {
+          STATE.sbTuning = e.target.value;
+          STATE.sbSelectedFretTarget = null;
+          renderSandboxFretboard();
+        });
+      }
+
+      const sbToneModeSelect = document.getElementById('sb-tone-mode-select');
+      if (sbToneModeSelect) {
+        sbToneModeSelect.addEventListener('change', (e) => {
+          STATE.sbToneMode = e.target.value;
+          renderSandboxFretboard();
+        });
+      }
+
+      const btnSbToggleNotes = document.getElementById('btn-sb-toggle-notes');
+      if (btnSbToggleNotes) {
+        btnSbToggleNotes.addEventListener('click', () => {
+          STATE.sbShowNotes = !STATE.sbShowNotes;
+          btnSbToggleNotes.textContent = `Notes: ${STATE.sbShowNotes ? 'ON' : 'OFF'}`;
+          btnSbToggleNotes.className = STATE.sbShowNotes
+            ? 'px-2.5 py-1.5 rounded-lg bg-amber-500/20 border border-amber-500/50 text-amber-300 hover:bg-amber-500/30 transition text-[11px] font-bold'
+            : 'px-2.5 py-1.5 rounded-lg bg-amp-950 border border-amp-800 text-gray-400 hover:text-gray-200 transition text-[11px] font-bold';
+          renderSandboxFretboard();
+        });
+      }
+
+      const btnSbToggleDegrees = document.getElementById('btn-sb-toggle-degrees');
+      if (btnSbToggleDegrees) {
+        btnSbToggleDegrees.addEventListener('click', () => {
+          STATE.sbShowDegrees = !STATE.sbShowDegrees;
+          btnSbToggleDegrees.textContent = `Degrees: ${STATE.sbShowDegrees ? 'ON' : 'OFF'}`;
+          btnSbToggleDegrees.className = STATE.sbShowDegrees
+            ? 'px-2.5 py-1.5 rounded-lg bg-amber-500/20 border border-amber-500/50 text-amber-300 hover:bg-amber-500/30 transition text-[11px] font-bold'
+            : 'px-2.5 py-1.5 rounded-lg bg-amp-950 border border-amp-800 text-gray-400 hover:text-gray-200 transition text-[11px] font-bold';
+          renderSandboxFretboard();
+        });
+      }
+
+      const btnSbToggleGhost = document.getElementById('btn-sb-toggle-ghost');
+      if (btnSbToggleGhost) {
+        btnSbToggleGhost.addEventListener('click', () => {
+          STATE.sbShowNextGhost = !STATE.sbShowNextGhost;
+          btnSbToggleGhost.textContent = `Next Chord Ghost: ${STATE.sbShowNextGhost ? 'ON' : 'OFF'}`;
+          btnSbToggleGhost.className = STATE.sbShowNextGhost
+            ? 'px-2.5 py-1.5 rounded-lg bg-sky-500/20 border border-sky-500/50 text-sky-300 hover:bg-sky-500/30 transition text-[11px] font-bold'
+            : 'px-2.5 py-1.5 rounded-lg bg-amp-950 border border-amp-800 text-gray-400 hover:text-gray-200 transition text-[11px] font-bold';
+          renderSandboxFretboard();
+        });
+      }
+
+      const btnSbPrevChord = document.getElementById('btn-sb-prev-chord');
+      if (btnSbPrevChord) {
+        btnSbPrevChord.addEventListener('click', () => {
+          if (STATE.sandboxCustomProg.length === 0) return;
+          STATE.sbActiveIndex = (STATE.sbActiveIndex - 1 + STATE.sandboxCustomProg.length) % STATE.sandboxCustomProg.length;
+          const item = STATE.sandboxCustomProg[STATE.sbActiveIndex];
+          const rn = typeof item === 'string' ? item : item.rn;
+          const inv = typeof item === 'object' && item.inversion !== undefined ? item.inversion : 0;
+          STATE.sbActiveChord = { rn, inversion: inv };
+          highlightSandboxChip(STATE.sbActiveIndex);
+          renderSandboxFretboard();
+          if (!STATE.sbIsPlaying) {
+            playSingleChord(getChordRoot(STATE.sandboxKey, rn), rn, 0.85, inv);
+          }
+        });
+      }
+
+      const btnSbNextChord = document.getElementById('btn-sb-next-chord');
+      if (btnSbNextChord) {
+        btnSbNextChord.addEventListener('click', () => {
+          if (STATE.sandboxCustomProg.length === 0) return;
+          STATE.sbActiveIndex = (STATE.sbActiveIndex + 1) % STATE.sandboxCustomProg.length;
+          const item = STATE.sandboxCustomProg[STATE.sbActiveIndex];
+          const rn = typeof item === 'string' ? item : item.rn;
+          const inv = typeof item === 'object' && item.inversion !== undefined ? item.inversion : 0;
+          STATE.sbActiveChord = { rn, inversion: inv };
+          highlightSandboxChip(STATE.sbActiveIndex);
+          renderSandboxFretboard();
+          if (!STATE.sbIsPlaying) {
+            playSingleChord(getChordRoot(STATE.sandboxKey, rn), rn, 0.85, inv);
+          }
+        });
+      }
+
+      const btnSbPinChord = document.getElementById('btn-sb-pin-chord');
+      if (btnSbPinChord) {
+        btnSbPinChord.addEventListener('click', () => {
+          const active = getActiveSandboxChordItem();
+          if (STATE.sbPinnedChord && STATE.sbPinnedChord.rn === active.rn) {
+            STATE.sbPinnedChord = null;
+          } else {
+            STATE.sbPinnedChord = { rn: active.rn, inversion: active.inversion };
+          }
+          renderSandboxFretboard();
+        });
+      }
+
+      const sbGuitarCanvas = document.getElementById('sb-guitar-canvas');
+      if (sbGuitarCanvas) {
+        sbGuitarCanvas.addEventListener('click', handleSandboxFretboardTap);
+      }
+
+      window.addEventListener('resize', () => {
+        if (!viewSandbox.classList.contains('hidden')) {
+          renderSandboxFretboard();
+        }
       });
 
       // Analytics Modal Listeners
@@ -2472,9 +3551,11 @@
 
       document.getElementById('btn-reset-stats').addEventListener('click', resetAllStats);
 
-      // Initialize scoreboard, first progression, and audio UI
+      // Initialize scoreboard, first progression, Chord Lab UI, and audio UI
       updateScoreboardUI();
       generateNewProgression();
+      updateSandboxPadLabels();
+      renderSandboxSequence();
       updateEngineStatusUI();
     });
   </script>
